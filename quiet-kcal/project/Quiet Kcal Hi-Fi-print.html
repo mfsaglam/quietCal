@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Quiet Kcal — Hi-Fi · Print</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  html, body { margin: 0; padding: 0; background: #f0eee9; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+
+  .page {
+    width: 100%;
+    min-height: 100vh;
+    padding: 60px 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #f0eee9;
+    break-after: page;
+    page-break-after: always;
+  }
+  .page:last-child { break-after: auto; page-break-after: auto; }
+
+  .page-header {
+    width: 100%;
+    max-width: 900px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .page-title {
+    font-family: -apple-system, system-ui, sans-serif;
+    font-size: 28px; font-weight: 700; color: #1a1a1a;
+    letter-spacing: -0.5px;
+  }
+  .page-sub {
+    font-family: -apple-system, system-ui, sans-serif;
+    font-size: 14px; color: rgba(60,50,40,0.65);
+    letter-spacing: 0;
+  }
+  .frame-row {
+    display: flex; gap: 32px; justify-content: center;
+    align-items: flex-start; flex-wrap: wrap;
+  }
+  .frame-cell {
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .frame-cell-label {
+    font-family: -apple-system, system-ui, sans-serif;
+    font-size: 11px; font-weight: 500; color: rgba(60,50,40,0.7);
+    letter-spacing: 0.6px; text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .widget-cell {
+    background: #E8E4DC; border-radius: 28px; padding: 26px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .cover-page {
+    justify-content: center;
+  }
+  .cover-title {
+    font-family: -apple-system, system-ui, sans-serif;
+    font-size: 72px; font-weight: 700; color: #1a1a1a;
+    letter-spacing: -2px; line-height: 1;
+  }
+  .cover-sub {
+    font-family: -apple-system, system-ui, sans-serif;
+    font-size: 22px; color: rgba(60,50,40,0.7);
+    letter-spacing: -0.3px; margin-top: 14px;
+  }
+  .cover-meta {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 11px; color: rgba(60,50,40,0.55);
+    letter-spacing: 0.6px; margin-top: 32px; line-height: 1.8;
+  }
+
+  @page { size: A4 portrait; margin: 1cm; }
+  @media print {
+    html, body { background: #f0eee9 !important; }
+    .page { padding: 24px 32px; min-height: auto; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="ios-frame.jsx"></script>
+<script type="text/babel" src="hifi-screens.jsx"></script>
+<script type="text/babel" src="widgets.jsx"></script>
+
+<script type="text/babel">
+const dark = false;
+
+// scale a device down to fit on portrait page
+const SCALE = 0.62;
+
+function ScaledDevice({ children }) {
+  return (
+    <div style={{
+      transform: `scale(${SCALE})`, transformOrigin: 'top center',
+      width: 402, height: 874,
+    }}>
+      <IOSDevice dark={dark} width={402} height={874}>
+        {children}
+      </IOSDevice>
+    </div>
+  );
+}
+
+function PageFrames({ title, subtitle, items }) {
+  // Wrapper height accounts for scaled height
+  const wrapH = 874 * SCALE + 40;
+  return (
+    <section className="page">
+      <div className="page-header">
+        <div className="page-title">{title}</div>
+        <div className="page-sub">{subtitle}</div>
+      </div>
+      <div className="frame-row">
+        {items.map((it, i) => (
+          <div key={i} className="frame-cell">
+            <div className="frame-cell-label">{it.label}</div>
+            <div style={{ width: 402 * SCALE, height: wrapH, position: 'relative' }}>
+              <ScaledDevice>{it.screen}</ScaledDevice>
+              {it.fab && (
+                <div style={{
+                  position: 'absolute', bottom: 60 * SCALE, right: -10,
+                  transform: `scale(${SCALE})`, transformOrigin: 'bottom right',
+                }}>
+                  <HifiFAB dark={dark} />
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function App() {
+  return (
+    <>
+      {/* Cover */}
+      <section className="page cover-page">
+        <div style={{ textAlign: 'left', width: '100%', maxWidth: 900 }}>
+          <div className="cover-title">Quiet Kcal</div>
+          <div className="cover-sub">Hi-fi · iOS 26 · calm minimal calorie tracking</div>
+          <div className="cover-meta">
+            HOME · ADD MEAL · HISTORY · SETTINGS · WIDGETS<br/>
+            SF PRO · APPLE INTELLIGENCE CALORIE ESTIMATION<br/>
+            APR 2026
+          </div>
+        </div>
+      </section>
+
+      <PageFrames
+        title="Home"
+        subtitle="Ring progress · default and over-target"
+        items={[
+          { label: 'Today · under target', screen: <HifiHome dark={dark} />, fab: true },
+          { label: 'Today · over target', screen: <HifiHome over dark={dark} />, fab: true },
+        ]}
+      />
+
+      <PageFrames
+        title="Add a meal"
+        subtitle="Apple Intelligence estimates calories from name + amount"
+        items={[
+          { label: '1 · Typing name', screen: <HifiAddMeal dark={dark} state="empty" /> },
+          { label: '2 · Estimating…', screen: <HifiAddMeal dark={dark} state="estimating" /> },
+          { label: '3 · Estimated', screen: <HifiAddMeal dark={dark} state="estimated" /> },
+        ]}
+      />
+
+      <PageFrames
+        title="History"
+        subtitle="Weekly chart · neutral, no streaks"
+        items={[
+          { label: 'History', screen: <HifiHistory dark={dark} /> },
+        ]}
+      />
+
+      <PageFrames
+        title="Settings"
+        subtitle="Intelligence · Daily target · Appearance · Data"
+        items={[
+          { label: 'Settings', screen: <HifiSettings dark={dark} /> },
+          { label: 'Edit target', screen: <HifiEditTarget dark={dark} /> },
+        ]}
+      />
+
+      {/* Widgets page */}
+      <section className="page">
+        <div className="page-header">
+          <div className="page-title">Widgets</div>
+          <div className="page-sub">Home screen · medium with quick log · lock screen</div>
+        </div>
+        <div className="frame-row">
+          <div className="frame-cell">
+            <div className="frame-cell-label">Small · Default</div>
+            <div className="widget-cell" style={{ width: 210, height: 210 }}>
+              <WidgetSmall dark={dark} />
+            </div>
+          </div>
+          <div className="frame-cell">
+            <div className="frame-cell-label">Small · Over target</div>
+            <div className="widget-cell" style={{ width: 210, height: 210 }}>
+              <WidgetSmall dark={dark} over />
+            </div>
+          </div>
+          <div className="frame-cell">
+            <div className="frame-cell-label">Medium · Quick log</div>
+            <div className="widget-cell" style={{ width: 386, height: 210 }}>
+              <WidgetMedium dark={dark} />
+            </div>
+          </div>
+          <div className="frame-cell">
+            <div className="frame-cell-label">Lock screen complications</div>
+            <div style={{ width: 400, height: 240 }}>
+              <LockBg w={400} h={240}>
+                <WidgetLockCircular />
+                <WidgetLockRect />
+              </LockBg>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+
+// Auto-print after fonts + babel ready
+window.addEventListener('load', async () => {
+  try { await document.fonts.ready; } catch (e) {}
+  setTimeout(() => window.print(), 800);
+});
+</script>
+</body>
+</html>

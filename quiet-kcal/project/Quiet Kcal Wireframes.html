@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Quiet Kcal — Wireframes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Kalam:wght@300;400;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #f0eee9; }
+  * { box-sizing: border-box; }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="wireframes.jsx"></script>
+<script type="text/babel" src="screens.jsx"></script>
+
+<script type="text/babel">
+function App() {
+  const initial = /*EDITMODE-BEGIN*/{
+    "activeHome": "ring",
+    "showAnnotations": true,
+    "paperTone": "cream"
+  }/*EDITMODE-END*/;
+  const [tweaks, setTweaks] = React.useState(initial);
+  const [editMode, setEditMode] = React.useState(false);
+
+  React.useEffect(() => {
+    const onMsg = (e) => {
+      if (e.data?.type === '__activate_edit_mode') setEditMode(true);
+      if (e.data?.type === '__deactivate_edit_mode') setEditMode(false);
+    };
+    window.addEventListener('message', onMsg);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  const update = (patch) => {
+    const next = { ...tweaks, ...patch };
+    setTweaks(next);
+    window.parent.postMessage({ type: '__edit_mode_set_keys', edits: patch }, '*');
+  };
+
+  React.useEffect(() => {
+    const tones = {
+      cream: '#f0eee9',
+      bone: '#f6f3ec',
+      grey: '#ececea',
+      white: '#fafaf8',
+    };
+    document.body.style.background = tones[tweaks.paperTone] || tones.cream;
+  }, [tweaks.paperTone]);
+
+  const HomeMap = {
+    ring: HomeRing,
+    big: HomeBigNumber,
+    countdown: HomeCountdown,
+    over: HomeOverTarget,
+  };
+  const FeaturedHome = HomeMap[tweaks.activeHome] || HomeRing;
+
+  return (
+    <>
+      <DesignCanvas>
+        <div style={{ padding: '0 60px 40px', maxWidth: 900 }}>
+          <div style={{ fontFamily: HAND, fontSize: 48, fontWeight: 700, color: INK, letterSpacing: -0.5 }}>
+            Quiet Kcal
+          </div>
+          <div style={{ fontFamily: HAND, fontSize: 22, color: MUTED, marginTop: 4 }}>
+            wireframes · iOS 26 · a minimal calorie tracker
+          </div>
+          <div style={{
+            fontFamily: '"JetBrains Mono", monospace', fontSize: 12, color: MUTED,
+            marginTop: 20, lineHeight: 1.6, maxWidth: 640,
+          }}>
+            CHOSEN — RING HOME (A) + OVER-TARGET STATE (D)<br/>
+            FAB → SHEET FOR MEAL ENTRY · NEUTRAL HISTORY · NO FAVORITES IN MVP<br/>
+            NEXT — HI-FI PASS IN REAL iOS 26 FRAMES
+          </div>
+        </div>
+
+        {tweaks.showAnnotations && (
+          <div style={{ padding: '0 60px 40px', display: 'flex', gap: 24, maxWidth: 1100, position: 'relative', minHeight: 80 }}>
+            <DCPostIt top="auto" left={60} rotate={-3} width={220}>
+              Calm & meditative — lots of whitespace, one accent (warning red), handwritten ink
+            </DCPostIt>
+            <DCPostIt top="auto" left={320} rotate={2} width={220}>
+              FAB + sheet for meal entry. Name / grams / kcal. Support g / oz / lb.
+            </DCPostIt>
+            <DCPostIt top="auto" left={580} rotate={-1} width={220}>
+              Over-target = red, no scolding copy. Just clean numbers.
+            </DCPostIt>
+          </div>
+        )}
+
+        <DCSection
+          title="1 · Home — Ring (chosen direction)"
+          subtitle="A = default state · D = same screen, over-target"
+          gap={56}
+        >
+          <DCArtboard label="A · RING — DEFAULT ✓"><HomeRing /></DCArtboard>
+          <DCArtboard label="D · RING — OVER TARGET ✓"><HomeOverTarget /></DCArtboard>
+        </DCSection>
+
+        <DCSection
+          title="1b · Alternatives (parked)"
+          subtitle="Keeping these visible for comparison"
+          gap={56}
+        >
+          <DCArtboard label="B · BIG NUMBER"><HomeBigNumber /></DCArtboard>
+          <DCArtboard label="C · COUNTDOWN"><HomeCountdown /></DCArtboard>
+        </DCSection>
+
+        <DCSection
+          title="2 · Add a meal"
+          subtitle="Floating + button → bottom sheet with name, amount, kcal"
+          gap={56}
+        >
+          <DCArtboard label="TAP +"><FeaturedHome /></DCArtboard>
+          <DCArtboard label="SHEET OPENS"><AddMealSheet /></DCArtboard>
+        </DCSection>
+
+        <DCSection
+          title="3 · History & Settings"
+          subtitle="Weekly rhythm + target editing"
+          gap={56}
+        >
+          <DCArtboard label="HISTORY"><HistoryView /></DCArtboard>
+          <DCArtboard label="SETTINGS"><SettingsView /></DCArtboard>
+          <DCArtboard label="EDIT TARGET"><EditTarget /></DCArtboard>
+        </DCSection>
+
+        <div style={{ padding: '20px 60px 80px', maxWidth: 800 }}>
+          <div style={{ fontFamily: HAND, fontSize: 26, fontWeight: 600, color: INK, marginBottom: 12 }}>
+            Decisions locked → ready for hi-fi
+          </div>
+          <ul style={{ fontFamily: HAND, fontSize: 18, color: INK, lineHeight: 1.6, paddingLeft: 20 }}>
+            <li><b>Home:</b> Ring (A), with D as over-target state on the same screen</li>
+            <li><b>History:</b> neutral — no streaks, no judgement</li>
+            <li><b>Meal entry:</b> FAB → sheet, type every time (no favorites in MVP)</li>
+            <li><b>Fields:</b> name, grams (w/ oz/lb toggle), kcal</li>
+          </ul>
+          <div style={{ fontFamily: HAND, fontSize: 18, color: MUTED, marginTop: 16 }}>
+            Next — hi-fi pass in real iOS 26 frames, SF Pro, proper ring animation.
+          </div>
+        </div>
+      </DesignCanvas>
+
+      {editMode && (
+        <div style={{
+          position: 'fixed', bottom: 20, right: 20, width: 260,
+          background: '#fff', borderRadius: 14, padding: 16,
+          boxShadow: '0 10px 40px rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08)',
+          fontFamily: '-apple-system, system-ui', fontSize: 13,
+          zIndex: 1000,
+        }}>
+          <div style={{ fontWeight: 600, marginBottom: 12, fontSize: 14 }}>Tweaks</div>
+
+          <div style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, color: '#888', marginBottom: 6 }}>
+            Featured home (in flow)
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, marginBottom: 14 }}>
+            {[
+              ['ring', 'Ring'],
+              ['big', 'Big #'],
+              ['countdown', 'Countdown'],
+              ['over', 'Over target'],
+            ].map(([k, l]) => (
+              <button key={k} onClick={() => update({ activeHome: k })}
+                style={{
+                  padding: '6px 8px', borderRadius: 6, border: '1px solid #ddd',
+                  background: tweaks.activeHome === k ? '#1a1a1a' : '#fff',
+                  color: tweaks.activeHome === k ? '#fff' : '#1a1a1a',
+                  fontSize: 12, cursor: 'pointer',
+                }}>{l}</button>
+            ))}
+          </div>
+
+          <div style={{ fontSize: 10, textTransform: 'uppercase', letterSpacing: 1, color: '#888', marginBottom: 6 }}>
+            Paper tone
+          </div>
+          <div style={{ display: 'flex', gap: 6, marginBottom: 14 }}>
+            {[
+              ['cream', '#f0eee9'],
+              ['bone', '#f6f3ec'],
+              ['grey', '#ececea'],
+              ['white', '#fafaf8'],
+            ].map(([k, c]) => (
+              <button key={k} onClick={() => update({ paperTone: k })}
+                title={k}
+                style={{
+                  width: 32, height: 32, borderRadius: 6,
+                  background: c,
+                  border: tweaks.paperTone === k ? '2px solid #1a1a1a' : '1px solid #ccc',
+                  cursor: 'pointer',
+                }} />
+            ))}
+          </div>
+
+          <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+            <input type="checkbox" checked={tweaks.showAnnotations}
+              onChange={(e) => update({ showAnnotations: e.target.checked })} />
+            Show post-it notes
+          </label>
+        </div>
+      )}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

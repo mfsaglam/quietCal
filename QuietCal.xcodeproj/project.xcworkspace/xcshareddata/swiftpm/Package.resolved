@@ -1,0 +1,15 @@
+{
+  "originHash" : "eeaea3a6a17bf8f81fc51ebf84474ff1b1454664ef5fcde0d0d85272f997a3e8",
+  "pins" : [
+    {
+      "identity" : "calorieestimator",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mfsaglam/CalorieEstimator.git",
+      "state" : {
+        "revision" : "30aa29a200fe75c34e45a20e3c92e36db23cbca1",
+        "version" : "1.1.0"
+      }
+    }
+  ],
+  "version" : 3
+}

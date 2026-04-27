@@ -6,8 +6,36 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		E6434E342F9FD6E6003E4714 /* CalorieEstimator in Frameworks */ = {isa = PBXBuildFile; productRef = E6434E332F9FD6E6003E4714 /* CalorieEstimator */; };
+		E6434E472F9FDA2B003E4714 /* Quiet Kcal Hi-Fi.html in Resources */ = {isa = PBXBuildFile; fileRef = E6434E3C2F9FDA2B003E4714 /* Quiet Kcal Hi-Fi.html */; };
+		E6434E482F9FDA2B003E4714 /* Quiet Kcal Hi-Fi-print.html in Resources */ = {isa = PBXBuildFile; fileRef = E6434E3F2F9FDA2B003E4714 /* Quiet Kcal Hi-Fi-print.html */; };
+		E6434E492F9FDA2B003E4714 /* wireframes.jsx in Resources */ = {isa = PBXBuildFile; fileRef = E6434E432F9FDA2B003E4714 /* wireframes.jsx */; };
+		E6434E4A2F9FDA2B003E4714 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = E6434E452F9FDA2B003E4714 /* README.md */; };
+		E6434E4B2F9FDA2B003E4714 /* ios-frame.jsx in Resources */ = {isa = PBXBuildFile; fileRef = E6434E3B2F9FDA2B003E4714 /* ios-frame.jsx */; };
+		E6434E4C2F9FDA2B003E4714 /* Quiet Kcal Wireframes.html in Resources */ = {isa = PBXBuildFile; fileRef = E6434E402F9FDA2B003E4714 /* Quiet Kcal Wireframes.html */; };
+		E6434E4D2F9FDA2B003E4714 /* design-canvas.jsx in Resources */ = {isa = PBXBuildFile; fileRef = E6434E392F9FDA2B003E4714 /* design-canvas.jsx */; };
+		E6434E4E2F9FDA2B003E4714 /* hifi-screens.jsx in Resources */ = {isa = PBXBuildFile; fileRef = E6434E3A2F9FDA2B003E4714 /* hifi-screens.jsx */; };
+		E6434E4F2F9FDA2B003E4714 /* Quiet Kcal Hi-Fi (standalone-source).html in Resources */ = {isa = PBXBuildFile; fileRef = E6434E3D2F9FDA2B003E4714 /* Quiet Kcal Hi-Fi (standalone-source).html */; };
+		E6434E502F9FDA2B003E4714 /* Quiet Kcal Hi-Fi (standalone).html in Resources */ = {isa = PBXBuildFile; fileRef = E6434E3E2F9FDA2B003E4714 /* Quiet Kcal Hi-Fi (standalone).html */; };
+		E6434E512F9FDA2B003E4714 /* screens.jsx in Resources */ = {isa = PBXBuildFile; fileRef = E6434E412F9FDA2B003E4714 /* screens.jsx */; };
+		E6434E522F9FDA2B003E4714 /* widgets.jsx in Resources */ = {isa = PBXBuildFile; fileRef = E6434E422F9FDA2B003E4714 /* widgets.jsx */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		E6434E242F9FD653003E4714 /* QuietCal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuietCal.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E6434E392F9FDA2B003E4714 /* design-canvas.jsx */ = {isa = PBXFileReference; lastKnownFileType = text; path = "design-canvas.jsx"; sourceTree = "<group>"; };
+		E6434E3A2F9FDA2B003E4714 /* hifi-screens.jsx */ = {isa = PBXFileReference; lastKnownFileType = text; path = "hifi-screens.jsx"; sourceTree = "<group>"; };
+		E6434E3B2F9FDA2B003E4714 /* ios-frame.jsx */ = {isa = PBXFileReference; lastKnownFileType = text; path = "ios-frame.jsx"; sourceTree = "<group>"; };
+		E6434E3C2F9FDA2B003E4714 /* Quiet Kcal Hi-Fi.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "Quiet Kcal Hi-Fi.html"; sourceTree = "<group>"; };
+		E6434E3D2F9FDA2B003E4714 /* Quiet Kcal Hi-Fi (standalone-source).html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "Quiet Kcal Hi-Fi (standalone-source).html"; sourceTree = "<group>"; };
+		E6434E3E2F9FDA2B003E4714 /* Quiet Kcal Hi-Fi (standalone).html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "Quiet Kcal Hi-Fi (standalone).html"; sourceTree = "<group>"; };
+		E6434E3F2F9FDA2B003E4714 /* Quiet Kcal Hi-Fi-print.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "Quiet Kcal Hi-Fi-print.html"; sourceTree = "<group>"; };
+		E6434E402F9FDA2B003E4714 /* Quiet Kcal Wireframes.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = "Quiet Kcal Wireframes.html"; sourceTree = "<group>"; };
+		E6434E412F9FDA2B003E4714 /* screens.jsx */ = {isa = PBXFileReference; lastKnownFileType = text; path = screens.jsx; sourceTree = "<group>"; };
+		E6434E422F9FDA2B003E4714 /* widgets.jsx */ = {isa = PBXFileReference; lastKnownFileType = text; path = widgets.jsx; sourceTree = "<group>"; };
+		E6434E432F9FDA2B003E4714 /* wireframes.jsx */ = {isa = PBXFileReference; lastKnownFileType = text; path = wireframes.jsx; sourceTree = "<group>"; };
+		E6434E452F9FDA2B003E4714 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -23,6 +51,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6434E342F9FD6E6003E4714 /* CalorieEstimator in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -32,6 +61,7 @@
 		E6434E1B2F9FD653003E4714 = {
 			isa = PBXGroup;
 			children = (
+				E6434E462F9FDA2B003E4714 /* quiet-kcal */,
 				E6434E262F9FD653003E4714 /* QuietCal */,
 				E6434E252F9FD653003E4714 /* Products */,
 			);
@@ -43,6 +73,33 @@
 				E6434E242F9FD653003E4714 /* QuietCal.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		E6434E442F9FDA2B003E4714 /* project */ = {
+			isa = PBXGroup;
+			children = (
+				E6434E392F9FDA2B003E4714 /* design-canvas.jsx */,
+				E6434E3A2F9FDA2B003E4714 /* hifi-screens.jsx */,
+				E6434E3B2F9FDA2B003E4714 /* ios-frame.jsx */,
+				E6434E3C2F9FDA2B003E4714 /* Quiet Kcal Hi-Fi.html */,
+				E6434E3D2F9FDA2B003E4714 /* Quiet Kcal Hi-Fi (standalone-source).html */,
+				E6434E3E2F9FDA2B003E4714 /* Quiet Kcal Hi-Fi (standalone).html */,
+				E6434E3F2F9FDA2B003E4714 /* Quiet Kcal Hi-Fi-print.html */,
+				E6434E402F9FDA2B003E4714 /* Quiet Kcal Wireframes.html */,
+				E6434E412F9FDA2B003E4714 /* screens.jsx */,
+				E6434E422F9FDA2B003E4714 /* widgets.jsx */,
+				E6434E432F9FDA2B003E4714 /* wireframes.jsx */,
+			);
+			path = project;
+			sourceTree = "<group>";
+		};
+		E6434E462F9FDA2B003E4714 /* quiet-kcal */ = {
+			isa = PBXGroup;
+			children = (
+				E6434E442F9FDA2B003E4714 /* project */,
+				E6434E452F9FDA2B003E4714 /* README.md */,
+			);
+			path = "quiet-kcal";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -65,6 +122,7 @@
 			);
 			name = QuietCal;
 			packageProductDependencies = (
+				E6434E332F9FD6E6003E4714 /* CalorieEstimator */,
 			);
 			productName = QuietCal;
 			productReference = E6434E242F9FD653003E4714 /* QuietCal.app */;
@@ -94,6 +152,9 @@
 			);
 			mainGroup = E6434E1B2F9FD653003E4714;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				E6434E322F9FD6E6003E4714 /* XCRemoteSwiftPackageReference "CalorieEstimator" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E6434E252F9FD653003E4714 /* Products */;
 			projectDirPath = "";
@@ -109,6 +170,18 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6434E472F9FDA2B003E4714 /* Quiet Kcal Hi-Fi.html in Resources */,
+				E6434E482F9FDA2B003E4714 /* Quiet Kcal Hi-Fi-print.html in Resources */,
+				E6434E492F9FDA2B003E4714 /* wireframes.jsx in Resources */,
+				E6434E4A2F9FDA2B003E4714 /* README.md in Resources */,
+				E6434E4B2F9FDA2B003E4714 /* ios-frame.jsx in Resources */,
+				E6434E4C2F9FDA2B003E4714 /* Quiet Kcal Wireframes.html in Resources */,
+				E6434E4D2F9FDA2B003E4714 /* design-canvas.jsx in Resources */,
+				E6434E4E2F9FDA2B003E4714 /* hifi-screens.jsx in Resources */,
+				E6434E4F2F9FDA2B003E4714 /* Quiet Kcal Hi-Fi (standalone-source).html in Resources */,
+				E6434E502F9FDA2B003E4714 /* Quiet Kcal Hi-Fi (standalone).html in Resources */,
+				E6434E512F9FDA2B003E4714 /* screens.jsx in Resources */,
+				E6434E522F9FDA2B003E4714 /* widgets.jsx in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,6 +401,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E6434E322F9FD6E6003E4714 /* XCRemoteSwiftPackageReference "CalorieEstimator" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mfsaglam/CalorieEstimator.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E6434E332F9FD6E6003E4714 /* CalorieEstimator */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E6434E322F9FD6E6003E4714 /* XCRemoteSwiftPackageReference "CalorieEstimator" */;
+			productName = CalorieEstimator;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E6434E1C2F9FD653003E4714 /* Project object */;
 }
