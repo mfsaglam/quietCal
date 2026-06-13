@@ -6,6 +6,7 @@ struct HomeView: View {
     var viewModel: HomeViewModel
 
     @State private var ringAnimated = false
+    @State private var showAddMeal = false
 
     var body: some View {
         NavigationStack {
@@ -188,7 +189,9 @@ struct HomeView: View {
     // MARK: - FAB
 
     private var fab: some View {
-        Button(action: {}) {
+        Button {
+            showAddMeal = true
+        } label: {
             Image(systemName: "plus")
                 .font(.system(size: 22, weight: .medium))
                 .foregroundStyle(Color.primary)
@@ -197,6 +200,9 @@ struct HomeView: View {
         .buttonStyle(.glass)
         .padding(.trailing, 20)
         .padding(.bottom, 52)
+        .sheet(isPresented: $showAddMeal) {
+            AddMealView()
+        }
     }
 }
 
