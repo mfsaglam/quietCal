@@ -46,7 +46,8 @@ struct HomeView: View {
 
                 }
             }
-            .onAppear {
+            .task {
+                await viewModel.load()
                 withAnimation(.easeOut(duration: 0.9).delay(0.1)) {
                     ringAnimated = true
                 }
@@ -196,5 +197,5 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView(viewModel: HomeViewModel())
+    HomeView(viewModel: HomeViewModel(mealStore: InMemoryMealStore()))
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var homeViewModel = HomeViewModel()
+    @State private var homeViewModel = HomeViewModel(mealStore: InMemoryMealStore())
 
     var body: some View {
         HomeView(viewModel: homeViewModel)
