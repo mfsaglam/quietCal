@@ -1,11 +1,15 @@
 import SwiftUI
 
 struct AddMealView: View {
-    enum FieldState { case empty, estimating, estimated }
-
-    var state: FieldState = .estimated
+    @Bindable var viewModel: AddMealViewModel
 
     @Environment(\.dismiss) private var dismiss
+    @FocusState private var focusedField: Field?
+
+    private enum Field { case name, amount }
+
+    private let aiPurple = Color(red: 175/255, green: 82/255, blue: 222/255)
+    private let aiPink = Color(red: 255/255, green: 45/255, blue: 146/255)
 
     var body: some View {
         NavigationStack {
@@ -16,7 +20,7 @@ struct AddMealView: View {
                         amountField
                         caloriesField
                     }
-                    if state == .estimated {
+                    if viewModel.state == .estimated {
                         aiChip
                     }
                     unitPicker
@@ -32,34 +36,59 @@ struct AddMealView: View {
                     Button("Cancel") { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") { dismiss() }
-                        .disabled(state != .estimated)
+                    Button("Save") {
+                        Task {
+                            await viewModel.save()
+                            dismiss()
+                        }
+                    }
+                    .disabled(!viewModel.canSave)
                 }
             }
+            .task(id: estimateTaskID) {
+                do {
+                    try await Task.sleep(for: .milliseconds(600))
+                } catch {
+                    return
+                }
+                await viewModel.estimate()
+            }
+            .onAppear { focusedField = .name }
         }
         .presentationDetents([.fraction(0.78), .large])
         .presentationDragIndicator(.visible)
+    }
+
+    private var estimateTaskID: String {
+        "\(viewModel.name)|\(viewModel.amount)|\(viewModel.unit.rawValue)"
     }
 
     // MARK: - Fields
 
     private var nameField: some View {
         fieldCard(label: "NAME") {
-            Text(state == .empty ? "Chick" : "Chicken salad")
+            TextField("e.g. Chicken salad", text: $viewModel.name)
                 .font(.system(size: 17))
                 .tracking(-0.4)
+                .textInputAutocapitalization(.sentences)
+                .autocorrectionDisabled(false)
+                .focused($focusedField, equals: .name)
+                .submitLabel(.next)
+                .onSubmit { focusedField = .amount }
         }
     }
 
     private var amountField: some View {
         fieldCard(label: "AMOUNT") {
             HStack(alignment: .firstTextBaseline, spacing: 4) {
-                Text(state == .empty ? "—" : "340")
+                TextField("—", text: $viewModel.amount)
                     .font(.system(size: 22, weight: .semibold, design: .rounded))
                     .tracking(-0.5)
                     .monospacedDigit()
-                    .foregroundStyle(state == .empty ? Color.secondary : Color.primary)
-                Text("g")
+                    .keyboardType(.numberPad)
+                    .focused($focusedField, equals: .amount)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text(viewModel.unit.label)
                     .font(.system(size: 15, weight: .medium))
                     .foregroundStyle(.secondary)
             }
@@ -68,7 +97,7 @@ struct AddMealView: View {
 
     @ViewBuilder
     private var caloriesField: some View {
-        switch state {
+        switch viewModel.state {
         case .empty:
             fieldCard(label: "CALORIES", sparkleLabel: true) {
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
@@ -81,13 +110,13 @@ struct AddMealView: View {
                 }
             }
         case .estimating:
-            fieldCard(label: "ESTIMATING…", sparkleLabel: true, labelColor: .purple) {
-                ShimmerBar(start: .purple, end: .pink)
+            fieldCard(label: "ESTIMATING…", sparkleLabel: true, labelColor: aiPurple) {
+                ShimmerBar(start: aiPurple, end: aiPink)
             }
         case .estimated:
             fieldCard(label: "CALORIES", sparkleLabel: true) {
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
-                    Text("520")
+                    Text("\(viewModel.estimatedCalories ?? 0)")
                         .font(.system(size: 22, weight: .semibold, design: .rounded))
                         .tracking(-0.5)
                         .monospacedDigit()
@@ -113,14 +142,14 @@ struct AddMealView: View {
             Spacer(minLength: 0)
             Image(systemName: "arrow.clockwise")
                 .font(.system(size: 14))
-                .foregroundStyle(.purple)
+                .foregroundStyle(aiPurple)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 10)
-        .background(.purple.opacity(0.08), in: RoundedRectangle(cornerRadius: 12))
+        .background(aiPurple.opacity(0.08), in: RoundedRectangle(cornerRadius: 12))
         .overlay {
             RoundedRectangle(cornerRadius: 12)
-                .stroke(.purple.opacity(0.25), lineWidth: 0.5)
+                .stroke(aiPurple.opacity(0.25), lineWidth: 0.5)
         }
     }
 
@@ -131,10 +160,10 @@ struct AddMealView: View {
                 .tracking(0.5)
                 .foregroundStyle(.secondary)
                 .padding(.leading, 4)
-            Picker("Unit", selection: .constant(0)) {
-                Text("g").tag(0)
-                Text("oz").tag(1)
-                Text("lb").tag(2)
+            Picker("Unit", selection: $viewModel.unit) {
+                ForEach(AddMealViewModel.Unit.allCases) { unit in
+                    Text(unit.label).tag(unit)
+                }
             }
             .pickerStyle(.segmented)
         }
@@ -170,7 +199,7 @@ struct AddMealView: View {
         Image(systemName: "sparkles")
             .font(.system(size: size))
             .foregroundStyle(
-                LinearGradient(colors: [.purple, .pink],
+                LinearGradient(colors: [aiPurple, aiPink],
                                startPoint: .topLeading,
                                endPoint: .bottomTrailing)
             )
@@ -200,27 +229,17 @@ private struct ShimmerBar: View {
     }
 }
 
-#Preview("Empty") {
-    AddMealPreviewWrapper(state: .empty)
-}
+#Preview("Add Meal") {
+    @Previewable @State var presented = true
 
-#Preview("Estimating") {
-    AddMealPreviewWrapper(state: .estimating)
-}
-
-#Preview("Estimated") {
-    AddMealPreviewWrapper(state: .estimated)
-}
-
-private struct AddMealPreviewWrapper: View {
-    let state: AddMealView.FieldState
-    @State private var presented = true
-
-    var body: some View {
-        Color.gray.opacity(0.2)
-            .ignoresSafeArea()
-            .sheet(isPresented: $presented) {
-                AddMealView(state: state)
-            }
-    }
+    Color.gray.opacity(0.2)
+        .ignoresSafeArea()
+        .sheet(isPresented: $presented) {
+            AddMealView(
+                viewModel: AddMealViewModel(
+                    mealStore: InMemoryMealStore(),
+                    calorieEstimator: StubCalorieEstimator()
+                )
+            )
+        }
 }

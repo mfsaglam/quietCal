@@ -200,24 +200,39 @@ struct HomeView: View {
         .buttonStyle(.glass)
         .padding(.trailing, 20)
         .padding(.bottom, 52)
-        .sheet(isPresented: $showAddMeal) {
-            AddMealView()
+        .sheet(
+            isPresented: $showAddMeal,
+            onDismiss: { Task { await viewModel.load() } }
+        ) {
+            AddMealView(viewModel: viewModel.makeAddMealViewModel())
         }
     }
 }
 
 #Preview("Default") {
-    HomeView(viewModel: HomeViewModel(mealStore: InMemoryMealStore()))
+    HomeView(viewModel: HomeViewModel(
+        mealStore: InMemoryMealStore(),
+        calorieEstimator: StubCalorieEstimator()
+    ))
 }
 
 #Preview("On Target") {
-    HomeView(viewModel: HomeViewModel(mealStore: InMemoryMealStore(meals: .onTarget)))
+    HomeView(viewModel: HomeViewModel(
+        mealStore: InMemoryMealStore(meals: .onTarget),
+        calorieEstimator: StubCalorieEstimator()
+    ))
 }
 
 #Preview("Over Target") {
-    HomeView(viewModel: HomeViewModel(mealStore: InMemoryMealStore(meals: .overTarget)))
+    HomeView(viewModel: HomeViewModel(
+        mealStore: InMemoryMealStore(meals: .overTarget),
+        calorieEstimator: StubCalorieEstimator()
+    ))
 }
 
 #Preview("Empty") {
-    HomeView(viewModel: HomeViewModel(mealStore: InMemoryMealStore(meals: .empty)))
+    HomeView(viewModel: HomeViewModel(
+        mealStore: InMemoryMealStore(meals: .empty),
+        calorieEstimator: StubCalorieEstimator()
+    ))
 }

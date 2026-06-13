@@ -8,7 +8,10 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var homeViewModel = HomeViewModel(mealStore: InMemoryMealStore())
+    @State private var homeViewModel = HomeViewModel(
+        mealStore: InMemoryMealStore(),
+        calorieEstimator: StubCalorieEstimator()
+    )
 
     var body: some View {
         HomeView(viewModel: homeViewModel)

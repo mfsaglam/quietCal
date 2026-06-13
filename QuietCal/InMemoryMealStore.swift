@@ -1,7 +1,7 @@
 import Foundation
 
-final class InMemoryMealStore: MealStore {
-    private let meals: [Meal]
+actor InMemoryMealStore: MealStore {
+    private var meals: [Meal]
 
     init(meals: [Meal] = .sample) {
         self.meals = meals
@@ -9,6 +9,10 @@ final class InMemoryMealStore: MealStore {
 
     func fetchMeals() async throws -> [Meal] {
         meals
+    }
+
+    func save(_ meal: Meal) async throws {
+        meals.append(meal)
     }
 }
 
