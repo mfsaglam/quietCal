@@ -64,20 +64,20 @@ struct HomeView: View {
 
             Circle()
                 .trim(from: 0, to: ringAnimated ? viewModel.progress : 0)
-                .stroke(Color.green, style: StrokeStyle(lineWidth: 18, lineCap: .round))
+                .stroke(viewModel.isOverTarget ? .orange : .green, style: StrokeStyle(lineWidth: 18, lineCap: .round))
                 .rotationEffect(.degrees(-90))
 
             VStack(spacing: 0) {
-                Text("EATEN")
+                Text(viewModel.isOverTarget ? "OVER BY" : "EATEN")
                     .font(.system(size: 13, weight: .medium, design: .rounded))
                     .tracking(0.5)
                     .foregroundStyle(Color.primary.opacity(0.6))
 
-                Text(viewModel.eaten.formatted())
+                Text(viewModel.isOverTarget ? "+\((viewModel.eaten - viewModel.target).formatted())" : viewModel.eaten.formatted())
                     .font(.system(size: 52, weight: .semibold, design: .rounded))
                     .tracking(-1.5)
                     .monospacedDigit()
-                    .foregroundStyle(Color.primary)
+                    .foregroundStyle(viewModel.isOverTarget ? Color.orange : Color.primary)
                     .padding(.top, 2)
 
                 Text("of \(viewModel.target.formatted()) kcal")
@@ -97,7 +97,11 @@ struct HomeView: View {
     private var statStrip: some View {
         HStack {
             statItem(value: viewModel.target.formatted(), label: "TARGET")
-            statItem(value: viewModel.remaining.formatted(), label: "REMAINING")
+            statItem(
+                value: viewModel.isOverTarget ? "+\((viewModel.eaten - viewModel.target).formatted())" : viewModel.remaining.formatted(),
+                label: viewModel.isOverTarget ? "OVER" : "REMAINING",
+                warn: viewModel.isOverTarget
+            )
             statItem(value: "\(viewModel.meals.count)", label: "MEALS")
         }
         .padding(.vertical, 16)
@@ -107,13 +111,13 @@ struct HomeView: View {
         .padding(.bottom, 20)
     }
 
-    private func statItem(value: String, label: String) -> some View {
+    private func statItem(value: String, label: String, warn: Bool = false) -> some View {
         VStack(spacing: 2) {
             Text(value)
                 .font(.system(size: 22, weight: .semibold, design: .rounded))
                 .tracking(-0.5)
                 .monospacedDigit()
-                .foregroundStyle(Color.primary)
+                .foregroundStyle(warn ? Color.orange : Color.primary)
 
             Text(label)
                 .font(.system(size: 11, weight: .medium))
@@ -196,6 +200,18 @@ struct HomeView: View {
     }
 }
 
-#Preview {
+#Preview("Default") {
     HomeView(viewModel: HomeViewModel(mealStore: InMemoryMealStore()))
+}
+
+#Preview("On Target") {
+    HomeView(viewModel: HomeViewModel(mealStore: InMemoryMealStore(meals: .onTarget)))
+}
+
+#Preview("Over Target") {
+    HomeView(viewModel: HomeViewModel(mealStore: InMemoryMealStore(meals: .overTarget)))
+}
+
+#Preview("Empty") {
+    HomeView(viewModel: HomeViewModel(mealStore: InMemoryMealStore(meals: .empty)))
 }

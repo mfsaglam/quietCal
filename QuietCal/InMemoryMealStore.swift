@@ -21,4 +21,26 @@ extension Array where Element == Meal {
             Meal(name: "Coffee with milk", grams: 240, kcal: 80, time: "16:10"),
         ]
     }
+
+    static var overTarget: [Meal] {
+        [
+            Meal(name: "Breakfast burrito", grams: 320, kcal: 580, time: "08:30"),
+            Meal(name: "Pasta carbonara", grams: 410, kcal: 720, time: "13:00"),
+            Meal(name: "Cheeseburger", grams: 280, kcal: 650, time: "19:15"),
+            Meal(name: "Ice cream", grams: 150, kcal: 380, time: "21:00"),
+            Meal(name: "Coffee with milk", grams: 240, kcal: 80, time: "21:30"),
+        ]
+    }
+
+    static var onTarget: [Meal] {
+        [
+            Meal(name: "Oatmeal with berries", grams: 220, kcal: 310, time: "08:15"),
+            Meal(name: "Chicken bowl", grams: 380, kcal: 650, time: "12:45"),
+            Meal(name: "Greek yogurt", grams: 170, kcal: 180, time: "15:30"),
+            Meal(name: "Salmon with rice", grams: 360, kcal: 720, time: "19:30"),
+            Meal(name: "Tea with honey", grams: 220, kcal: 140, time: "21:15"),
+        ]
+    }
+
+    static var empty: [Meal] { [] }
 }
