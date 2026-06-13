@@ -1,14 +1,5 @@
 import SwiftUI
 
-// MARK: - Theme
-
-extension Color {
-    static let qcPaper = Color(red: 250 / 255, green: 250 / 255, blue: 247 / 255)
-    static let qcInk = Color(red: 26 / 255, green: 26 / 255, blue: 26 / 255)
-    static let qcMuted = Color(red: 60 / 255, green: 60 / 255, blue: 67 / 255)
-    static let qcWarn = Color(red: 200 / 255, green: 66 / 255, blue: 45 / 255)
-}
-
 // MARK: - Home View
 
 struct HomeView: View {
