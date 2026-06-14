@@ -158,11 +158,15 @@ struct HomeView: View {
 
             VStack(spacing: 0) {
                 ForEach(Array(viewModel.meals.enumerated()), id: \.element.id) { index, meal in
-                    mealRow(meal, isLast: index == viewModel.meals.count - 1)
+                    SwipeToDeleteRow {
+                        Task { await viewModel.delete(meal) }
+                    } content: {
+                        mealRow(meal, isLast: index == viewModel.meals.count - 1)
+                            .padding(.horizontal, 18)
+                    }
                 }
             }
             .padding(.vertical, 4)
-            .padding(.horizontal, 18)
         }
         .padding(.horizontal, 20)
     }

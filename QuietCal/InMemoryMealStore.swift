@@ -14,6 +14,10 @@ actor InMemoryMealStore: MealStore {
     func save(_ meal: Meal) async throws {
         meals.append(meal)
     }
+
+    func delete(_ meal: Meal) async throws {
+        meals.removeAll { $0.id == meal.id }
+    }
 }
 
 extension Array where Element == Meal {

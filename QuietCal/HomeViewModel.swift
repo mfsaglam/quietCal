@@ -32,6 +32,11 @@ final class HomeViewModel {
         }
     }
 
+    func delete(_ meal: Meal) async {
+        meals.removeAll { $0.id == meal.id }
+        try? await mealStore.delete(meal)
+    }
+
     func makeAddMealViewModel() -> AddMealViewModel {
         AddMealViewModel(mealStore: mealStore, calorieEstimator: calorieEstimator)
     }

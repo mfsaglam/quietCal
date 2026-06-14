@@ -15,4 +15,15 @@ actor SwiftDataMealStore: MealStore {
         modelContext.insert(MealEntity(meal: meal))
         try modelContext.save()
     }
+
+    func delete(_ meal: Meal) async throws {
+        let id = meal.id
+        let descriptor = FetchDescriptor<MealEntity>(
+            predicate: #Predicate { $0.id == id }
+        )
+        for entity in try modelContext.fetch(descriptor) {
+            modelContext.delete(entity)
+        }
+        try modelContext.save()
+    }
 }
