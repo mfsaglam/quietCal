@@ -3,7 +3,7 @@ import Foundation
 actor InMemoryMealStore: MealStore {
     private var meals: [Meal]
 
-    init(meals: [Meal] = .sample) {
+    init(meals: [Meal]) {
         self.meals = meals
     }
 

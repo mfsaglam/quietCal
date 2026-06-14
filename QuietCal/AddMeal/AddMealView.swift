@@ -237,7 +237,7 @@ private struct ShimmerBar: View {
         .sheet(isPresented: $presented) {
             AddMealView(
                 viewModel: AddMealViewModel(
-                    mealStore: InMemoryMealStore(),
+                    mealStore: InMemoryMealStore(meals: .sample),
                     calorieEstimator: StubCalorieEstimator()
                 )
             )

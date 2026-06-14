@@ -230,7 +230,7 @@ struct HomeView: View {
 
 #Preview("Default") {
     HomeView(viewModel: HomeViewModel(
-        mealStore: InMemoryMealStore(),
+        mealStore: InMemoryMealStore(meals: .sample),
         calorieEstimator: StubCalorieEstimator(),
         settingsStore: InMemorySettingsStore()
     ))
