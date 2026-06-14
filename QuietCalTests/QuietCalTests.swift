@@ -1,0 +1,18 @@
+//
+//  QuietCalTests.swift
+//  QuietCalTests
+//
+//  Created by Saglam, Fatih on 14.06.2026.
+//
+
+import Testing
+
+struct QuietCalTests {
+
+    @Test func example() async throws {
+        // Write your test here and use APIs like `#expect(...)` to check expected conditions.
+        // Swift Testing Documentation
+        // https://developer.apple.com/documentation/testing
+    }
+
+}

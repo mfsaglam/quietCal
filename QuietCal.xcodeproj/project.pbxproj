@@ -22,6 +22,16 @@
 		E6434E522F9FDA2B003E4714 /* widgets.jsx in Resources */ = {isa = PBXBuildFile; fileRef = E6434E422F9FDA2B003E4714 /* widgets.jsx */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		E6F204D62FDF3F9B0042097F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = E6434E1C2F9FD653003E4714 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E6434E232F9FD653003E4714;
+			remoteInfo = QuietCal;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		E6434E242F9FD653003E4714 /* QuietCal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QuietCal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6434E392F9FDA2B003E4714 /* design-canvas.jsx */ = {isa = PBXFileReference; lastKnownFileType = text; path = "design-canvas.jsx"; sourceTree = "<group>"; };
@@ -36,12 +46,18 @@
 		E6434E422F9FDA2B003E4714 /* widgets.jsx */ = {isa = PBXFileReference; lastKnownFileType = text; path = widgets.jsx; sourceTree = "<group>"; };
 		E6434E432F9FDA2B003E4714 /* wireframes.jsx */ = {isa = PBXFileReference; lastKnownFileType = text; path = wireframes.jsx; sourceTree = "<group>"; };
 		E6434E452F9FDA2B003E4714 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		E6F204D22FDF3F9A0042097F /* QuietCalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = QuietCalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		E6434E262F9FD653003E4714 /* QuietCal */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = QuietCal;
+			sourceTree = "<group>";
+		};
+		E6F204D32FDF3F9B0042097F /* QuietCalTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = QuietCalTests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -55,6 +71,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E6F204CF2FDF3F9A0042097F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -63,6 +86,7 @@
 			children = (
 				E6434E462F9FDA2B003E4714 /* quiet-kcal */,
 				E6434E262F9FD653003E4714 /* QuietCal */,
+				E6F204D32FDF3F9B0042097F /* QuietCalTests */,
 				E6434E252F9FD653003E4714 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -71,6 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				E6434E242F9FD653003E4714 /* QuietCal.app */,
+				E6F204D22FDF3F9A0042097F /* QuietCalTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -128,6 +153,29 @@
 			productReference = E6434E242F9FD653003E4714 /* QuietCal.app */;
 			productType = "com.apple.product-type.application";
 		};
+		E6F204D12FDF3F9A0042097F /* QuietCalTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E6F204D82FDF3F9B0042097F /* Build configuration list for PBXNativeTarget "QuietCalTests" */;
+			buildPhases = (
+				E6F204CE2FDF3F9A0042097F /* Sources */,
+				E6F204CF2FDF3F9A0042097F /* Frameworks */,
+				E6F204D02FDF3F9A0042097F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E6F204D72FDF3F9B0042097F /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				E6F204D32FDF3F9B0042097F /* QuietCalTests */,
+			);
+			name = QuietCalTests;
+			packageProductDependencies = (
+			);
+			productName = QuietCalTests;
+			productReference = E6F204D22FDF3F9A0042097F /* QuietCalTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -135,11 +183,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2640;
+				LastSwiftUpdateCheck = 2650;
 				LastUpgradeCheck = 2650;
 				TargetAttributes = {
 					E6434E232F9FD653003E4714 = {
 						CreatedOnToolsVersion = 26.4.1;
+					};
+					E6F204D12FDF3F9A0042097F = {
+						CreatedOnToolsVersion = 26.5;
+						TestTargetID = E6434E232F9FD653003E4714;
 					};
 				};
 			};
@@ -161,6 +213,7 @@
 			projectRoot = "";
 			targets = (
 				E6434E232F9FD653003E4714 /* QuietCal */,
+				E6F204D12FDF3F9A0042097F /* QuietCalTests */,
 			);
 		};
 /* End PBXProject section */
@@ -185,6 +238,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E6F204D02FDF3F9A0042097F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -195,7 +255,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E6F204CE2FDF3F9A0042097F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E6F204D72FDF3F9B0042097F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E6434E232F9FD653003E4714 /* QuietCal */;
+			targetProxy = E6F204D62FDF3F9B0042097F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		E6434E2D2F9FD654003E4714 /* Debug */ = {
@@ -381,6 +456,48 @@
 			};
 			name = Release;
 		};
+		E6F204D92FDF3F9B0042097F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = mfsaglam.QuietCalTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QuietCal.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/QuietCal";
+			};
+			name = Debug;
+		};
+		E6F204DA2FDF3F9B0042097F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = mfsaglam.QuietCalTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/QuietCal.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/QuietCal";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -398,6 +515,15 @@
 			buildConfigurations = (
 				E6434E302F9FD654003E4714 /* Debug */,
 				E6434E312F9FD654003E4714 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E6F204D82FDF3F9B0042097F /* Build configuration list for PBXNativeTarget "QuietCalTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E6F204D92FDF3F9B0042097F /* Debug */,
+				E6F204DA2FDF3F9B0042097F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
