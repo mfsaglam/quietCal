@@ -79,6 +79,7 @@ struct HomeView: View {
                 .trim(from: 0, to: ringAnimated ? viewModel.progress : 0)
                 .stroke(viewModel.isOverTarget ? .orange : .green, style: StrokeStyle(lineWidth: 18, lineCap: .round))
                 .rotationEffect(.degrees(-90))
+                .animation(.easeOut(duration: 0.7), value: viewModel.progress)
 
             VStack(spacing: 0) {
                 Text(viewModel.isOverTarget ? "OVER BY" : "EATEN")
@@ -92,6 +93,8 @@ struct HomeView: View {
                     .monospacedDigit()
                     .foregroundStyle(viewModel.isOverTarget ? Color.orange : Color.primary)
                     .padding(.top, 2)
+                    .contentTransition(.numericText(value: Double(viewModel.eaten)))
+                    .animation(.snappy, value: viewModel.eaten)
 
                 Text("of \(viewModel.target.formatted()) kcal")
                     .font(.system(size: 14))
