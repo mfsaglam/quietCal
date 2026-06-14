@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var homeViewModel = HomeViewModel(
         mealStore: InMemoryMealStore(),
-        calorieEstimator: StubCalorieEstimator()
+        calorieEstimator: AppleIntelligenceCalorieEstimator()
     )
 
     var body: some View {
