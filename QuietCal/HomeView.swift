@@ -7,6 +7,7 @@ struct HomeView: View {
 
     @State private var ringAnimated = false
     @State private var showAddMeal = false
+    @State private var showSettings = false
 
     var body: some View {
         NavigationStack {
@@ -42,9 +43,8 @@ struct HomeView: View {
 
                 ToolbarItem(placement: .primaryAction) {
                     Button("Settings", systemImage: "gearshape") {
-                        // Button action here
+                        showSettings = true
                     }
-
                 }
             }
             .task {
@@ -52,6 +52,9 @@ struct HomeView: View {
                 withAnimation(.easeOut(duration: 0.9).delay(0.1)) {
                     ringAnimated = true
                 }
+            }
+            .navigationDestination(isPresented: $showSettings) {
+                SettingsView()
             }
         }
     }
