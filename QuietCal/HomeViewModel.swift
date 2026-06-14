@@ -6,16 +6,25 @@ import Observation
 final class HomeViewModel {
     private let mealStore: MealStore
     private let calorieEstimator: CalorieEstimating
+    private let settingsStore: SettingsStore
 
     var target = 2000
     var meals: [Meal] = []
 
-    init(mealStore: MealStore, calorieEstimator: CalorieEstimating) {
+    init(
+        mealStore: MealStore,
+        calorieEstimator: CalorieEstimating,
+        settingsStore: SettingsStore
+    ) {
         self.mealStore = mealStore
         self.calorieEstimator = calorieEstimator
+        self.settingsStore = settingsStore
     }
 
     func load() async {
+        if let loadedTarget = try? await settingsStore.loadTarget() {
+            target = loadedTarget
+        }
         do {
             meals = try await mealStore.fetchMeals()
         } catch {
@@ -25,6 +34,10 @@ final class HomeViewModel {
 
     func makeAddMealViewModel() -> AddMealViewModel {
         AddMealViewModel(mealStore: mealStore, calorieEstimator: calorieEstimator)
+    }
+
+    func makeSettingsViewModel() -> SettingsViewModel {
+        SettingsViewModel(store: settingsStore)
     }
 
     var eaten: Int { meals.reduce(0) { $0 + $1.kcal } }

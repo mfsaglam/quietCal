@@ -8,6 +8,7 @@ struct HomeView: View {
     @State private var ringAnimated = false
     @State private var showAddMeal = false
     @State private var showSettings = false
+    @State private var settingsViewModel: SettingsViewModel?
 
     var body: some View {
         NavigationStack {
@@ -43,6 +44,7 @@ struct HomeView: View {
 
                 ToolbarItem(placement: .primaryAction) {
                     Button("Settings", systemImage: "gearshape") {
+                        settingsViewModel = viewModel.makeSettingsViewModel()
                         showSettings = true
                     }
                 }
@@ -54,7 +56,14 @@ struct HomeView: View {
                 }
             }
             .navigationDestination(isPresented: $showSettings) {
-                SettingsView()
+                if let settingsViewModel {
+                    SettingsView(viewModel: settingsViewModel)
+                }
+            }
+            .onChange(of: showSettings) { _, isShown in
+                if !isShown {
+                    Task { await viewModel.load() }
+                }
             }
         }
     }
@@ -215,27 +224,31 @@ struct HomeView: View {
 #Preview("Default") {
     HomeView(viewModel: HomeViewModel(
         mealStore: InMemoryMealStore(),
-        calorieEstimator: StubCalorieEstimator()
+        calorieEstimator: StubCalorieEstimator(),
+        settingsStore: InMemorySettingsStore()
     ))
 }
 
 #Preview("On Target") {
     HomeView(viewModel: HomeViewModel(
         mealStore: InMemoryMealStore(meals: .onTarget),
-        calorieEstimator: StubCalorieEstimator()
+        calorieEstimator: StubCalorieEstimator(),
+        settingsStore: InMemorySettingsStore()
     ))
 }
 
 #Preview("Over Target") {
     HomeView(viewModel: HomeViewModel(
         mealStore: InMemoryMealStore(meals: .overTarget),
-        calorieEstimator: StubCalorieEstimator()
+        calorieEstimator: StubCalorieEstimator(),
+        settingsStore: InMemorySettingsStore()
     ))
 }
 
 #Preview("Empty") {
     HomeView(viewModel: HomeViewModel(
         mealStore: InMemoryMealStore(meals: .empty),
-        calorieEstimator: StubCalorieEstimator()
+        calorieEstimator: StubCalorieEstimator(),
+        settingsStore: InMemorySettingsStore()
     ))
 }

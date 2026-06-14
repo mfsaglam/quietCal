@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct SettingsView: View {
+    let viewModel: SettingsViewModel
+
     var body: some View {
         List {
             Section("Intelligence") {
@@ -10,13 +12,13 @@ struct SettingsView: View {
 
             Section("Daily Target") {
                 NavigationLink {
-                    EditTargetView()
+                    EditTargetView(viewModel: viewModel)
                 } label: {
                     HStack {
                         Text("Calorie target")
                             .foregroundStyle(.primary)
                         Spacer()
-                        Text("2,000 kcal")
+                        Text(viewModel.formattedTarget)
                             .foregroundStyle(.secondary)
                     }
                 }
@@ -43,6 +45,7 @@ struct SettingsView: View {
             }
         }
         .navigationTitle("Settings")
+        .task { await viewModel.load() }
     }
 
     private func valueRow(label: String, value: String) -> some View {
@@ -78,6 +81,6 @@ struct SettingsView: View {
 
 #Preview {
     NavigationStack {
-        SettingsView()
+        SettingsView(viewModel: SettingsViewModel(store: InMemorySettingsStore()))
     }
 }

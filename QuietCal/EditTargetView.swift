@@ -1,9 +1,9 @@
 import SwiftUI
 
 struct EditTargetView: View {
-    @Environment(\.dismiss) private var dismiss
+    let viewModel: SettingsViewModel
 
-    @State private var target: Double = 2000
+    @Environment(\.dismiss) private var dismiss
 
     private let range: ClosedRange<Double> = 1200...3500
     private let presets: [Int] = [1500, 1800, 2000, 2200, 2500, 2800]
@@ -43,11 +43,13 @@ struct EditTargetView: View {
 
     private var bigNumber: some View {
         VStack(spacing: 6) {
-            Text(Int(target).formatted())
+            Text(viewModel.target.formatted())
                 .font(.system(size: 96, weight: .semibold, design: .rounded))
                 .tracking(-3)
                 .monospacedDigit()
                 .foregroundStyle(.primary)
+                .contentTransition(.numericText())
+                .animation(.snappy, value: viewModel.target)
             Text("KCAL PER DAY")
                 .font(.system(size: 13, weight: .medium))
                 .tracking(0.5)
@@ -60,7 +62,7 @@ struct EditTargetView: View {
 
     private var sliderCard: some View {
         VStack(spacing: 10) {
-            Slider(value: $target, in: range, step: 50)
+            Slider(value: sliderBinding, in: range, step: 50)
             HStack {
                 Text(Int(range.lowerBound).formatted())
                 Spacer()
@@ -99,9 +101,9 @@ struct EditTargetView: View {
     }
 
     private func chip(_ preset: Int) -> some View {
-        let isSelected = Int(target) == preset
+        let isSelected = viewModel.target == preset
         return Button {
-            target = Double(preset)
+            viewModel.updateTarget(preset)
         } label: {
             Text(preset.formatted())
                 .font(.system(size: 15, weight: .medium))
@@ -116,10 +118,17 @@ struct EditTargetView: View {
         }
         .buttonStyle(.plain)
     }
+
+    private var sliderBinding: Binding<Double> {
+        Binding(
+            get: { Double(viewModel.target) },
+            set: { viewModel.updateTarget(Int($0)) }
+        )
+    }
 }
 
 #Preview {
     NavigationStack {
-        EditTargetView()
+        EditTargetView(viewModel: SettingsViewModel(store: InMemorySettingsStore()))
     }
 }
