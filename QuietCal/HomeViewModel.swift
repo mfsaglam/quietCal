@@ -25,8 +25,10 @@ final class HomeViewModel {
         if let loadedTarget = try? await settingsStore.loadTarget() {
             target = loadedTarget
         }
+        let today = Calendar.current.dateInterval(of: .day, for: Date())
+            ?? DateInterval(start: Date(), duration: 0)
         do {
-            meals = try await mealStore.fetchMeals()
+            meals = try await mealStore.fetchMeals(in: today)
         } catch {
             meals = []
         }

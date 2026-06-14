@@ -181,7 +181,7 @@ struct HomeView: View {
                         .foregroundStyle(Color.primary)
                         .lineLimit(1)
 
-                    Text("\(meal.time) · \(meal.grams)g")
+                    Text("\(meal.timeString) · \(meal.grams)g")
                         .font(.system(size: 13))
                         .tracking(-0.08)
                         .foregroundStyle(Color.primary.opacity(0.6))

@@ -3,12 +3,14 @@ import SwiftData
 
 @ModelActor
 actor SwiftDataMealStore: MealStore {
-    func fetchMeals() async throws -> [Meal] {
+    func fetchMeals(in interval: DateInterval) async throws -> [Meal] {
+        let start = interval.start
+        let end = interval.end
         let descriptor = FetchDescriptor<MealEntity>(
+            predicate: #Predicate { $0.createdAt >= start && $0.createdAt < end },
             sortBy: [SortDescriptor(\.createdAt, order: .forward)]
         )
-        let entities = try modelContext.fetch(descriptor)
-        return entities.map(\.asMeal)
+        return try modelContext.fetch(descriptor).map(\.asMeal)
     }
 
     func save(_ meal: Meal) async throws {

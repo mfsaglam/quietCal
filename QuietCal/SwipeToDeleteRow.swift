@@ -28,7 +28,7 @@ struct SwipeToDeleteRow<Content: View>: View {
                     .background(Color.red)
             }
             .buttonStyle(.plain)
-            .opacity(currentOffset < 0 ? I1 : 0)
+            .opacity(currentOffset < 0 ? 1 : 0)
 
             content()
                 .background(Color(.systemBackground))

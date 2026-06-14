@@ -5,13 +5,19 @@ struct Meal: Identifiable, Sendable {
     let name: String
     let grams: Int
     let kcal: Int
-    let time: String
+    let createdAt: Date
 
-    init(id: UUID = UUID(), name: String, grams: Int, kcal: Int, time: String) {
+    init(id: UUID = UUID(), name: String, grams: Int, kcal: Int, createdAt: Date) {
         self.id = id
         self.name = name
         self.grams = grams
         self.kcal = kcal
-        self.time = time
+        self.createdAt = createdAt
+    }
+
+    var timeString: String {
+        createdAt.formatted(
+            .dateTime.hour(.twoDigits(amPM: .omitted)).minute(.twoDigits)
+        )
     }
 }

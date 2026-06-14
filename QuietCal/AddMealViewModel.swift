@@ -85,14 +85,8 @@ final class AddMealViewModel {
             name: trimmedName,
             grams: gramsValue,
             kcal: kcal,
-            time: Self.currentTimeString()
+            createdAt: Date()
         )
         try? await mealStore.save(meal)
-    }
-
-    private static func currentTimeString() -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        return formatter.string(from: Date())
     }
 }
