@@ -11,7 +11,7 @@ struct ContentView: View {
     @State private var homeViewModel = HomeViewModel(
         mealStore: InMemoryMealStore(),
         calorieEstimator: AppleIntelligenceCalorieEstimator(),
-        settingsStore: InMemorySettingsStore()
+        settingsStore: UserDefaultsSettingsStore()
     )
 
     var body: some View {
