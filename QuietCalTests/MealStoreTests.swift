@@ -113,6 +113,55 @@ struct MealStoreTests {
 
         #expect(result.map(\.id) == [saved.id])
     }
+
+    @Test(arguments: Kind.allCases)
+    func deleteMealsInIntervalRemovesOnlyMatching(_ kind: Kind) async throws {
+        let store = try kind.make()
+        try await store.save(makeMeal(name: "Yesterday", createdAt: dateAt(2026, 6, 13, 12)))
+        try await store.save(makeMeal(name: "Today", createdAt: dateAt(2026, 6, 14, 12)))
+        try await store.save(makeMeal(name: "Tomorrow", createdAt: dateAt(2026, 6, 15, 12)))
+
+        try await store.deleteMeals(in: dayInterval(2026, 6, 14))
+
+        let everything = DateInterval(start: .distantPast, end: .distantFuture)
+        let remaining = try await store.fetchMeals(in: everything)
+        #expect(remaining.map(\.name) == ["Yesterday", "Tomorrow"])
+    }
+
+    @Test(arguments: Kind.allCases)
+    func deleteMealsInEmptyRangeIsNoOp(_ kind: Kind) async throws {
+        let store = try kind.make()
+        try await store.save(makeMeal(name: "Keep", createdAt: dateAt(2026, 6, 14, 12)))
+
+        try await store.deleteMeals(in: dayInterval(2026, 6, 13))
+
+        let everything = DateInterval(start: .distantPast, end: .distantFuture)
+        let remaining = try await store.fetchMeals(in: everything)
+        #expect(remaining.count == 1)
+    }
+
+    @Test(arguments: Kind.allCases)
+    func deleteAllRemovesEveryMeal(_ kind: Kind) async throws {
+        let store = try kind.make()
+        try await store.save(makeMeal(name: "A", createdAt: dateAt(2026, 6, 13, 12)))
+        try await store.save(makeMeal(name: "B", createdAt: dateAt(2026, 6, 14, 12)))
+        try await store.save(makeMeal(name: "C", createdAt: dateAt(2026, 6, 15, 12)))
+
+        try await store.deleteAll()
+
+        let everything = DateInterval(start: .distantPast, end: .distantFuture)
+        let remaining = try await store.fetchMeals(in: everything)
+        #expect(remaining.isEmpty)
+    }
+
+    @Test(arguments: Kind.allCases)
+    func deleteAllOnEmptyStoreIsNoOp(_ kind: Kind) async throws {
+        let store = try kind.make()
+        try await store.deleteAll()
+        let everything = DateInterval(start: .distantPast, end: .distantFuture)
+        let remaining = try await store.fetchMeals(in: everything)
+        #expect(remaining.isEmpty)
+    }
 }
 
 // MARK: - Helpers

@@ -129,6 +129,9 @@ struct EditTargetView: View {
 
 #Preview {
     NavigationStack {
-        EditTargetView(viewModel: SettingsViewModel(store: InMemorySettingsStore()))
+        EditTargetView(viewModel: SettingsViewModel(
+            store: InMemorySettingsStore(),
+            mealStore: InMemoryMealStore(meals: [])
+        ))
     }
 }

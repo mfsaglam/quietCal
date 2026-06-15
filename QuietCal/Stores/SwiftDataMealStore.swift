@@ -28,4 +28,19 @@ actor SwiftDataMealStore: MealStore {
         }
         try modelContext.save()
     }
+
+    func deleteMeals(in interval: DateInterval) async throws {
+        let start = interval.start
+        let end = interval.end
+        try modelContext.delete(
+            model: MealEntity.self,
+            where: #Predicate { $0.createdAt >= start && $0.createdAt < end }
+        )
+        try modelContext.save()
+    }
+
+    func deleteAll() async throws {
+        try modelContext.delete(model: MealEntity.self)
+        try modelContext.save()
+    }
 }

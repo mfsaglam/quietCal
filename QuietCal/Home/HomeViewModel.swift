@@ -44,7 +44,7 @@ final class HomeViewModel {
     }
 
     func makeSettingsViewModel() -> SettingsViewModel {
-        SettingsViewModel(store: settingsStore)
+        SettingsViewModel(store: settingsStore, mealStore: mealStore)
     }
 
     func makeHistoryViewModel() -> HistoryViewModel {

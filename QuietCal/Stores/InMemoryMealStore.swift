@@ -20,6 +20,14 @@ actor InMemoryMealStore: MealStore {
     func delete(_ meal: Meal) async throws {
         meals.removeAll { $0.id == meal.id }
     }
+
+    func deleteMeals(in interval: DateInterval) async throws {
+        meals.removeAll { $0.createdAt >= interval.start && $0.createdAt < interval.end }
+    }
+
+    func deleteAll() async throws {
+        meals.removeAll()
+    }
 }
 
 private func todayAt(_ hour: Int, _ minute: Int) -> Date {
