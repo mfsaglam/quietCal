@@ -57,4 +57,28 @@ extension Array where Element == Meal {
     }
 
     static var empty: [Meal] { [] }
+
+    static var historySample: [Meal] {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let days: [(offset: Int, kcal: Int)] = [
+            (0, 1240), (-1, 1890), (-2, 2150), (-3, 1720),
+            (-4, 2040), (-5, 1600), (-6, 1810),
+            (-7, 1950), (-8, 1600), (-9, 2040),
+            (-10, 1720), (-11, 2150), (-12, 1890),
+            (-13, 1810), (-15, 1700), (-18, 2100),
+            (-20, 1500),
+        ]
+        return days.compactMap { entry in
+            guard let date = calendar.date(byAdding: .day, value: entry.offset, to: today),
+                  let createdAt = calendar.date(bySettingHour: 12, minute: 0, second: 0, of: date)
+            else { return nil }
+            return Meal(
+                name: "Sample",
+                grams: 300,
+                kcal: entry.kcal,
+                createdAt: createdAt
+            )
+        }
+    }
 }

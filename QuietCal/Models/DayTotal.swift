@@ -6,6 +6,22 @@ nonisolated struct DayTotal: Hashable, Sendable, Identifiable {
     let mealCount: Int
 
     var id: Date { date }
+
+    var weekdayName: String {
+        date.formatted(.dateTime.weekday(.wide))
+    }
+
+    var weekdayLetter: String {
+        date.formatted(.dateTime.weekday(.narrow))
+    }
+
+    var shortDate: String {
+        date.formatted(.dateTime.month(.abbreviated).day())
+    }
+
+    var isToday: Bool {
+        Calendar.current.isDateInToday(date)
+    }
 }
 
 extension Array where Element == Meal {

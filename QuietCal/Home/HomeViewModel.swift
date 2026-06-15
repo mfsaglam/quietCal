@@ -47,6 +47,10 @@ final class HomeViewModel {
         SettingsViewModel(store: settingsStore)
     }
 
+    func makeHistoryViewModel() -> HistoryViewModel {
+        HistoryViewModel(mealStore: mealStore, settingsStore: settingsStore)
+    }
+
     var eaten: Int { meals.reduce(0) { $0 + $1.kcal } }
     var remaining: Int { target - eaten }
     var progress: Double { min(Double(eaten) / Double(target), 1.0) }

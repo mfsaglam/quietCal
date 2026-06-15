@@ -9,6 +9,8 @@ struct HomeView: View {
     @State private var showAddMeal = false
     @State private var showSettings = false
     @State private var settingsViewModel: SettingsViewModel?
+    @State private var showHistory = false
+    @State private var historyViewModel: HistoryViewModel?
 
     var body: some View {
         NavigationStack {
@@ -29,7 +31,8 @@ struct HomeView: View {
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button {
-
+                        historyViewModel = viewModel.makeHistoryViewModel()
+                        showHistory = true
                     } label: {
                         HStack(spacing: 6) {
                             Image(systemName: "clock")
@@ -58,6 +61,11 @@ struct HomeView: View {
             .navigationDestination(isPresented: $showSettings) {
                 if let settingsViewModel {
                     SettingsView(viewModel: settingsViewModel)
+                }
+            }
+            .navigationDestination(isPresented: $showHistory) {
+                if let historyViewModel {
+                    HistoryView(viewModel: historyViewModel)
                 }
             }
             .onChange(of: showSettings) { _, isShown in
