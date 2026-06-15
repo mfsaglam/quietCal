@@ -1,4 +1,5 @@
 import SwiftUI
+import Charts
 
 struct HistoryView: View {
     let viewModel: HistoryViewModel
@@ -43,12 +44,7 @@ struct HistoryView: View {
 
     private var weekCard: some View {
         VStack(alignment: .leading, spacing: 14) {
-            HStack(alignment: .bottom, spacing: 8) {
-                ForEach(viewModel.week) { dayTotal in
-                    weekBar(for: dayTotal)
-                }
-            }
-            .frame(height: Self.chartHeight * 1.1)
+            chart
 
             HStack {
                 Text("THIS WEEK")
@@ -69,38 +65,52 @@ struct HistoryView: View {
         .padding(.bottom, 16)
     }
 
-    private func weekBar(for dayTotal: DayTotal) -> some View {
-        let isOver = dayTotal.kcal > viewModel.target
-        let pct = min(Double(dayTotal.kcal) / Double(max(viewModel.target, 1)), 1.1)
-        let barColor: Color = isOver ? Self.warnColor : .primary
-        let barHeight = Self.chartHeight * pct
+    private var chart: some View {
+        let target = viewModel.target
+        let maxY = Double(max(target, 1)) * 1.1
 
-        return VStack(spacing: 6) {
-            ZStack(alignment: .bottom) {
-                Color.clear
-                    .frame(height: Self.chartHeight * 1.1)
+        return Chart {
+            ForEach(viewModel.week) { dayTotal in
+                let cappedKcal = min(Double(dayTotal.kcal), maxY)
 
-                RoundedRectangle(cornerRadius: 6)
-                    .fill(barColor)
-                    .opacity(dayTotal.isToday ? 1.0 : 0.85)
-                    .frame(height: rendered ? max(barHeight, 2) : 0)
-                    .overlay(alignment: .top) {
-                        if dayTotal.isToday && dayTotal.kcal > 0 {
-                            Text(dayTotal.kcal.formatted())
-                                .font(.system(size: 11, weight: .semibold, design: .rounded))
-                                .monospacedDigit()
-                                .foregroundStyle(.primary)
-                                .offset(y: -16)
-                                .opacity(rendered ? 1 : 0)
-                        }
+                BarMark(
+                    x: .value("Day", dayTotal.date, unit: .day),
+                    y: .value("Kcal", rendered ? cappedKcal : 0),
+                    width: .ratio(0.7)
+                )
+                .foregroundStyle(dayTotal.kcal > target ? Self.warnColor : Color.primary)
+                .opacity(dayTotal.isToday ? 1.0 : 0.85)
+                .cornerRadius(6)
+                .annotation(position: .top, spacing: 4) {
+                    if dayTotal.isToday && dayTotal.kcal > 0 {
+                        Text(dayTotal.kcal.formatted())
+                            .font(.system(size: 11, weight: .semibold, design: .rounded))
+                            .monospacedDigit()
+                            .foregroundStyle(.primary)
+                            .opacity(rendered ? 1 : 0)
                     }
+                }
             }
 
-            Text(dayTotal.weekdayLetter)
-                .font(.system(size: 12, weight: dayTotal.isToday ? .bold : .medium))
-                .foregroundStyle(dayTotal.isToday ? Color.primary : Color.secondary)
+            RuleMark(y: .value("Target", target))
+                .foregroundStyle(Color.secondary.opacity(0.4))
+                .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 4]))
         }
-        .frame(maxWidth: .infinity)
+        .chartYScale(domain: 0...maxY)
+        .chartYAxis(.hidden)
+        .chartXAxis {
+            AxisMarks(values: viewModel.week.map(\.date)) { value in
+                AxisValueLabel {
+                    if let date = value.as(Date.self) {
+                        let isToday = Calendar.current.isDateInToday(date)
+                        Text(date.formatted(.dateTime.weekday(.narrow)))
+                            .font(.system(size: 12, weight: isToday ? .bold : .medium))
+                            .foregroundStyle(isToday ? Color.primary : Color.secondary)
+                    }
+                }
+            }
+        }
+        .frame(height: Self.chartHeight * 1.1)
     }
 
     // MARK: - Earlier list
