@@ -161,7 +161,7 @@ struct AddMealView: View {
                 .foregroundStyle(.secondary)
                 .padding(.leading, 4)
             Picker("Unit", selection: $viewModel.unit) {
-                ForEach(AddMealViewModel.Unit.allCases) { unit in
+                ForEach(WeightUnit.allCases) { unit in
                     Text(unit.label).tag(unit)
                 }
             }

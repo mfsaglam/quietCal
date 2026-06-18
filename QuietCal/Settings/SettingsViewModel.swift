@@ -8,6 +8,8 @@ final class SettingsViewModel {
     private let mealStore: MealStore
 
     var target: Int = 2000
+    var theme: Theme = .system
+    var weightUnit: WeightUnit = .g
 
     init(store: SettingsStore, mealStore: MealStore) {
         self.store = store
@@ -18,11 +20,27 @@ final class SettingsViewModel {
         if let loaded = try? await store.loadTarget() {
             target = loaded
         }
+        if let loaded = try? await store.loadTheme() {
+            theme = loaded
+        }
+        if let loaded = try? await store.loadWeightUnit() {
+            weightUnit = loaded
+        }
     }
 
     func updateTarget(_ newTarget: Int) {
         target = newTarget
         Task { try? await store.saveTarget(newTarget) }
+    }
+
+    func updateTheme(_ newTheme: Theme) {
+        theme = newTheme
+        Task { try? await store.saveTheme(newTheme) }
+    }
+
+    func updateWeightUnit(_ newUnit: WeightUnit) {
+        weightUnit = newUnit
+        Task { try? await store.saveWeightUnit(newUnit) }
     }
 
     func resetToday() async {

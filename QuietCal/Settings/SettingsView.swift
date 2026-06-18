@@ -28,11 +28,28 @@ struct SettingsView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
-                valueRow(label: "Weight unit", value: "Grams")
+                Picker(selection: weightUnitBinding) {
+                    ForEach(WeightUnit.allCases) { unit in
+                        Text(unit.settingsLabel).tag(unit)
+                    }
+                } label: {
+                    Text("Weight unit")
+                        .foregroundStyle(.primary)
+                }
+                .pickerStyle(.navigationLink)
             }
 
             Section("Appearance") {
-                valueRow(label: "Theme", value: "System")
+                Picker(selection: themeBinding) {
+                    ForEach(Theme.allCases) { theme in
+                        Text(theme.label).tag(theme)
+                    }
+                } label: {
+                    Text("Theme")
+                        .foregroundStyle(.primary)
+                }
+                .pickerStyle(.navigationLink)
+
                 valueRow(label: "Accent", value: "Ink")
             }
 
@@ -102,6 +119,20 @@ struct SettingsView: View {
         ) { _ in
             exportDocument = nil
         }
+    }
+
+    private var themeBinding: Binding<Theme> {
+        Binding(
+            get: { viewModel.theme },
+            set: { viewModel.updateTheme($0) }
+        )
+    }
+
+    private var weightUnitBinding: Binding<WeightUnit> {
+        Binding(
+            get: { viewModel.weightUnit },
+            set: { viewModel.updateWeightUnit($0) }
+        )
     }
 
     private func valueRow(label: String, value: String) -> some View {

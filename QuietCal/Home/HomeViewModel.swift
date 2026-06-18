@@ -39,8 +39,13 @@ final class HomeViewModel {
         try? await mealStore.delete(meal)
     }
 
-    func makeAddMealViewModel() -> AddMealViewModel {
-        AddMealViewModel(mealStore: mealStore, calorieEstimator: calorieEstimator)
+    func makeAddMealViewModel() async -> AddMealViewModel {
+        let defaultUnit = (try? await settingsStore.loadWeightUnit()) ?? .g
+        return AddMealViewModel(
+            mealStore: mealStore,
+            calorieEstimator: calorieEstimator,
+            defaultUnit: defaultUnit
+        )
     }
 
     func makeSettingsViewModel() -> SettingsViewModel {

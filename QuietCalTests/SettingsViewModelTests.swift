@@ -114,4 +114,64 @@ struct SettingsViewModelTests {
         #expect(lines.count == 3) // header + 2 rows
         #expect(lines[1].contains("A,100,100") || lines[1].contains("B,200,300"))
     }
+
+    // MARK: - Theme
+
+    @Test func initialThemeBeforeLoad() {
+        let vm = makeViewModel(settings: InMemorySettingsStore(theme: .dark))
+        #expect(vm.theme == .system)
+    }
+
+    @Test func loadReadsThemeFromStore() async {
+        let vm = makeViewModel(settings: InMemorySettingsStore(theme: .dark))
+        await vm.load()
+        #expect(vm.theme == .dark)
+    }
+
+    @Test func updateThemeSetsLocally() {
+        let vm = makeViewModel()
+        vm.updateTheme(.light)
+        #expect(vm.theme == .light)
+    }
+
+    @Test func updateThemePersistsToStore() async throws {
+        let store = InMemorySettingsStore()
+        let vm = makeViewModel(settings: store)
+
+        vm.updateTheme(.dark)
+        try? await Task.sleep(for: .milliseconds(100))
+
+        let persisted = try await store.loadTheme()
+        #expect(persisted == .dark)
+    }
+
+    // MARK: - Weight unit
+
+    @Test func initialWeightUnitBeforeLoad() {
+        let vm = makeViewModel(settings: InMemorySettingsStore(weightUnit: .lb))
+        #expect(vm.weightUnit == .g)
+    }
+
+    @Test func loadReadsWeightUnitFromStore() async {
+        let vm = makeViewModel(settings: InMemorySettingsStore(weightUnit: .oz))
+        await vm.load()
+        #expect(vm.weightUnit == .oz)
+    }
+
+    @Test func updateWeightUnitSetsLocally() {
+        let vm = makeViewModel()
+        vm.updateWeightUnit(.lb)
+        #expect(vm.weightUnit == .lb)
+    }
+
+    @Test func updateWeightUnitPersistsToStore() async throws {
+        let store = InMemorySettingsStore()
+        let vm = makeViewModel(settings: store)
+
+        vm.updateWeightUnit(.oz)
+        try? await Task.sleep(for: .milliseconds(100))
+
+        let persisted = try await store.loadWeightUnit()
+        #expect(persisted == .oz)
+    }
 }

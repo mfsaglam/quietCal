@@ -10,6 +10,7 @@ import SwiftData
 
 struct ContentView: View {
     @State private var homeViewModel: HomeViewModel
+    @AppStorage(UserDefaultsSettingsStore.themeKey) private var themeRawValue: String = Theme.system.rawValue
 
     init(modelContainer: ModelContainer) {
         let mealStore = SwiftDataMealStore(modelContainer: modelContainer)
@@ -20,8 +21,13 @@ struct ContentView: View {
         ))
     }
 
+    private var theme: Theme {
+        Theme(rawValue: themeRawValue) ?? .system
+    }
+
     var body: some View {
         HomeView(viewModel: homeViewModel)
+            .preferredColorScheme(theme.colorScheme)
     }
 }
 

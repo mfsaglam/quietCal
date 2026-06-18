@@ -6,33 +6,23 @@ import Observation
 final class AddMealViewModel {
     enum FieldState { case empty, estimating, estimated }
 
-    enum Unit: String, CaseIterable, Identifiable, Hashable {
-        case g, oz, lb
-
-        var id: String { rawValue }
-        var label: String { rawValue }
-
-        var gramsMultiplier: Double {
-            switch self {
-            case .g: return 1
-            case .oz: return 28.3495
-            case .lb: return 453.592
-            }
-        }
-    }
-
     private let mealStore: MealStore
     private let calorieEstimator: CalorieEstimating
 
     var name: String = ""
     var amount: String = ""
-    var unit: Unit = .g
+    var unit: WeightUnit
     var estimatedCalories: Int?
     var isEstimating: Bool = false
 
-    init(mealStore: MealStore, calorieEstimator: CalorieEstimating) {
+    init(
+        mealStore: MealStore,
+        calorieEstimator: CalorieEstimating,
+        defaultUnit: WeightUnit = .g
+    ) {
         self.mealStore = mealStore
         self.calorieEstimator = calorieEstimator
+        self.unit = defaultUnit
     }
 
     var state: FieldState {

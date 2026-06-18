@@ -7,6 +7,7 @@ struct HomeView: View {
 
     @State private var ringAnimated = false
     @State private var showAddMeal = false
+    @State private var addMealViewModel: AddMealViewModel?
     @State private var showSettings = false
     @State private var settingsViewModel: SettingsViewModel?
     @State private var showHistory = false
@@ -217,7 +218,10 @@ struct HomeView: View {
 
     private var fab: some View {
         Button {
-            showAddMeal = true
+            Task {
+                addMealViewModel = await viewModel.makeAddMealViewModel()
+                showAddMeal = true
+            }
         } label: {
             Image(systemName: "plus")
                 .font(.system(size: 22, weight: .medium))
@@ -231,7 +235,9 @@ struct HomeView: View {
             isPresented: $showAddMeal,
             onDismiss: { Task { await viewModel.load() } }
         ) {
-            AddMealView(viewModel: viewModel.makeAddMealViewModel())
+            if let addMealViewModel {
+                AddMealView(viewModel: addMealViewModel)
+            }
         }
     }
 }

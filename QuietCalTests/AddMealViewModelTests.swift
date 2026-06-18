@@ -8,9 +8,19 @@ struct AddMealViewModelTests {
 
     private func makeViewModel(
         store: any MealStore = InMemoryMealStore(meals: []),
-        estimator: TestCalorieEstimator = TestCalorieEstimator()
+        estimator: TestCalorieEstimator = TestCalorieEstimator(),
+        defaultUnit: WeightUnit = .g
     ) -> AddMealViewModel {
-        AddMealViewModel(mealStore: store, calorieEstimator: estimator)
+        AddMealViewModel(
+            mealStore: store,
+            calorieEstimator: estimator,
+            defaultUnit: defaultUnit
+        )
+    }
+
+    @Test func defaultUnitIsApplied() {
+        let vm = makeViewModel(defaultUnit: .oz)
+        #expect(vm.unit == .oz)
     }
 
     @Test func initialStateIsEmpty() {
