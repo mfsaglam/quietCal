@@ -73,3 +73,7 @@ simulator or device.
 
 Run the `QuietCalTests` scheme in Xcode, or use `Cmd+U`. Tests are written with
 the Swift Testing framework.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
