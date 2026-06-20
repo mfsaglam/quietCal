@@ -30,7 +30,10 @@ final class SettingsViewModel {
 
     func updateTarget(_ newTarget: Int) {
         target = newTarget
-        Task { try? await store.saveTarget(newTarget) }
+        Task {
+            try? await store.saveTarget(newTarget)
+            AppGroup.reloadWidgets()
+        }
     }
 
     func updateTheme(_ newTheme: Theme) {
@@ -47,10 +50,12 @@ final class SettingsViewModel {
         let today = Calendar.current.dateInterval(of: .day, for: Date())
             ?? DateInterval(start: Date(), duration: 0)
         try? await mealStore.deleteMeals(in: today)
+        AppGroup.reloadWidgets()
     }
 
     func clearAll() async {
         try? await mealStore.deleteAll()
+        AppGroup.reloadWidgets()
     }
 
     func generateCSV() async -> String {

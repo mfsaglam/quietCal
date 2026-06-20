@@ -1,14 +1,14 @@
 import Foundation
 
 struct UserDefaultsSettingsStore: SettingsStore {
-    static let targetKey = "settings.target"
-    static let themeKey = "settings.theme"
-    static let weightUnitKey = "settings.weightUnit"
-    private static let defaultTarget = 2000
+    static let targetKey = AppGroup.targetKey
+    static let themeKey = AppGroup.themeKey
+    static let weightUnitKey = AppGroup.weightUnitKey
+    private static let defaultTarget = AppGroup.defaultTarget
 
     private let defaults: UserDefaults
 
-    init(defaults: UserDefaults = .standard) {
+    init(defaults: UserDefaults = AppGroup.sharedDefaults) {
         self.defaults = defaults
     }
 

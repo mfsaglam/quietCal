@@ -73,6 +73,13 @@ struct HomeView: View {
                     Task { await viewModel.load() }
                 }
             }
+            .onOpenURL { url in
+                if url.host == "addMeal" {
+                    Task {
+                        addMealViewModel = await viewModel.makeAddMealViewModel()
+                    }
+                }
+            }
         }
     }
 

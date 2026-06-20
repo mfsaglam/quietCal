@@ -14,7 +14,7 @@ struct QuietCalApp: App {
 
     init() {
         do {
-            modelContainer = try ModelContainer(for: MealEntity.self)
+            modelContainer = try AppGroup.makeModelContainer()
         } catch {
             fatalError("Failed to create ModelContainer: \(error)")
         }

@@ -96,5 +96,6 @@ final class AddMealViewModel: Identifiable {
             createdAt: Date()
         )
         try? await mealStore.save(meal)
+        AppGroup.reloadWidgets()
     }
 }
