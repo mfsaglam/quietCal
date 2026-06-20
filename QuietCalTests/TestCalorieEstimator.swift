@@ -2,6 +2,7 @@ import Foundation
 @testable import QuietCal
 
 final class TestCalorieEstimator: CalorieEstimating, @unchecked Sendable {
+    var source: CalorieEstimationSource = .stub
     var calories: Int = 200
     var error: Error?
     var delay: Duration = .zero

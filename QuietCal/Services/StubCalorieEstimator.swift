@@ -1,6 +1,7 @@
 import Foundation
 
 struct StubCalorieEstimator: CalorieEstimating {
+    let source: CalorieEstimationSource = .stub
     var delay: Duration = .milliseconds(1500)
     var caloriesPerGram: Double = 1.5
 

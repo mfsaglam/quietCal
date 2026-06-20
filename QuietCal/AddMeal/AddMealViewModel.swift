@@ -28,6 +28,10 @@ final class AddMealViewModel: Identifiable {
         self.unit = defaultUnit
     }
 
+    var estimationSource: CalorieEstimationSource {
+        calorieEstimator.source
+    }
+
     var state: FieldState {
         if isEstimating { return .estimating }
         if errorMessage != nil { return .failed }

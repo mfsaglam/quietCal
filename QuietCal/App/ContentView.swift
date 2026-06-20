@@ -14,7 +14,7 @@ struct ContentView: View {
 
     init(modelContainer: ModelContainer) {
         let mealStore = SwiftDataMealStore(modelContainer: modelContainer)
-        #if DEBUG
+        #if targetEnvironment(simulator)
         let calorieEstimator: CalorieEstimating = StubCalorieEstimator()
         #else
         let calorieEstimator: CalorieEstimating = AppleIntelligenceCalorieEstimator()

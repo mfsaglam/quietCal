@@ -149,7 +149,7 @@ struct AddMealView: View {
             HStack(spacing: 8) {
                 sparkle(size: 14)
                 VStack(alignment: .leading, spacing: 1) {
-                    Text("Estimated by Apple Intelligence")
+                    Text(viewModel.estimationSource.label)
                         .font(.system(size: 13, weight: .semibold))
                         .tracking(-0.1)
                     Text("Medium confidence · tap to retry")
