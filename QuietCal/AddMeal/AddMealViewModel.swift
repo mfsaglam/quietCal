@@ -71,6 +71,11 @@ final class AddMealViewModel: Identifiable {
         }
     }
 
+    func retry() async {
+        estimatedCalories = nil
+        await estimate()
+    }
+
     func save() async {
         guard canSave, let kcal = estimatedCalories else { return }
         let meal = Meal(
