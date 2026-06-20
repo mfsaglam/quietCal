@@ -14,9 +14,14 @@ struct ContentView: View {
 
     init(modelContainer: ModelContainer) {
         let mealStore = SwiftDataMealStore(modelContainer: modelContainer)
+        #if DEBUG
+        let calorieEstimator: CalorieEstimating = StubCalorieEstimator()
+        #else
+        let calorieEstimator: CalorieEstimating = AppleIntelligenceCalorieEstimator()
+        #endif
         _homeViewModel = State(initialValue: HomeViewModel(
             mealStore: mealStore,
-            calorieEstimator: StubCalorieEstimator(),
+            calorieEstimator: calorieEstimator,
             settingsStore: UserDefaultsSettingsStore()
         ))
     }
