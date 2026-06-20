@@ -6,7 +6,6 @@ struct HomeView: View {
     var viewModel: HomeViewModel
 
     @State private var ringAnimated = false
-    @State private var showAddMeal = false
     @State private var addMealViewModel: AddMealViewModel?
     @State private var showSettings = false
     @State private var settingsViewModel: SettingsViewModel?
@@ -220,7 +219,6 @@ struct HomeView: View {
         Button {
             Task {
                 addMealViewModel = await viewModel.makeAddMealViewModel()
-                showAddMeal = true
             }
         } label: {
             Image(systemName: "plus")
@@ -232,12 +230,10 @@ struct HomeView: View {
         .padding(.trailing, 20)
         .padding(.bottom, 52)
         .sheet(
-            isPresented: $showAddMeal,
+            item: $addMealViewModel,
             onDismiss: { Task { await viewModel.load() } }
-        ) {
-            if let addMealViewModel {
-                AddMealView(viewModel: addMealViewModel)
-            }
+        ) { addMealViewModel in
+            AddMealView(viewModel: addMealViewModel)
         }
     }
 }

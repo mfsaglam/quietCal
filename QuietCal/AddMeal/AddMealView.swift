@@ -55,7 +55,7 @@ struct AddMealView: View {
             }
             .onAppear { focusedField = .name }
         }
-        .presentationDetents([.fraction(0.78), .large])
+        .presentationDetents([.large])
         .presentationDragIndicator(.visible)
     }
 

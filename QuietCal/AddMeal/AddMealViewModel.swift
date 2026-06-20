@@ -3,8 +3,10 @@ import Observation
 
 @MainActor
 @Observable
-final class AddMealViewModel {
+final class AddMealViewModel: Identifiable {
     enum FieldState { case empty, estimating, estimated }
+
+    let id = UUID()
 
     private let mealStore: MealStore
     private let calorieEstimator: CalorieEstimating
