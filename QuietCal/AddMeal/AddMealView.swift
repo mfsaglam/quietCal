@@ -23,6 +23,9 @@ struct AddMealView: View {
                     if viewModel.state == .estimated {
                         aiChip
                     }
+                    if viewModel.state == .failed {
+                        errorChip
+                    }
                     unitPicker
                 }
                 .padding(.horizontal, 16)
@@ -125,6 +128,17 @@ struct AddMealView: View {
                         .foregroundStyle(.secondary)
                 }
             }
+        case .failed:
+            fieldCard(label: "CALORIES", labelColor: .orange) {
+                HStack(alignment: .firstTextBaseline, spacing: 4) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .font(.system(size: 16))
+                        .foregroundStyle(.orange)
+                    Text("Failed")
+                        .font(.system(size: 22, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.orange)
+                }
+            }
         }
     }
 
@@ -153,6 +167,39 @@ struct AddMealView: View {
             .overlay {
                 RoundedRectangle(cornerRadius: 12)
                     .stroke(aiPurple.opacity(0.25), lineWidth: 0.5)
+            }
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var errorChip: some View {
+        Button {
+            Task { await viewModel.retry() }
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(.system(size: 14))
+                    .foregroundStyle(.orange)
+                VStack(alignment: .leading, spacing: 1) {
+                    Text("Couldn't estimate calories")
+                        .font(.system(size: 13, weight: .semibold))
+                        .tracking(-0.1)
+                    Text(viewModel.errorMessage ?? "Tap to try again")
+                        .font(.system(size: 11))
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.leading)
+                }
+                Spacer(minLength: 0)
+                Image(systemName: "arrow.clockwise")
+                    .font(.system(size: 14))
+                    .foregroundStyle(.orange)
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 10)
+            .background(Color.orange.opacity(0.08), in: RoundedRectangle(cornerRadius: 12))
+            .overlay {
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color.orange.opacity(0.25), lineWidth: 0.5)
             }
         }
         .buttonStyle(.plain)

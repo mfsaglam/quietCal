@@ -96,7 +96,7 @@ struct AddMealViewModelTests {
         #expect(vm.estimatedCalories == nil)
     }
 
-    @Test func estimateClearsCaloriesOnError() async {
+    @Test func estimateEntersFailedStateOnError() async {
         let estimator = TestCalorieEstimator()
         estimator.error = TestEstimatorError()
         let vm = makeViewModel(estimator: estimator)
@@ -106,7 +106,28 @@ struct AddMealViewModelTests {
         await vm.estimate()
 
         #expect(vm.estimatedCalories == nil)
-        #expect(vm.state == .empty)
+        #expect(vm.state == .failed)
+        #expect(vm.errorMessage != nil)
+        #expect(!vm.canSave)
+    }
+
+    @Test func retryRecoversFromFailedState() async {
+        let estimator = TestCalorieEstimator()
+        estimator.error = TestEstimatorError()
+        let vm = makeViewModel(estimator: estimator)
+        vm.name = "Salad"
+        vm.amount = "200"
+
+        await vm.estimate()
+        #expect(vm.state == .failed)
+
+        estimator.error = nil
+        estimator.calories = 350
+        await vm.retry()
+
+        #expect(vm.state == .estimated)
+        #expect(vm.estimatedCalories == 350)
+        #expect(vm.errorMessage == nil)
     }
 
     @Test func staleEstimateIsDiscardedWhenNameChangesMidCall() async {

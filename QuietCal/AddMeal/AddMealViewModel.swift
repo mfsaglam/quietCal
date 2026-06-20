@@ -4,7 +4,7 @@ import Observation
 @MainActor
 @Observable
 final class AddMealViewModel: Identifiable {
-    enum FieldState { case empty, estimating, estimated }
+    enum FieldState { case empty, estimating, estimated, failed }
 
     let id = UUID()
 
@@ -16,6 +16,7 @@ final class AddMealViewModel: Identifiable {
     var unit: WeightUnit
     var estimatedCalories: Int?
     var isEstimating: Bool = false
+    var errorMessage: String?
 
     init(
         mealStore: MealStore,
@@ -29,6 +30,7 @@ final class AddMealViewModel: Identifiable {
 
     var state: FieldState {
         if isEstimating { return .estimating }
+        if errorMessage != nil { return .failed }
         if estimatedCalories != nil { return .estimated }
         return .empty
     }
@@ -54,11 +56,13 @@ final class AddMealViewModel: Identifiable {
     func estimate() async {
         guard shouldEstimate else {
             estimatedCalories = nil
+            errorMessage = nil
             return
         }
         let requestName = trimmedName
         let requestGrams = gramsValue
         isEstimating = true
+        errorMessage = nil
         defer { isEstimating = false }
         do {
             let kcal = try await calorieEstimator.estimate(name: requestName, grams: requestGrams)
@@ -67,12 +71,15 @@ final class AddMealViewModel: Identifiable {
         } catch is CancellationError {
             // keep previous estimate
         } catch {
+            guard requestName == trimmedName, requestGrams == gramsValue else { return }
             estimatedCalories = nil
+            errorMessage = "Couldn't estimate this meal. Check the name and amount, then try again."
         }
     }
 
     func retry() async {
         estimatedCalories = nil
+        errorMessage = nil
         await estimate()
     }
 
