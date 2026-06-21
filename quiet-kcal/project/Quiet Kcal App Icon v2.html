@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Quiet Kcal — App Icon · Liquid Glass</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root {
+    --cream: #f0eee9;
+    --ink: #1a1a1a;
+    --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+    --sf: -apple-system, "SF Pro Text", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--cream); -webkit-font-smoothing: antialiased; }
+  body { font-family: var(--sf); color: var(--ink); padding: 64px clamp(28px, 6vw, 100px) 120px; }
+
+  .head { max-width: 980px; margin: 0 auto 8px; }
+  .title { font-size: 46px; font-weight: 700; letter-spacing: -1.4px; }
+  .sub { font-size: 18px; color: rgba(60,50,40,0.7); margin-top: 8px; letter-spacing: -0.2px; max-width: 720px; }
+  .meta { font-family: var(--mono); font-size: 11px; color: rgba(60,50,40,0.55);
+          margin-top: 18px; line-height: 1.7; letter-spacing: 0.5px; text-transform: uppercase; }
+
+  .wrap { max-width: 1140px; margin: 0 auto; }
+  .sec-label { font-family: var(--mono); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+               color: rgba(60,50,40,0.5); margin: 66px 0 24px; padding-bottom: 12px;
+               border-bottom: 1px solid rgba(60,50,40,0.12); }
+
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 46px 40px; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px 30px; }
+  @media (max-width: 900px) { .grid3, .grid4 { grid-template-columns: repeat(2, 1fr); } }
+
+  .cell { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .ico { line-height: 0; filter: drop-shadow(0 22px 40px rgba(40,30,20,0.22)); }
+  .grid3 .ico svg { width: 236px; height: 236px; display: block; }
+  .grid4 .ico svg { width: 176px; height: 176px; display: block; }
+  .name { font-size: 14px; font-weight: 600; letter-spacing: -0.1px; }
+  .rec { display: inline-block; margin-left: 8px; font-family: var(--mono); font-size: 9px;
+         letter-spacing: 1px; text-transform: uppercase; color: #b9745a;
+         border: 1px solid rgba(185,116,90,0.45); border-radius: 5px; padding: 2px 6px; vertical-align: 2px; }
+  .desc { font-size: 12.5px; color: rgba(60,50,40,0.62); text-align: center; max-width: 248px; line-height: 1.5; margin-top: -6px; }
+
+  /* clear-mode cells need a backdrop to refract */
+  .cell.onbg .ico { background: linear-gradient(150deg,#7c5cff,#3aa0ff 55%,#22c3a6);
+                    border-radius: 23%; padding: 0; filter: drop-shadow(0 22px 40px rgba(40,30,20,0.22)); }
+  .grid4 .cell.onbg .ico svg, .grid3 .cell.onbg .ico svg { mix-blend-mode: normal; }
+
+  /* home screen */
+  .home { border-radius: 46px; padding: 56px 44px 44px; overflow: hidden; position: relative;
+          max-width: 600px; margin: 0 auto;
+          background: linear-gradient(155deg,#6a4cf0 0%,#9d4ce0 30%,#e0588f 60%,#f2944b 100%); }
+  .home::after { content:""; position:absolute; inset:0;
+          background: radial-gradient(circle at 24% 16%, rgba(255,255,255,0.30), transparent 44%),
+                      radial-gradient(circle at 84% 86%, rgba(0,0,0,0.18), transparent 52%); }
+  .home-grid { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px 26px; }
+  .app { display: flex; flex-direction: column; align-items: center; gap: 9px; }
+  .app .icn { width: 100%; aspect-ratio: 1; line-height: 0; filter: drop-shadow(0 8px 16px rgba(20,10,30,0.32)); }
+  .app .icn svg { width: 100%; height: 100%; display: block; }
+  .app .lab { font-size: 12px; color: #fff; font-weight: 500; letter-spacing: -0.1px; text-shadow: 0 1px 3px rgba(0,0,0,0.4); }
+  .app.ph .icn { aspect-ratio: 1; border-radius: 23%; background: rgba(255,255,255,0.22);
+                 backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); box-shadow: inset 0 1px 1px rgba(255,255,255,0.4); }
+  .app.ph .lab { opacity: 0; }
+  .footnote { font-family: var(--mono); font-size: 10.5px; color: rgba(60,50,40,0.5);
+              text-align: center; margin-top: 26px; letter-spacing: 0.5px; }
+</style>
+</head>
+<body>
+  <div class="head">
+    <div class="title">Quiet Kcal — App Icon</div>
+    <div class="sub">The calorie ring reimagined as a glass tube floating over a glass tile — translucent body, specular edge light, real depth. Built for iOS 26 Liquid Glass.</div>
+    <div class="meta">1024 master · glass tube ring · supports Default / Dark / Clear / Tinted appearance</div>
+  </div>
+
+  <div class="wrap">
+    <div class="sec-label">Directions</div>
+    <div class="grid3" id="dirs"></div>
+
+    <div class="sec-label">Same icon · iOS 26 appearance modes</div>
+    <div class="grid4" id="modes"></div>
+
+    <div class="sec-label">On the home screen — glass over a live wallpaper</div>
+    <div class="home"><div class="home-grid" id="home"></div></div>
+    <div class="footnote">faux wallpaper · icons at true home-screen scale · clear glass refracts the color beneath</div>
+  </div>
+
+<script>
+let UID = 0;
+
+// continuous-corner squircle (superellipse), n≈5 ≈ iOS
+function squircle(s, n){
+  const a=s/2, c=s/2, N=240; let d="";
+  for(let i=0;i<=N;i++){
+    const t=(i/N)*2*Math.PI, ct=Math.cos(t), st=Math.sin(t);
+    const x=c+a*Math.sign(ct)*Math.pow(Math.abs(ct),2/n);
+    const y=c+a*Math.sign(st)*Math.pow(Math.abs(st),2/n);
+    d+=(i===0?"M":"L")+x.toFixed(2)+" "+y.toFixed(2)+" ";
+  }
+  return d+"Z";
+}
+
+// arc-on-ring helper -> point
+function onRing(cx,cy,r,deg){ const a=deg*Math.PI/180; return [cx+r*Math.cos(a), cy+r*Math.sin(a)]; }
+
+/* opts:
+   tile: array of [stop%, color] for vertical tile gradient (omit for clear)
+   clear: bool — frosted transparent tile
+   ringTrack: gradient stops for track (translucent)
+   ringBody: gradient stops for the glass progress tube
+   glow: color of luminous halo behind progress (or null)
+   rim: rim-light color on tile edge
+   prog: 0..1
+*/
+function glassIcon(o){
+  const id="g"+(UID++), S=1024, cx=512, cy=512;
+  const r=o.r??298, sw=o.sw??96, circ=2*Math.PI*r, prog=o.prog??0.62;
+  const sq=squircle(S,5);
+  const progDash=`${(circ*prog).toFixed(1)} ${circ.toFixed(1)}`;
+  const rot=`rotate(-90 ${cx} ${cy})`;
+
+  const grad=(gid,stops,vertical=true)=>
+    `<linearGradient id="${gid}" x1="0" y1="${vertical?0:0}" x2="${vertical?0:1}" y2="${vertical?1:0}">`+
+    stops.map(([off,c])=>`<stop offset="${off}" stop-color="${c}"/>`).join("")+`</linearGradient>`;
+
+  // tile
+  let tile;
+  if(o.clear){
+    tile = `<path d="${sq}" fill="rgba(248,246,242,0.18)"/>
+            <path d="${sq}" fill="url(#${id}-sheen)"/>`;
+  } else {
+    tile = `<path d="${sq}" fill="url(#${id}-tile)"/>
+            <path d="${sq}" fill="url(#${id}-sheen)"/>`;
+  }
+
+  // top sheen (wet gloss): clipped ellipse highlight near top
+  const sheenStops = o.dark || o.clear || o.tinted
+    ? [["0","rgba(255,255,255,0.30)"],["0.42","rgba(255,255,255,0.04)"],["1","rgba(255,255,255,0)"]]
+    : [["0","rgba(255,255,255,0.65)"],["0.42","rgba(255,255,255,0.10)"],["1","rgba(255,255,255,0)"]];
+
+  // glass tube highlight (inner-top bright arc) + lower occlusion arc
+  const hiR = r - sw*0.24, hiSW = sw*0.30, hiCirc=2*Math.PI*hiR;
+  const ocR = r + sw*0.26, ocSW = sw*0.16, ocCirc=2*Math.PI*ocR;
+
+  const glow = o.glow ? `
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${o.glow}" stroke-width="${sw*1.05}"
+      stroke-linecap="round" stroke-dasharray="${progDash}" transform="${rot}"
+      filter="url(#${id}-glow)" opacity="0.7"/>` : "";
+
+  return `<svg viewBox="0 0 ${S} ${S}" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    ${o.tile?grad(id+"-tile",o.tile):""}
+    ${grad(id+"-sheen",sheenStops)}
+    ${grad(id+"-track",o.ringTrack)}
+    ${grad(id+"-body",o.ringBody)}
+    <linearGradient id="${id}-hi" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="rgba(255,255,255,0.95)"/>
+      <stop offset="0.7" stop-color="rgba(255,255,255,0.15)"/>
+      <stop offset="1" stop-color="rgba(255,255,255,0)"/>
+    </linearGradient>
+    <clipPath id="${id}-clip"><path d="${sq}"/></clipPath>
+    <filter id="${id}-glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="22"/>
+    </filter>
+    <filter id="${id}-soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6"/>
+    </filter>
+    <filter id="${id}-spec" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="6" result="b"/>
+      <feSpecularLighting in="b" surfaceScale="6" specularConstant="0.8" specularExponent="22"
+        lighting-color="#ffffff" result="s"><fePointLight x="260" y="150" z="520"/></feSpecularLighting>
+      <feComposite in="s" in2="SourceAlpha" operator="in" result="sc"/>
+      <feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="sc"/></feMerge>
+    </filter>
+  </defs>
+
+  ${tile}
+
+  <g clip-path="url(#${id}-clip)">
+    <!-- inner sheen blob -->
+    <ellipse cx="${cx}" cy="${cy*0.34}" rx="${S*0.62}" ry="${S*0.30}" fill="url(#${id}-sheen)"/>
+  </g>
+
+  <!-- cast shadow of the ring onto the tile (depth) -->
+  <circle cx="${cx}" cy="${cy+18}" r="${r}" fill="none" stroke="rgba(0,0,0,0.28)" stroke-width="${sw}"
+    transform="${rot}" filter="url(#${id}-soft)" opacity="${o.dark?0.5:0.32}"/>
+
+  ${glow}
+
+  <!-- track (full glass loop) -->
+  <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="url(#${id}-track)" stroke-width="${sw}"/>
+
+  <!-- progress glass tube -->
+  <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="url(#${id}-body)" stroke-width="${sw}"
+    stroke-linecap="round" stroke-dasharray="${progDash}" transform="${rot}" filter="url(#${id}-spec)"/>
+
+  <!-- lower-edge occlusion to round the tube -->
+  <circle cx="${cx}" cy="${cy}" r="${ocR}" fill="none" stroke="rgba(0,0,0,0.16)" stroke-width="${ocSW}"
+    stroke-linecap="round" stroke-dasharray="${(ocCirc*prog).toFixed(1)} ${ocCirc.toFixed(1)}" transform="${rot}"/>
+
+  <!-- top-edge specular highlight running along the tube -->
+  <circle cx="${cx}" cy="${cy}" r="${hiR}" fill="none" stroke="url(#${id}-hi)" stroke-width="${hiSW}"
+    stroke-linecap="round" stroke-dasharray="${(hiCirc*prog*0.96).toFixed(1)} ${hiCirc.toFixed(1)}" transform="${rot}"/>
+
+  <!-- crisp rim light on the tile edge -->
+  <path d="${sq}" fill="none" stroke="url(#${id}-hi)" stroke-width="3.5" opacity="${o.dark?0.8:0.6}"/>
+</svg>`;
+}
+
+// ---- palettes ----
+const TILE_LIGHT = [["0","#fbfaf7"],["0.55","#efe9de"],["1","#e1d9ca"]];
+const TILE_DARK  = [["0","#343437"],["0.5","#1f1f21"],["1","#111113"]];
+const TILE_CLAY  = [["0","#2a2421"],["0.5","#1b1613"],["1","#120d0b"]];
+
+const BODY_CREAM = [["0","#ffffff"],["0.5","#efe9dc"],["1","#cfc7b6"]]; // glass cream on dark
+const BODY_INK   = [["0","#6f6b66"],["0.5","#312e2a"],["1","#161412"]]; // glass ink on light
+const BODY_CLEAR = [["0","rgba(255,255,255,0.95)"],["0.5","rgba(255,255,255,0.7)"],["1","rgba(255,255,255,0.45)"]];
+const BODY_CLAY  = [["0","#f0cdbb"],["0.5","#d49a82"],["1","#b46a4f"]];
+
+const TRACK_ON_DARK  = [["0","rgba(255,255,255,0.16)"],["1","rgba(255,255,255,0.05)"]];
+const TRACK_ON_LIGHT = [["0","rgba(40,30,20,0.14)"],["1","rgba(40,30,20,0.05)"]];
+const TRACK_CLEAR    = [["0","rgba(255,255,255,0.28)"],["1","rgba(255,255,255,0.10)"]];
+
+const ICON_INK = { tile:TILE_DARK,  dark:true, ringTrack:TRACK_ON_DARK,  ringBody:BODY_CREAM, glow:"rgba(255,250,235,0.5)" };
+const ICON_LIGHT = { tile:TILE_LIGHT, ringTrack:TRACK_ON_LIGHT, ringBody:BODY_INK };
+const ICON_CLAY = { tile:TILE_CLAY, dark:true, tinted:true, ringTrack:[["0","rgba(240,205,187,0.18)"],["1","rgba(240,205,187,0.05)"]], ringBody:BODY_CLAY, glow:"rgba(212,154,130,0.55)" };
+const ICON_CLEAR = { clear:true, ringTrack:TRACK_CLEAR, ringBody:BODY_CLEAR, glow:"rgba(255,255,255,0.4)" };
+
+// ---- Directions ----
+const DIRS = [
+  { name:"Glass ring · Ink", rec:true, opts:ICON_INK,
+    desc:"Cream glass tube glowing on dark glass. The signature look — luminous and quiet." },
+  { name:"Glass ring · Light", opts:ICON_LIGHT,
+    desc:"Ink glass on warm light glass. Matches the app surface; softer in a light dock." },
+  { name:"Glass ring · Clay", opts:ICON_CLAY,
+    desc:"A warm clay tint carries the brand's terracotta accent into the glass itself." },
+];
+const dirs=document.getElementById("dirs");
+DIRS.forEach(d=>{
+  const cell=document.createElement("div"); cell.className="cell";
+  cell.innerHTML=`<div class="ico">${glassIcon(d.opts)}</div>
+    <div class="name">${d.name}${d.rec?'<span class="rec">Recommended</span>':''}</div>
+    <div class="desc">${d.desc}</div>`;
+  dirs.appendChild(cell);
+});
+
+// ---- Appearance modes (same recommended icon) ----
+const MODES=[
+  { name:"Default", opts:ICON_INK },
+  { name:"Dark", opts:{...ICON_INK, tile:[["0","#262628"],["0.5","#161618"],["1","#0c0c0d"]]} },
+  { name:"Clear", opts:ICON_CLEAR, onbg:true },
+  { name:"Tinted", opts:ICON_CLAY },
+];
+const modes=document.getElementById("modes");
+MODES.forEach(m=>{
+  const cell=document.createElement("div"); cell.className="cell"+(m.onbg?" onbg":"");
+  cell.innerHTML=`<div class="ico">${glassIcon(m.opts)}</div><div class="name">${m.name}</div>`;
+  modes.appendChild(cell);
+});
+
+// ---- Home screen ----
+const home=document.getElementById("home");
+const layout=[
+  {ph:1},{ph:1},{ph:1},{ph:1},
+  {opts:ICON_INK},{opts:ICON_LIGHT},{opts:ICON_CLAY},{opts:ICON_CLEAR},
+];
+layout.forEach(a=>{
+  const el=document.createElement("div");
+  if(a.ph){ el.className="app ph"; el.innerHTML=`<div class="icn"></div><div class="lab">·</div>`; }
+  else { el.className="app"; el.innerHTML=`<div class="icn">${glassIcon(a.opts)}</div><div class="lab">Quiet Kcal</div>`; }
+  home.appendChild(el);
+});
+</script>
+</body>
+</html>

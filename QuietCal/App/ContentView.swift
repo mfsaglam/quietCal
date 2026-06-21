@@ -10,7 +10,9 @@ import SwiftData
 
 struct ContentView: View {
     @State private var homeViewModel: HomeViewModel
+    @State private var onboardingViewModel: OnboardingViewModel
     @AppStorage(UserDefaultsSettingsStore.themeKey, store: AppGroup.sharedDefaults) private var themeRawValue: String = Theme.system.rawValue
+    @AppStorage(AppGroup.onboardingCompletedKey, store: AppGroup.sharedDefaults) private var onboardingCompleted = false
 
     init(modelContainer: ModelContainer) {
         let mealStore = SwiftDataMealStore(modelContainer: modelContainer)
@@ -24,6 +26,9 @@ struct ContentView: View {
             calorieEstimator: calorieEstimator,
             settingsStore: UserDefaultsSettingsStore()
         ))
+        _onboardingViewModel = State(initialValue: OnboardingViewModel(
+            settingsStore: UserDefaultsSettingsStore()
+        ))
     }
 
     private var theme: Theme {
@@ -31,8 +36,16 @@ struct ContentView: View {
     }
 
     var body: some View {
-        HomeView(viewModel: homeViewModel)
-            .preferredColorScheme(theme.colorScheme)
+        Group {
+            if onboardingCompleted {
+                HomeView(viewModel: homeViewModel)
+            } else {
+                OnboardingView(viewModel: onboardingViewModel) {
+                    onboardingCompleted = true
+                }
+            }
+        }
+        .preferredColorScheme(theme.colorScheme)
     }
 }
 

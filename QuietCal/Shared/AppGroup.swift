@@ -22,6 +22,7 @@ enum AppGroup {
     static let targetKey = "settings.target"
     static let themeKey = "settings.theme"
     static let weightUnitKey = "settings.weightUnit"
+    static let onboardingCompletedKey = "settings.onboardingCompleted"
     static let defaultTarget = 2000
 
     // MARK: - Shared containers

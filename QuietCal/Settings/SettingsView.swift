@@ -58,6 +58,19 @@ struct SettingsView: View {
                 }
             }
 
+            Section("About") {
+                Button {
+                    AppGroup.sharedDefaults.set(false, forKey: AppGroup.onboardingCompletedKey)
+                } label: {
+                    HStack {
+                        Text("Show intro again")
+                            .foregroundStyle(.primary)
+                        Spacer()
+                        chevron
+                    }
+                }
+            }
+
             Section("Data") {
                 Button {
                     Task {
