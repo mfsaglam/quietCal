@@ -10,7 +10,7 @@ import SwiftData
 
 struct ContentView: View {
     @State private var homeViewModel: HomeViewModel
-    @AppStorage(UserDefaultsSettingsStore.themeKey) private var themeRawValue: String = Theme.system.rawValue
+    @AppStorage(UserDefaultsSettingsStore.themeKey, store: AppGroup.sharedDefaults) private var themeRawValue: String = Theme.system.rawValue
 
     init(modelContainer: ModelContainer) {
         let mealStore = SwiftDataMealStore(modelContainer: modelContainer)
