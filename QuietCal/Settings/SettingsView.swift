@@ -11,11 +11,6 @@ struct SettingsView: View {
 
     var body: some View {
         List {
-            Section("Intelligence") {
-                valueRow(label: "Auto-estimate calories", value: "On")
-                valueRow(label: "Cloud fallback", value: "Off")
-            }
-
             Section("Daily Target") {
                 NavigationLink {
                     EditTargetView(viewModel: viewModel)
@@ -49,8 +44,6 @@ struct SettingsView: View {
                         .foregroundStyle(.primary)
                 }
                 .pickerStyle(.navigationLink)
-
-                valueRow(label: "Accent", value: "Ink")
             }
 
             Section("Data") {
@@ -133,19 +126,6 @@ struct SettingsView: View {
             get: { viewModel.weightUnit },
             set: { viewModel.updateWeightUnit($0) }
         )
-    }
-
-    private func valueRow(label: String, value: String) -> some View {
-        Button { } label: {
-            HStack {
-                Text(label)
-                    .foregroundStyle(.primary)
-                Spacer()
-                Text(value)
-                    .foregroundStyle(.secondary)
-                chevron
-            }
-        }
     }
 
     private var chevron: some View {
