@@ -149,6 +149,7 @@ private struct SmallWidgetView: View {
 
 private struct MediumWidgetView: View {
     let entry: CalorieEntry
+    @Environment(\.widgetRenderingMode) private var renderingMode
 
     var body: some View {
         HStack(spacing: 16) {
@@ -193,8 +194,18 @@ private struct MediumWidgetView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 8)
-                    .background(Color.primary, in: RoundedRectangle(cornerRadius: 12))
-                    .foregroundStyle(Color(.systemBackground))
+                    .background {
+                        if renderingMode == .accented {
+                            // Tinted home screen: a filled pill collapses to one
+                            // flat tint, hiding the label. Use an outline instead.
+                            RoundedRectangle(cornerRadius: 12)
+                                .strokeBorder(.primary.opacity(0.5), lineWidth: 1.5)
+                        } else {
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color.primary)
+                        }
+                    }
+                    .foregroundStyle(renderingMode == .accented ? Color.primary : Color(.systemBackground))
                 }
                 .unredacted()
             }
