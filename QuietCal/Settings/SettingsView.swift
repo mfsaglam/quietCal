@@ -9,6 +9,10 @@ struct SettingsView: View {
     @State private var showExporter = false
     @State private var exportDocument: CSVDocument?
 
+    @State private var selectedWeightUnit: WeightUnit = .g
+    @State private var selectedTheme: Theme = .system
+    @State private var didLoad = false
+
     var body: some View {
         List {
             Section("Daily Target") {
@@ -23,7 +27,7 @@ struct SettingsView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
-                Picker(selection: weightUnitBinding) {
+                Picker(selection: $selectedWeightUnit) {
                     ForEach(WeightUnit.allCases) { unit in
                         Text(unit.settingsLabel).tag(unit)
                     }
@@ -32,10 +36,14 @@ struct SettingsView: View {
                         .foregroundStyle(.primary)
                 }
                 .pickerStyle(.navigationLink)
+                .onChange(of: selectedWeightUnit) { _, newValue in
+                    guard didLoad else { return }
+                    viewModel.updateWeightUnit(newValue)
+                }
             }
 
             Section("Appearance") {
-                Picker(selection: themeBinding) {
+                Picker(selection: $selectedTheme) {
                     ForEach(Theme.allCases) { theme in
                         Text(theme.label).tag(theme)
                     }
@@ -44,6 +52,10 @@ struct SettingsView: View {
                         .foregroundStyle(.primary)
                 }
                 .pickerStyle(.navigationLink)
+                .onChange(of: selectedTheme) { _, newValue in
+                    guard didLoad else { return }
+                    viewModel.updateTheme(newValue)
+                }
             }
 
             Section("Data") {
@@ -87,7 +99,13 @@ struct SettingsView: View {
             }
         }
         .navigationTitle("Settings")
-        .task { await viewModel.load() }
+        .task {
+            guard !didLoad else { return }
+            await viewModel.load()
+            selectedWeightUnit = viewModel.weightUnit
+            selectedTheme = viewModel.theme
+            didLoad = true
+        }
         .alert("Reset today's meals?", isPresented: $showResetTodayConfirm) {
             Button("Cancel", role: .cancel) { }
             Button("Reset", role: .destructive) {
@@ -112,20 +130,6 @@ struct SettingsView: View {
         ) { _ in
             exportDocument = nil
         }
-    }
-
-    private var themeBinding: Binding<Theme> {
-        Binding(
-            get: { viewModel.theme },
-            set: { viewModel.updateTheme($0) }
-        )
-    }
-
-    private var weightUnitBinding: Binding<WeightUnit> {
-        Binding(
-            get: { viewModel.weightUnit },
-            set: { viewModel.updateWeightUnit($0) }
-        )
     }
 
     private var chevron: some View {
