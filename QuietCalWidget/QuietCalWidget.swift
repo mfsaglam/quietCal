@@ -31,6 +31,14 @@ struct CalorieEntry: TimelineEntry {
         return min(Double(eaten) / Double(target), 1.0)
     }
 
+    /// Percent of target consumed, for compact lock-screen layouts.
+    var percent: Int { Int((progress * 100).rounded()) }
+
+    /// Compact eaten value for tight lock-screen rings, e.g. "1.2K" / "840".
+    var eatenCompact: String {
+        eaten >= 1000 ? String(format: "%.1fK", Double(eaten) / 1000) : "\(eaten)"
+    }
+
     static let placeholder = CalorieEntry(date: Date(), eaten: 1240, target: 2000)
 }
 
@@ -202,6 +210,65 @@ private struct MediumWidgetView: View {
     }
 }
 
+// MARK: - Lock screen (accessory) families
+
+private struct AccessoryCircularView: View {
+    let entry: CalorieEntry
+
+    var body: some View {
+        Gauge(value: entry.progress) {
+            EmptyView()
+        } currentValueLabel: {
+            Text(entry.eatenCompact)
+                .minimumScaleFactor(0.6)
+        }
+        .gaugeStyle(.accessoryCircular)
+    }
+}
+
+private struct AccessoryRectangularView: View {
+    let entry: CalorieEntry
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Gauge(value: entry.progress) {
+                EmptyView()
+            } currentValueLabel: {
+                Text("\(entry.percent)")
+                    .minimumScaleFactor(0.6)
+            }
+            .gaugeStyle(.accessoryCircularCapacity)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(entry.isOverTarget
+                     ? "+\(entry.overBy.formatted()) over"
+                     : "\(entry.remaining.formatted()) left")
+                    .font(.headline)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                Text("of \(entry.target.formatted()) kcal")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+            }
+            Spacer(minLength: 0)
+        }
+    }
+}
+
+private struct AccessoryInlineView: View {
+    let entry: CalorieEntry
+
+    var body: some View {
+        Label(
+            entry.isOverTarget
+                ? "+\(entry.overBy.formatted()) kcal over"
+                : "\(entry.remaining.formatted()) kcal left",
+            systemImage: "flame.fill"
+        )
+    }
+}
+
 // MARK: - Entry view
 
 struct QuietCalWidgetEntryView: View {
@@ -209,11 +276,35 @@ struct QuietCalWidgetEntryView: View {
     var entry: CalorieEntry
 
     var body: some View {
+        content
+            .containerBackground(for: .widget) { background }
+    }
+
+    @ViewBuilder
+    private var content: some View {
         switch family {
         case .systemSmall:
             SmallWidgetView(entry: entry)
+        case .accessoryCircular:
+            AccessoryCircularView(entry: entry)
+        case .accessoryRectangular:
+            AccessoryRectangularView(entry: entry)
+        case .accessoryInline:
+            AccessoryInlineView(entry: entry)
         default:
             MediumWidgetView(entry: entry)
+        }
+    }
+
+    @ViewBuilder
+    private var background: some View {
+        switch family {
+        case .accessoryCircular, .accessoryRectangular:
+            AccessoryWidgetBackground()
+        case .accessoryInline:
+            EmptyView()
+        default:
+            Color(.systemBackground)
         }
     }
 }
@@ -226,11 +317,16 @@ struct QuietCalWidget: Widget {
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
             QuietCalWidgetEntryView(entry: entry)
-                .containerBackground(.background, for: .widget)
         }
         .configurationDisplayName("Calories")
         .description("Today's calories at a glance.")
-        .supportedFamilies([.systemSmall, .systemMedium])
+        .supportedFamilies([
+            .systemSmall,
+            .systemMedium,
+            .accessoryCircular,
+            .accessoryRectangular,
+            .accessoryInline
+        ])
     }
 }
 
@@ -248,4 +344,22 @@ struct QuietCalWidget: Widget {
 } timeline: {
     CalorieEntry(date: .now, eaten: 1240, target: 2000)
     CalorieEntry(date: .now, eaten: 2180, target: 2000)
+}
+
+#Preview("Circular", as: .accessoryCircular) {
+    QuietCalWidget()
+} timeline: {
+    CalorieEntry(date: .now, eaten: 1240, target: 2000)
+}
+
+#Preview("Rectangular", as: .accessoryRectangular) {
+    QuietCalWidget()
+} timeline: {
+    CalorieEntry(date: .now, eaten: 1240, target: 2000)
+}
+
+#Preview("Inline", as: .accessoryInline) {
+    QuietCalWidget()
+} timeline: {
+    CalorieEntry(date: .now, eaten: 1240, target: 2000)
 }
