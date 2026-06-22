@@ -345,7 +345,7 @@ private struct EstimatesStep: View {
     private let steps: [(title: String, detail: String)] = [
         ("Type what you ate", "A name and a rough amount — “chicken salad, 340g.”"),
         ("Get an instant estimate", "Apple Intelligence estimates the calories on device."),
-        ("Adjust if needed", "Every estimate stays editable. Tap to correct it.")
+        ("Retry if needed", "Not sure about an estimate? Tap to retry it.")
     ]
 
     var body: some View {
@@ -422,7 +422,7 @@ private struct EstimatesStep: View {
                 Image(systemName: "sparkles")
                     .font(.system(size: 12))
                     .foregroundStyle(appleIntelligenceGradient)
-                Text("Estimated by Apple Intelligence · editable")
+                Text("Estimated by Apple Intelligence · tap to retry")
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(.secondary)
                 Spacer()
