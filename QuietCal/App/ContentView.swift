@@ -14,6 +14,11 @@ struct ContentView: View {
     @AppStorage(UserDefaultsSettingsStore.themeKey, store: AppGroup.sharedDefaults) private var themeRawValue: String = Theme.system.rawValue
     @AppStorage(AppGroup.onboardingCompletedKey, store: AppGroup.sharedDefaults) private var onboardingCompleted = false
 
+    /// Captured once at launch so that resetting the onboarding flag from
+    /// Settings only takes effect on the next launch rather than interrupting
+    /// the current session.
+    @State private var showOnboarding: Bool
+
     init(modelContainer: ModelContainer) {
         let mealStore = SwiftDataMealStore(modelContainer: modelContainer)
         #if targetEnvironment(simulator)
@@ -29,6 +34,8 @@ struct ContentView: View {
         _onboardingViewModel = State(initialValue: OnboardingViewModel(
             settingsStore: UserDefaultsSettingsStore()
         ))
+        let completed = AppGroup.sharedDefaults.bool(forKey: AppGroup.onboardingCompletedKey)
+        _showOnboarding = State(initialValue: !completed)
     }
 
     private var theme: Theme {
@@ -37,12 +44,13 @@ struct ContentView: View {
 
     var body: some View {
         Group {
-            if onboardingCompleted {
-                HomeView(viewModel: homeViewModel)
-            } else {
+            if showOnboarding {
                 OnboardingView(viewModel: onboardingViewModel) {
                     onboardingCompleted = true
+                    showOnboarding = false
                 }
+            } else {
+                HomeView(viewModel: homeViewModel)
             }
         }
         .preferredColorScheme(theme.colorScheme)

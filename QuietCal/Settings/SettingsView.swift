@@ -6,6 +6,7 @@ struct SettingsView: View {
 
     @State private var showResetTodayConfirm = false
     @State private var showClearAllConfirm = false
+    @State private var showIntroResetAlert = false
     @State private var showExporter = false
     @State private var exportDocument: CSVDocument?
 
@@ -61,6 +62,7 @@ struct SettingsView: View {
             Section("About") {
                 Button {
                     AppGroup.sharedDefaults.set(false, forKey: AppGroup.onboardingCompletedKey)
+                    showIntroResetAlert = true
                 } label: {
                     HStack {
                         Text("Show intro again")
@@ -118,6 +120,11 @@ struct SettingsView: View {
             selectedWeightUnit = viewModel.weightUnit
             selectedTheme = viewModel.theme
             didLoad = true
+        }
+        .alert("Intro reset", isPresented: $showIntroResetAlert) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("The intro will be shown the next time you launch the app.")
         }
         .alert("Reset today's meals?", isPresented: $showResetTodayConfirm) {
             Button("Cancel", role: .cancel) { }
