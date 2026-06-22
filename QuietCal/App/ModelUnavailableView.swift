@@ -123,13 +123,13 @@ struct ModelUnavailableView: View {
     private var message: String {
         switch availability {
         case .appleIntelligenceNotEnabled:
-            "QuietCal uses Apple Intelligence to estimate the calories in your meals. Turn it on in Settings, then come back."
+            "\(AppInfo.name) uses Apple Intelligence to estimate the calories in your meals. Turn it on in Settings, then come back."
         case .modelNotReady:
             "Apple Intelligence is still setting up — this can take a little while after you enable it or update iOS. Try again in a bit."
         case .deviceNotEligible:
-            "QuietCal estimates calories with Apple Intelligence, which this iPhone doesn't support. Sorry — the app can't work on this device."
+            "\(AppInfo.name) estimates calories with Apple Intelligence, which this iPhone doesn't support. Sorry — the app can't work on this device."
         default:
-            "QuietCal needs Apple Intelligence to estimate calories, and it isn't available right now."
+            "\(AppInfo.name) needs Apple Intelligence to estimate calories, and it isn't available right now."
         }
     }
 }

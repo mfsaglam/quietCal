@@ -106,7 +106,7 @@ struct SettingsView: View {
             }
 
             Section {
-                Text("Quiet Kcal · v1.0")
+                Text(AppInfo.nameAndVersion)
                     .font(.system(size: 13))
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity)

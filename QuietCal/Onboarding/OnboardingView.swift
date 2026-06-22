@@ -209,7 +209,7 @@ private struct WelcomeStep: View {
             .frame(width: 132, height: 132)
             .padding(.bottom, 40)
 
-            Text("QUIET KCAL")
+            Text(AppInfo.name.uppercased())
                 .font(.system(size: 13, weight: .semibold))
                 .tracking(1.5)
                 .foregroundStyle(.secondary)

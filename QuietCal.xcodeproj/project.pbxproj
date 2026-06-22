@@ -101,6 +101,7 @@
 				Models/Meal.swift,
 				Models/MealEntity.swift,
 				Shared/AppGroup.swift,
+				Shared/AppInfo.swift,
 			);
 			target = 12F519F82FE6D0E00083490F /* QuietCalWidgetExtension */;
 		};
