@@ -19,13 +19,25 @@ struct ContentView: View {
     /// the current session.
     @State private var showOnboarding: Bool
 
+    /// Whether on-device calorie estimation can run. Re-checked whenever the
+    /// app becomes active so recoverable states (Apple Intelligence enabled in
+    /// Settings, or the model finishing its download) are picked up live.
+    private let availabilityProvider: ModelAvailabilityProviding
+    @State private var availability: ModelAvailability
+
+    @Environment(\.scenePhase) private var scenePhase
+
     init(modelContainer: ModelContainer) {
         let mealStore = SwiftDataMealStore(modelContainer: modelContainer)
         #if targetEnvironment(simulator)
         let calorieEstimator: CalorieEstimating = StubCalorieEstimator()
+        let availabilityProvider: ModelAvailabilityProviding = AlwaysAvailableModelProvider()
         #else
         let calorieEstimator: CalorieEstimating = AppleIntelligenceCalorieEstimator()
+        let availabilityProvider: ModelAvailabilityProviding = SystemModelAvailabilityProvider()
         #endif
+        self.availabilityProvider = availabilityProvider
+        _availability = State(initialValue: availabilityProvider.availability)
         _homeViewModel = State(initialValue: HomeViewModel(
             mealStore: mealStore,
             calorieEstimator: calorieEstimator,
@@ -44,16 +56,32 @@ struct ContentView: View {
 
     var body: some View {
         Group {
-            if showOnboarding {
-                OnboardingView(viewModel: onboardingViewModel) {
-                    onboardingCompleted = true
-                    showOnboarding = false
-                }
+            if availability.isAvailable {
+                mainContent
             } else {
-                HomeView(viewModel: homeViewModel)
+                ModelUnavailableView(availability: availability) {
+                    availability = availabilityProvider.availability
+                }
             }
         }
         .preferredColorScheme(theme.colorScheme)
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .active {
+                availability = availabilityProvider.availability
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var mainContent: some View {
+        if showOnboarding {
+            OnboardingView(viewModel: onboardingViewModel) {
+                onboardingCompleted = true
+                showOnboarding = false
+            }
+        } else {
+            HomeView(viewModel: homeViewModel)
+        }
     }
 }
 
