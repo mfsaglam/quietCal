@@ -169,21 +169,48 @@ struct HomeView: View {
                 .padding(.horizontal, 4)
                 .padding(.bottom, 8)
 
-
-
-            VStack(spacing: 0) {
-                ForEach(Array(viewModel.meals.enumerated()), id: \.element.id) { index, meal in
-                    SwipeToDeleteRow {
-                        Task { await viewModel.delete(meal) }
-                    } content: {
-                        mealRow(meal, isLast: index == viewModel.meals.count - 1)
-                            .padding(.horizontal, 18)
-                    }
-                }
+            if #available(iOS 27, *) {
+                mealsList
+            } else {
+                legacyMealsList
             }
-            .padding(.vertical, 4)
         }
         .padding(.horizontal, 20)
+    }
+
+    // iOS 27+: native swipe actions on a non-List container via swipeActionsContainer().
+    @available(iOS 27, *)
+    private var mealsList: some View {
+        VStack(spacing: 0) {
+            ForEach(Array(viewModel.meals.enumerated()), id: \.element.id) { index, meal in
+                mealRow(meal, isLast: index == viewModel.meals.count - 1)
+                    .padding(.horizontal, 18)
+                    .swipeActions {
+                        Button(role: .destructive) {
+                            Task { await viewModel.delete(meal) }
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
+            }
+        }
+        .padding(.vertical, 4)
+        .swipeActionsContainer()
+    }
+
+    // iOS 26 fallback: custom swipe-to-delete row.
+    private var legacyMealsList: some View {
+        VStack(spacing: 0) {
+            ForEach(Array(viewModel.meals.enumerated()), id: \.element.id) { index, meal in
+                SwipeToDeleteRow {
+                    Task { await viewModel.delete(meal) }
+                } content: {
+                    mealRow(meal, isLast: index == viewModel.meals.count - 1)
+                        .padding(.horizontal, 18)
+                }
+            }
+        }
+        .padding(.vertical, 4)
     }
 
     private func mealRow(_ meal: Meal, isLast: Bool) -> some View {
