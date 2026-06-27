@@ -23,6 +23,8 @@ enum AppGroup {
     static let themeKey = "settings.theme"
     static let weightUnitKey = "settings.weightUnit"
     static let onboardingCompletedKey = "settings.onboardingCompleted"
+    static let mealsLoggedCountKey = "settings.mealsLoggedCount"
+    static let lastReviewPromptVersionKey = "settings.lastReviewPromptVersion"
     static let defaultTarget = 2000
 
     // MARK: - Shared containers

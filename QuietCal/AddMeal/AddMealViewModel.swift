@@ -10,6 +10,7 @@ final class AddMealViewModel: Identifiable {
 
     private let mealStore: MealStore
     private let calorieEstimator: CalorieEstimating
+    private let reviewPrompt: ReviewPromptController
 
     var name: String = ""
     var amount: String = ""
@@ -21,11 +22,13 @@ final class AddMealViewModel: Identifiable {
     init(
         mealStore: MealStore,
         calorieEstimator: CalorieEstimating,
-        defaultUnit: WeightUnit = .g
+        defaultUnit: WeightUnit = .g,
+        reviewPrompt: ReviewPromptController = ReviewPromptController()
     ) {
         self.mealStore = mealStore
         self.calorieEstimator = calorieEstimator
         self.unit = defaultUnit
+        self.reviewPrompt = reviewPrompt
     }
 
     var estimationSource: CalorieEstimationSource {
@@ -96,6 +99,7 @@ final class AddMealViewModel: Identifiable {
             createdAt: Date()
         )
         try? await mealStore.save(meal)
+        reviewPrompt.recordMealLogged()
         AppGroup.reloadWidgets()
     }
 }

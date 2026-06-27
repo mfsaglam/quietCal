@@ -1,9 +1,13 @@
 import SwiftUI
+import StoreKit
 
 // MARK: - Home View
 
 struct HomeView: View {
     var viewModel: HomeViewModel
+
+    @Environment(\.requestReview) private var requestReview
+    private let reviewPrompt = ReviewPromptController()
 
     @State private var ringAnimated = false
     @State private var addMealViewModel: AddMealViewModel?
@@ -265,10 +269,26 @@ struct HomeView: View {
         .padding(.bottom, 52)
         .sheet(
             item: $addMealViewModel,
-            onDismiss: { Task { await viewModel.load() } }
+            onDismiss: {
+                Task {
+                    await viewModel.load()
+                    await requestReviewIfEligible()
+                }
+            }
         ) { addMealViewModel in
             AddMealView(viewModel: addMealViewModel)
         }
+    }
+
+    /// Asks StoreKit to present the rating prompt once the user has logged enough
+    /// meals, after a short delay so it doesn't interrupt their return to Home.
+    /// Apple discourages prompting directly from a user action, so this runs on
+    /// the natural moment the add-meal sheet dismisses rather than on the Save tap.
+    private func requestReviewIfEligible() async {
+        guard reviewPrompt.shouldRequestReview() else { return }
+        try? await Task.sleep(for: .seconds(1.5))
+        await requestReview()
+        reviewPrompt.markPrompted()
     }
 }
 
