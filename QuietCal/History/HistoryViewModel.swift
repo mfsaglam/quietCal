@@ -9,20 +9,32 @@ final class HistoryViewModel {
 
     private let mealStore: MealStore
     private let settingsStore: SettingsStore
+    private let entitlements: any EntitlementProviding
 
     var target: Int = 2000
     var week: [DayTotal] = []     // exactly 7 entries, oldest → today, zeros for empty days
     var earlier: [DayTotal] = []  // newest first, only days with meals
 
-    init(mealStore: MealStore, settingsStore: SettingsStore) {
+    /// Whether the "Earlier" history beyond the trailing week is locked behind
+    /// Pro. When `true`, `earlier` is left empty and the view shows an upsell.
+    var historyLocked = false
+
+    init(
+        mealStore: MealStore,
+        settingsStore: SettingsStore,
+        entitlements: any EntitlementProviding = StaticEntitlement(isPro: true)
+    ) {
         self.mealStore = mealStore
         self.settingsStore = settingsStore
+        self.entitlements = entitlements
     }
 
     func load() async {
         if let loaded = try? await settingsStore.loadTarget() {
             target = loaded
         }
+
+        historyLocked = !entitlements.isPro
 
         let calendar = Calendar.current
         let today = calendar.startOfDay(for: Date())
@@ -36,10 +48,8 @@ final class HistoryViewModel {
         else { return }
 
         let weekInterval = DateInterval(start: weekStart, end: weekEnd)
-        let earlierInterval = DateInterval(start: earlierStart, end: weekStart)
 
         let weekMeals = (try? await mealStore.fetchMeals(in: weekInterval)) ?? []
-        let earlierMeals = (try? await mealStore.fetchMeals(in: earlierInterval)) ?? []
 
         let weekTotalsByDay = Dictionary(
             uniqueKeysWithValues: weekMeals.dailyTotals(calendar: calendar).map { ($0.date, $0) }
@@ -52,6 +62,15 @@ final class HistoryViewModel {
             return weekTotalsByDay[dayStart] ?? DayTotal(date: dayStart, kcal: 0, mealCount: 0)
         }
 
+        // The "Earlier" log is Pro-only. Free users keep the trailing-week chart
+        // above, but don't load or see days beyond it.
+        guard !historyLocked else {
+            earlier = []
+            return
+        }
+
+        let earlierInterval = DateInterval(start: earlierStart, end: weekStart)
+        let earlierMeals = (try? await mealStore.fetchMeals(in: earlierInterval)) ?? []
         earlier = earlierMeals.dailyTotals(calendar: calendar).reversed()
     }
 

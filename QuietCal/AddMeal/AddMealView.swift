@@ -6,6 +6,8 @@ struct AddMealView: View {
     @Environment(\.dismiss) private var dismiss
     @FocusState private var focusedField: Field?
 
+    @State private var showPaywall = false
+
     private enum Field { case name, amount }
 
     private let aiPurple = Color(red: 175/255, green: 82/255, blue: 222/255)
@@ -41,12 +43,18 @@ struct AddMealView: View {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
                         Task {
-                            await viewModel.save()
-                            dismiss()
+                            if await viewModel.save() == .blockedByLimit {
+                                showPaywall = true
+                            } else {
+                                dismiss()
+                            }
                         }
                     }
                     .disabled(!viewModel.canSave)
                 }
+            }
+            .sheet(isPresented: $showPaywall) {
+                PaywallView()
             }
             .task(id: estimateTaskID) {
                 do {

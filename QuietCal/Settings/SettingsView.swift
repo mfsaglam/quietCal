@@ -4,11 +4,14 @@ import UniformTypeIdentifiers
 struct SettingsView: View {
     let viewModel: SettingsViewModel
 
+    @Environment(StoreKitEntitlementStore.self) private var entitlements
+
     @State private var showResetTodayConfirm = false
     @State private var showClearAllConfirm = false
     @State private var showIntroResetAlert = false
     @State private var showExporter = false
     @State private var exportDocument: CSVDocument?
+    @State private var showPaywall = false
 
     @State private var selectedWeightUnit: WeightUnit = .g
     @State private var selectedTheme: Theme = .system
@@ -16,6 +19,8 @@ struct SettingsView: View {
 
     var body: some View {
         List {
+            proSection
+
             Section("Daily Target") {
                 NavigationLink {
                     EditTargetView(viewModel: viewModel)
@@ -46,7 +51,7 @@ struct SettingsView: View {
             Section("Appearance") {
                 Picker(selection: $selectedTheme) {
                     ForEach(Theme.allCases) { theme in
-                        Text(theme.label).tag(theme)
+                        themeRow(theme).tag(theme)
                     }
                 } label: {
                     Text("Theme")
@@ -55,6 +60,14 @@ struct SettingsView: View {
                 .pickerStyle(.navigationLink)
                 .onChange(of: selectedTheme) { _, newValue in
                     guard didLoad else { return }
+                    // Light and Dark are Pro-only; System stays free. If a free
+                    // user picks a locked theme, revert to System and surface the
+                    // paywall instead of applying it.
+                    if !entitlements.isPro, newValue != .system {
+                        selectedTheme = .system
+                        showPaywall = true
+                        return
+                    }
                     viewModel.updateTheme(newValue)
                 }
             }
@@ -75,6 +88,10 @@ struct SettingsView: View {
 
             Section("Data") {
                 Button {
+                    guard entitlements.isPro else {
+                        showPaywall = true
+                        return
+                    }
                     Task {
                         let csv = await viewModel.generateCSV()
                         exportDocument = CSVDocument(text: csv)
@@ -85,7 +102,11 @@ struct SettingsView: View {
                         Text("Export CSV")
                             .foregroundStyle(.primary)
                         Spacer()
-                        chevron
+                        if entitlements.isPro {
+                            chevron
+                        } else {
+                            proLock
+                        }
                     }
                 }
 
@@ -114,6 +135,9 @@ struct SettingsView: View {
             }
         }
         .navigationTitle("Settings")
+        .sheet(isPresented: $showPaywall) {
+            PaywallView()
+        }
         .task {
             guard !didLoad else { return }
             await viewModel.load()
@@ -152,6 +176,62 @@ struct SettingsView: View {
         }
     }
 
+    // MARK: - Pro
+
+    @ViewBuilder
+    private var proSection: some View {
+        if entitlements.isPro {
+            Section("QuietCal Pro") {
+                HStack {
+                    Label("QuietCal Pro", systemImage: "checkmark.seal.fill")
+                        .foregroundStyle(.primary)
+                    Spacer()
+                    Text("Active")
+                        .font(.system(size: 15, weight: .medium))
+                        .foregroundStyle(.secondary)
+                }
+            }
+        } else {
+            Section("QuietCal Pro") {
+                Button {
+                    showPaywall = true
+                } label: {
+                    HStack {
+                        Label("Upgrade to Pro", systemImage: "sparkles")
+                            .foregroundStyle(.primary)
+                        Spacer()
+                        chevron
+                    }
+                }
+                Button("Restore purchases") {
+                    Task { await entitlements.restore() }
+                }
+                .foregroundStyle(.primary)
+            }
+        }
+    }
+
+    /// A theme picker row, badged with a lock for Pro-only themes when the user
+    /// isn't subscribed.
+    @ViewBuilder
+    private func themeRow(_ theme: Theme) -> some View {
+        if !entitlements.isPro, theme != .system {
+            HStack {
+                Text(theme.label)
+                Spacer()
+                proLock
+            }
+        } else {
+            Text(theme.label)
+        }
+    }
+
+    private var proLock: some View {
+        Image(systemName: "lock.fill")
+            .font(.system(size: 13))
+            .foregroundStyle(.tertiary)
+    }
+
     private var chevron: some View {
         Image(systemName: "chevron.right")
             .font(.system(size: 13, weight: .semibold))
@@ -188,4 +268,5 @@ struct CSVDocument: FileDocument {
             mealStore: InMemoryMealStore(meals: .sample)
         ))
     }
+    .environment(StoreKitEntitlementStore(previewIsPro: false))
 }

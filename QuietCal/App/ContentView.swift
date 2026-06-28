@@ -19,6 +19,14 @@ struct ContentView: View {
     /// the current session.
     @State private var showOnboarding: Bool
 
+    /// Source of truth for QuietCal Pro, shared with every view via the
+    /// environment and with view models that enforce the free-tier limits.
+    @State private var entitlements: StoreKitEntitlementStore
+
+    /// Presents the paywall once, right after onboarding finishes, for users who
+    /// aren't already subscribed.
+    @State private var showOnboardingPaywall = false
+
     /// Whether on-device calorie estimation can run. Re-checked whenever the
     /// app becomes active so recoverable states (Apple Intelligence enabled in
     /// Settings, or the model finishing its download) are picked up live.
@@ -38,10 +46,13 @@ struct ContentView: View {
         #endif
         self.availabilityProvider = availabilityProvider
         _availability = State(initialValue: availabilityProvider.availability)
+        let entitlements = StoreKitEntitlementStore()
+        _entitlements = State(initialValue: entitlements)
         _homeViewModel = State(initialValue: HomeViewModel(
             mealStore: mealStore,
             calorieEstimator: calorieEstimator,
-            settingsStore: UserDefaultsSettingsStore()
+            settingsStore: UserDefaultsSettingsStore(),
+            entitlements: entitlements
         ))
         _onboardingViewModel = State(initialValue: OnboardingViewModel(
             settingsStore: UserDefaultsSettingsStore()
@@ -65,6 +76,11 @@ struct ContentView: View {
             }
         }
         .preferredColorScheme(theme.colorScheme)
+        .environment(entitlements)
+        .task { entitlements.start() }
+        .sheet(isPresented: $showOnboardingPaywall) {
+            PaywallView()
+        }
         .onChange(of: scenePhase) { _, newPhase in
             if newPhase == .active {
                 availability = availabilityProvider.availability
@@ -78,6 +94,9 @@ struct ContentView: View {
             OnboardingView(viewModel: onboardingViewModel) {
                 onboardingCompleted = true
                 showOnboarding = false
+                if !entitlements.isPro {
+                    showOnboardingPaywall = true
+                }
             }
         } else {
             HomeView(viewModel: homeViewModel)

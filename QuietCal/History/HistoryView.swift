@@ -5,6 +5,7 @@ struct HistoryView: View {
     let viewModel: HistoryViewModel
 
     @State private var rendered = false
+    @State private var showPaywall = false
 
     private static let warnColor: Color = .orange
     private static let chartHeight: CGFloat = 130
@@ -14,13 +15,20 @@ struct HistoryView: View {
             VStack(alignment: .leading, spacing: 0) {
                 header
                 weekCard
-                earlierSection
+                if viewModel.historyLocked {
+                    lockedEarlierCard
+                } else {
+                    earlierSection
+                }
             }
             .padding(.top, 4)
             .padding(.bottom, 32)
         }
         .scrollIndicators(.hidden)
         .navigationTitle("History")
+        .sheet(isPresented: $showPaywall) {
+            PaywallView()
+        }
         .task {
             await viewModel.load()
             withAnimation(.easeOut(duration: 0.7).delay(0.1)) {
@@ -111,6 +119,52 @@ struct HistoryView: View {
             }
         }
         .frame(height: Self.chartHeight * 1.1)
+    }
+
+    // MARK: - Locked earlier (free tier)
+
+    private var lockedEarlierCard: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("EARLIER")
+                .font(.system(size: 13, weight: .medium))
+                .tracking(0.5)
+                .foregroundStyle(.secondary)
+                .padding(.horizontal, 4)
+
+            Button {
+                showPaywall = true
+            } label: {
+                VStack(spacing: 10) {
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 22))
+                        .foregroundStyle(.secondary)
+
+                    Text("See your full history")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundStyle(.primary)
+
+                    Text("Free shows the last \(FreeTierLimits.freeHistoryDays) days. Unlock every day you've tracked with QuietCal Pro.")
+                        .font(.system(size: 14))
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    Text("Unlock with Pro")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(Color(.systemBackground))
+                        .padding(.horizontal, 22)
+                        .padding(.vertical, 11)
+                        .background(Color.primary, in: Capsule())
+                        .padding(.top, 4)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 28)
+                .padding(.horizontal, 20)
+                .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 22))
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, 20)
     }
 
     // MARK: - Earlier list

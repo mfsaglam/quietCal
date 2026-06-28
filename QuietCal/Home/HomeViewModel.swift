@@ -7,6 +7,7 @@ final class HomeViewModel {
     private let mealStore: MealStore
     private let calorieEstimator: CalorieEstimating
     private let settingsStore: SettingsStore
+    private let entitlements: any EntitlementProviding
 
     var target = 2000
     var meals: [Meal] = []
@@ -14,11 +15,13 @@ final class HomeViewModel {
     init(
         mealStore: MealStore,
         calorieEstimator: CalorieEstimating,
-        settingsStore: SettingsStore
+        settingsStore: SettingsStore,
+        entitlements: any EntitlementProviding = StaticEntitlement(isPro: true)
     ) {
         self.mealStore = mealStore
         self.calorieEstimator = calorieEstimator
         self.settingsStore = settingsStore
+        self.entitlements = entitlements
     }
 
     func load() async {
@@ -45,7 +48,8 @@ final class HomeViewModel {
         return AddMealViewModel(
             mealStore: mealStore,
             calorieEstimator: calorieEstimator,
-            defaultUnit: defaultUnit
+            defaultUnit: defaultUnit,
+            entitlements: entitlements
         )
     }
 
@@ -54,7 +58,11 @@ final class HomeViewModel {
     }
 
     func makeHistoryViewModel() -> HistoryViewModel {
-        HistoryViewModel(mealStore: mealStore, settingsStore: settingsStore)
+        HistoryViewModel(
+            mealStore: mealStore,
+            settingsStore: settingsStore,
+            entitlements: entitlements
+        )
     }
 
     var eaten: Int { meals.reduce(0) { $0 + $1.kcal } }

@@ -229,6 +229,60 @@ struct AddMealViewModelTests {
         let meals = try await store.fetchMeals(in: anyInterval())
         #expect(meals.first?.grams == 453)
     }
+
+    // MARK: - Free-tier daily save limit
+
+    private func mealsLoggedToday(_ count: Int) -> [Meal] {
+        (0..<count).map { Meal(name: "M\($0)", grams: 100, kcal: 100, createdAt: Date()) }
+    }
+
+    private func estimatedViewModel(store: any MealStore, isPro: Bool) async -> AddMealViewModel {
+        let estimator = TestCalorieEstimator()
+        estimator.calories = 200
+        let vm = AddMealViewModel(
+            mealStore: store,
+            calorieEstimator: estimator,
+            entitlements: StaticEntitlement(isPro: isPro)
+        )
+        vm.name = "Snack"
+        vm.amount = "100"
+        await vm.estimate()
+        return vm
+    }
+
+    @Test func freeUserBlockedAtDailyLimit() async throws {
+        let store = InMemoryMealStore(meals: mealsLoggedToday(FreeTierLimits.dailyMealLimit))
+        let vm = await estimatedViewModel(store: store, isPro: false)
+
+        let outcome = await vm.save()
+
+        #expect(outcome == .blockedByLimit)
+        // The meal was not persisted.
+        let count = try await store.fetchMeals(in: anyInterval()).count
+        #expect(count == FreeTierLimits.dailyMealLimit)
+    }
+
+    @Test func freeUserUnderDailyLimitSaves() async throws {
+        let store = InMemoryMealStore(meals: mealsLoggedToday(FreeTierLimits.dailyMealLimit - 1))
+        let vm = await estimatedViewModel(store: store, isPro: false)
+
+        let outcome = await vm.save()
+
+        #expect(outcome == .saved)
+        let count = try await store.fetchMeals(in: anyInterval()).count
+        #expect(count == FreeTierLimits.dailyMealLimit)
+    }
+
+    @Test func proUserNotBlockedAtDailyLimit() async throws {
+        let store = InMemoryMealStore(meals: mealsLoggedToday(FreeTierLimits.dailyMealLimit))
+        let vm = await estimatedViewModel(store: store, isPro: true)
+
+        let outcome = await vm.save()
+
+        #expect(outcome == .saved)
+        let count = try await store.fetchMeals(in: anyInterval()).count
+        #expect(count == FreeTierLimits.dailyMealLimit + 1)
+    }
 }
 
 private func anyInterval() -> DateInterval {
