@@ -5,6 +5,9 @@ import StoreKit
 
 struct HomeView: View {
     var viewModel: HomeViewModel
+    /// The Pro entitlement store, threaded down to `SettingsView` (which needs
+    /// the concrete type) so it doesn't depend on environment propagation.
+    let entitlements: StoreKitEntitlementStore
 
     @Environment(\.requestReview) private var requestReview
     private let reviewPrompt = ReviewPromptController()
@@ -64,7 +67,7 @@ struct HomeView: View {
             }
             .navigationDestination(isPresented: $showSettings) {
                 if let settingsViewModel {
-                    SettingsView(viewModel: settingsViewModel)
+                    SettingsView(viewModel: settingsViewModel, entitlements: entitlements)
                 }
             }
             .navigationDestination(isPresented: $showHistory) {
@@ -297,7 +300,7 @@ struct HomeView: View {
         mealStore: InMemoryMealStore(meals: .sample),
         calorieEstimator: StubCalorieEstimator(),
         settingsStore: InMemorySettingsStore()
-    ))
+    ), entitlements: StoreKitEntitlementStore(previewIsPro: false))
 }
 
 #Preview("On Target") {
@@ -305,7 +308,7 @@ struct HomeView: View {
         mealStore: InMemoryMealStore(meals: .onTarget),
         calorieEstimator: StubCalorieEstimator(),
         settingsStore: InMemorySettingsStore()
-    ))
+    ), entitlements: StoreKitEntitlementStore(previewIsPro: false))
 }
 
 #Preview("Over Target") {
@@ -313,7 +316,7 @@ struct HomeView: View {
         mealStore: InMemoryMealStore(meals: .overTarget),
         calorieEstimator: StubCalorieEstimator(),
         settingsStore: InMemorySettingsStore()
-    ))
+    ), entitlements: StoreKitEntitlementStore(previewIsPro: false))
 }
 
 #Preview("Empty") {
@@ -321,5 +324,5 @@ struct HomeView: View {
         mealStore: InMemoryMealStore(meals: .empty),
         calorieEstimator: StubCalorieEstimator(),
         settingsStore: InMemorySettingsStore()
-    ))
+    ), entitlements: StoreKitEntitlementStore(previewIsPro: false))
 }

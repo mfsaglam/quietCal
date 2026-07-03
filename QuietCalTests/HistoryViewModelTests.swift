@@ -138,4 +138,42 @@ struct HistoryViewModelTests {
         // recent goes into week, not earlier
         #expect(vm.earlier.map(\.kcal) == [1700])
     }
+
+    // MARK: - Free-tier history lock
+
+    private func earlierMealFixture() -> [Meal] {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        let tenDaysAgo = calendar.date(byAdding: .day, value: -10, to: today)!
+        return [
+            Meal(name: "Earlier", grams: 100, kcal: 1500,
+                 createdAt: tenDaysAgo.addingTimeInterval(8 * 3600))
+        ]
+    }
+
+    @Test func freeUserHistoryIsLockedAndEarlierEmpty() async {
+        let vm = HistoryViewModel(
+            mealStore: InMemoryMealStore(meals: earlierMealFixture()),
+            settingsStore: InMemorySettingsStore(),
+            entitlements: StaticEntitlement(isPro: false)
+        )
+        await vm.load()
+
+        #expect(vm.historyLocked)
+        #expect(vm.earlier.isEmpty)
+        // The trailing-week chart is still available to free users.
+        #expect(vm.week.count == 7)
+    }
+
+    @Test func proUserHistoryIsUnlocked() async {
+        let vm = HistoryViewModel(
+            mealStore: InMemoryMealStore(meals: earlierMealFixture()),
+            settingsStore: InMemorySettingsStore(),
+            entitlements: StaticEntitlement(isPro: true)
+        )
+        await vm.load()
+
+        #expect(!vm.historyLocked)
+        #expect(vm.earlier.map(\.kcal) == [1500])
+    }
 }
