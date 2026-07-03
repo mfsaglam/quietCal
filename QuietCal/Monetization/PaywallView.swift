@@ -4,10 +4,15 @@ import StoreKit
 /// The QuietCal Pro paywall, presented as a sheet from Settings, the History
 /// upsell, a blocked save, and at the end of onboarding. Merchandising and the
 /// purchase/restore flow are handled by `SubscriptionStoreView`; this view adds
-/// the marketing header and the feature list, and dismisses itself once the
-/// purchase grants Pro.
+/// the marketing header and the feature list, and dismisses itself once a
+/// purchase succeeds.
+///
+/// Deliberately free of any environment dependency: the shared
+/// `StoreKitEntitlementStore` listens to `Transaction.updates`, so a successful
+/// purchase flips `isPro` app-wide on its own. Keeping the paywall
+/// self-contained means it can be presented from any sheet without relying on
+/// environment propagation across sheet/navigation boundaries.
 struct PaywallView: View {
-    @Environment(StoreKitEntitlementStore.self) private var entitlements
     @Environment(\.dismiss) private var dismiss
 
     private static let features: [(icon: String, title: String, detail: String)] = [
@@ -26,12 +31,11 @@ struct PaywallView: View {
         .storeButton(.visible, for: .restorePurchases)
         .storeButton(.visible, for: .cancellation)
         .onInAppPurchaseCompletion { _, result in
+            // On success the shared entitlement store picks up the transaction
+            // via Transaction.updates and unlocks Pro app-wide; just close.
             if case .success(.success) = result {
-                await entitlements.refresh()
+                dismiss()
             }
-        }
-        .onChange(of: entitlements.isPro) { _, isPro in
-            if isPro { dismiss() }
         }
     }
 
@@ -84,5 +88,4 @@ struct PaywallView: View {
 
 #Preview {
     PaywallView()
-        .environment(StoreKitEntitlementStore(previewIsPro: false))
 }

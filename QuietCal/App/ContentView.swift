@@ -76,7 +76,6 @@ struct ContentView: View {
             }
         }
         .preferredColorScheme(theme.colorScheme)
-        .environment(entitlements)
         .task { entitlements.start() }
         .sheet(isPresented: $showOnboardingPaywall) {
             PaywallView()
@@ -99,7 +98,7 @@ struct ContentView: View {
                 }
             }
         } else {
-            HomeView(viewModel: homeViewModel)
+            HomeView(viewModel: homeViewModel, entitlements: entitlements)
         }
     }
 }

@@ -3,8 +3,10 @@ import UniformTypeIdentifiers
 
 struct SettingsView: View {
     let viewModel: SettingsViewModel
-
-    @Environment(StoreKitEntitlementStore.self) private var entitlements
+    /// Passed in explicitly rather than read from the environment: Settings is
+    /// reached through a `navigationDestination`, and `@Observable` environment
+    /// objects don't reliably propagate across that boundary.
+    let entitlements: StoreKitEntitlementStore
 
     @State private var showResetTodayConfirm = false
     @State private var showClearAllConfirm = false
@@ -289,10 +291,12 @@ struct CSVDocument: FileDocument {
 
 #Preview {
     NavigationStack {
-        SettingsView(viewModel: SettingsViewModel(
-            store: InMemorySettingsStore(),
-            mealStore: InMemoryMealStore(meals: .sample)
-        ))
+        SettingsView(
+            viewModel: SettingsViewModel(
+                store: InMemorySettingsStore(),
+                mealStore: InMemoryMealStore(meals: .sample)
+            ),
+            entitlements: StoreKitEntitlementStore(previewIsPro: false)
+        )
     }
-    .environment(StoreKitEntitlementStore(previewIsPro: false))
 }
