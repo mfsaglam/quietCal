@@ -19,6 +19,14 @@ final class StoreKitEntitlementStore: EntitlementProviding {
 
     @ObservationIgnored private var updatesTask: Task<Void, Never>?
 
+    #if DEBUG
+    /// Debug-only manual override of the entitlement, driven by the hidden
+    /// "Developer" toggle in Settings. When non-nil it takes precedence over
+    /// StoreKit and survives refreshes, so you can flip Pro on/off without going
+    /// through a purchase. Never compiled into release builds.
+    @ObservationIgnored private var debugOverride: Bool?
+    #endif
+
     init() {}
 
     /// Builds a store with a fixed entitlement for SwiftUI previews, avoiding any
@@ -45,6 +53,12 @@ final class StoreKitEntitlementStore: EntitlementProviding {
 
     /// Recomputes `isPro` from the user's current entitlements.
     func refresh() async {
+        #if DEBUG
+        if let debugOverride {
+            isPro = debugOverride
+            return
+        }
+        #endif
         var entitled = false
         for await result in Transaction.currentEntitlements {
             guard case .verified(let transaction) = result else { continue }
@@ -62,4 +76,13 @@ final class StoreKitEntitlementStore: EntitlementProviding {
         try? await AppStore.sync()
         await refresh()
     }
+
+    #if DEBUG
+    /// Forces the entitlement on or off for testing, bypassing StoreKit. The
+    /// override persists for the session so refreshes don't undo it.
+    func setDebugPro(_ isPro: Bool) {
+        debugOverride = isPro
+        self.isPro = isPro
+    }
+    #endif
 }

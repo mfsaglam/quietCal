@@ -126,6 +126,8 @@ struct SettingsView: View {
                 }
             }
 
+            developerSection
+
             Section {
                 Text(AppInfo.nameAndVersion)
                     .font(.system(size: 13))
@@ -175,6 +177,30 @@ struct SettingsView: View {
             exportDocument = nil
         }
     }
+
+    // MARK: - Developer (debug only)
+
+    @ViewBuilder
+    private var developerSection: some View {
+        #if DEBUG
+        Section {
+            Toggle("QuietCal Pro (Debug)", isOn: debugProBinding)
+        } header: {
+            Text("Developer")
+        } footer: {
+            Text("Debug builds only. Overrides StoreKit so you can test the free and Pro states without a purchase.")
+        }
+        #endif
+    }
+
+    #if DEBUG
+    private var debugProBinding: Binding<Bool> {
+        Binding(
+            get: { entitlements.isPro },
+            set: { entitlements.setDebugPro($0) }
+        )
+    }
+    #endif
 
     // MARK: - Pro
 
