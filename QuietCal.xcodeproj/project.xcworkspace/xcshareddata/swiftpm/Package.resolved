@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mfsaglam/CalorieEstimator.git",
       "state" : {
-        "revision" : "30aa29a200fe75c34e45a20e3c92e36db23cbca1",
-        "version" : "1.1.0"
+        "revision" : "696c7b261056db3f335842943e6466df82d12b4f",
+        "version" : "1.2.0"
       }
     }
   ],

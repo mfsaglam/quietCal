@@ -1,5 +1,6 @@
 import SwiftUI
 import StoreKit
+import AppIntents
 
 // MARK: - Home View
 
@@ -11,6 +12,12 @@ struct HomeView: View {
 
     @Environment(\.requestReview) private var requestReview
     private let reviewPrompt = ReviewPromptController()
+
+    /// Whether the user has dismissed the Siri tip. Persisted (in the shared
+    /// suite) so the tip teaching "Log a meal in QuietCal" stays hidden once
+    /// they've dismissed it.
+    @AppStorage("settings.siriTipDismissed", store: AppGroup.sharedDefaults)
+    private var siriTipDismissed = false
 
     @State private var ringAnimated = false
     @State private var addMealViewModel: AddMealViewModel?
@@ -30,6 +37,7 @@ struct HomeView: View {
                     VStack(alignment: .leading, spacing: 0) {
                         ringSection
                         statStrip
+                        siriTip
                         mealsSection
                     }
                 }
@@ -159,6 +167,25 @@ struct HomeView: View {
         .glassEffect()
         .padding(.horizontal, 20)
         .padding(.bottom, 20)
+    }
+
+    // MARK: - Siri Tip
+
+    /// Teaches the "Log a meal in QuietCal" phrase. Its built-in dismiss button
+    /// flips `isVisible`, which we persist so it doesn't reappear.
+    @ViewBuilder
+    private var siriTip: some View {
+        if !siriTipDismissed {
+            SiriTipView(
+                intent: LogMealIntent(),
+                isVisible: Binding(
+                    get: { !siriTipDismissed },
+                    set: { siriTipDismissed = !$0 }
+                )
+            )
+            .padding(.horizontal, 20)
+            .padding(.bottom, 20)
+        }
     }
 
     private func statItem(value: String, label: String, warn: Bool = false) -> some View {

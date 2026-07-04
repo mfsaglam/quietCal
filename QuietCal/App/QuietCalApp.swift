@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import AppIntents
 
 @main
 struct QuietCalApp: App {
@@ -22,6 +23,9 @@ struct QuietCalApp: App {
         } catch {
             fatalError("Failed to create ModelContainer: \(error)")
         }
+        // Register the App Shortcuts so Siri/Spotlight pick up any phrase or
+        // parameter changes on launch.
+        QuietCalShortcuts.updateAppShortcutParameters()
     }
 
     var body: some Scene {
