@@ -9,14 +9,18 @@ struct AppleIntelligenceCalorieEstimator: CalorieEstimating {
         try await estimator.estimate(meal: name, grams: grams).calories
     }
 
-    // Until the CalorieEstimator package ships a model-based `estimate(phrase:)`,
-    // this type uses the protocol's default phrase handling (local parse via
-    // MealPhraseParser + `estimate(name:grams:)`). Once the package can parse a
-    // full phrase, override here to delegate — the model handles messy phrasing
-    // ("a cup", "a handful", word numbers) far better than the local parser:
-    //
-    // func estimate(phrase: String) async throws -> MealEstimate {
-    //     let result = try await estimator.estimate(phrase: phrase)
-    //     return MealEstimate(foodName: result.foodName, grams: result.grams, calories: result.calories)
-    // }
+    /// Delegates whole-phrase parsing to the package's model-based
+    /// `estimate(phrase:)` (CalorieEstimator 1.2.0+), which handles messy
+    /// phrasing — "a cup", "a handful", word-number quantities — far better than
+    /// the interim `MealPhraseParser` used by the protocol's default. The return
+    /// type is the app's own `MealEstimate` (`QuietCal.MealEstimate`), distinct
+    /// from the package's identically-named type.
+    func estimate(phrase: String) async throws -> QuietCal.MealEstimate {
+        let result = try await estimator.estimate(phrase: phrase)
+        return QuietCal.MealEstimate(
+            foodName: result.foodName,
+            grams: result.grams,
+            calories: result.calories
+        )
+    }
 }
