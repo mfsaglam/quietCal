@@ -9,7 +9,7 @@ enum LogMealError: Error, CustomLocalizedStringResourceConvertible {
     var localizedStringResource: LocalizedStringResource {
         switch self {
         case .invalidInput:
-            "Please provide a food name and an amount greater than zero."
+            "Please tell me what you ate."
         case .estimationFailed:
             "Couldn't estimate the calories for that meal. Try again."
         }
@@ -28,37 +28,42 @@ struct LogMealIntent: AppIntent {
     /// Keep the interaction hands-free — no need to bring the app to the front.
     static let openAppWhenRun = false
 
-    @Parameter(title: "Food", requestValueDialog: "What did you eat?")
-    var food: String
-
-    @Parameter(title: "Amount (grams)", requestValueDialog: "How many grams?")
-    var grams: Double
+    /// A single natural-language phrase — "200 grams of grilled chicken",
+    /// "8 oz salmon", "a cup of rice". One parameter means Siri asks at most one
+    /// follow-up question, and the food, amount and unit are all inferred from
+    /// what the user says rather than prompted for separately.
+    @Parameter(title: "Meal", requestValueDialog: "What did you eat?")
+    var meal: String
 
     static var parameterSummary: some ParameterSummary {
-        Summary("Log \(\.$grams) grams of \(\.$food)")
+        Summary("Log \(\.$meal)")
     }
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        let name = food.trimmingCharacters(in: .whitespacesAndNewlines)
-        let gramsInt = Int(grams.rounded())
-        guard !name.isEmpty, gramsInt > 0 else {
+        let phrase = meal.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !phrase.isEmpty else {
             throw LogMealError.invalidInput
         }
 
-        let kcal: Int
+        let estimate: MealEstimate
         do {
-            kcal = try await Self.makeEstimator().estimate(name: name, grams: gramsInt)
+            estimate = try await Self.makeEstimator().estimate(phrase: phrase)
         } catch {
             throw LogMealError.estimationFailed
         }
 
         let store = SwiftDataMealStore(modelContainer: try AppGroup.makeModelContainer())
-        let meal = Meal(name: name, grams: gramsInt, kcal: kcal, createdAt: Date())
-        try await store.save(meal)
+        let mealEntry = Meal(
+            name: estimate.foodName,
+            grams: estimate.grams,
+            kcal: estimate.calories,
+            createdAt: Date()
+        )
+        try await store.save(mealEntry)
         AppGroup.reloadWidgets()
 
         return .result(
-            dialog: "Logged \(name) — about \(kcal) calories."
+            dialog: "Logged \(estimate.foodName) — about \(estimate.calories) calories."
         )
     }
 
