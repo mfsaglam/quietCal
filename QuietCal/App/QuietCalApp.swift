@@ -10,6 +10,10 @@ import SwiftData
 
 @main
 struct QuietCalApp: App {
+    /// Installs an app delegate so new scenes get a delegate that receives
+    /// Home Screen quick actions (SwiftUI doesn't deliver these by default).
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+
     let modelContainer: ModelContainer
 
     init() {

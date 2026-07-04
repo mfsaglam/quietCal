@@ -19,6 +19,10 @@ struct HomeView: View {
     @State private var showHistory = false
     @State private var historyViewModel: HistoryViewModel?
 
+    /// Home Screen quick actions land here via the scene delegate; we observe
+    /// `pending` and route it into the same navigation the UI already uses.
+    private let quickActionRouter = QuickActionRouter.shared
+
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottomTrailing) {
@@ -64,6 +68,14 @@ struct HomeView: View {
                 withAnimation(.easeOut(duration: 0.9).delay(0.1)) {
                     ringAnimated = true
                 }
+                // Cold launch from a quick action: the action is already
+                // pending by the time this view appears.
+                await handlePendingQuickAction()
+            }
+            .onChange(of: quickActionRouter.pending) { _, action in
+                // Warm launch: a quick action fired while the app was running.
+                guard action != nil else { return }
+                Task { await handlePendingQuickAction() }
             }
             .navigationDestination(isPresented: $showSettings) {
                 if let settingsViewModel {
@@ -280,6 +292,20 @@ struct HomeView: View {
             }
         ) { addMealViewModel in
             AddMealView(viewModel: addMealViewModel)
+        }
+    }
+
+    /// Consumes a pending Home Screen quick action, routing it into the same
+    /// navigation the on-screen controls use.
+    private func handlePendingQuickAction() async {
+        guard let action = quickActionRouter.pending else { return }
+        quickActionRouter.pending = nil
+        switch action {
+        case .logMeal:
+            addMealViewModel = await viewModel.makeAddMealViewModel()
+        case .history:
+            historyViewModel = viewModel.makeHistoryViewModel()
+            showHistory = true
         }
     }
 
