@@ -13,19 +13,44 @@ enum CalorieEstimationSource {
     }
 }
 
+/// How much to trust an estimate, mirroring the `CalorieEstimator` package's
+/// `Confidence`: `.high` when the calorie figure was resolved from the bundled
+/// nutrition database, `.medium` when the model supplied it.
+enum EstimateConfidence: Sendable, Equatable {
+    case high
+    case medium
+
+    /// User-facing description shown alongside an estimate.
+    var label: String {
+        switch self {
+        case .high: "High confidence"
+        case .medium: "Medium confidence"
+        }
+    }
+}
+
+/// A calorie estimate for a known food name and gram weight, paired with the
+/// confidence reported by the estimator.
+struct CalorieEstimate: Sendable, Equatable {
+    let calories: Int
+    let confidence: EstimateConfidence
+}
+
 /// A meal parsed and estimated from a single natural-language phrase such as
 /// "200 grams of grilled chicken". `foodName` is the cleaned food (without the
 /// quantity), `grams` an approximate mass (any spoken unit — oz, ml, "a cup" —
-/// is normalised to grams), and `calories` the estimate for that amount.
+/// is normalised to grams), `calories` the estimate for that amount, and
+/// `confidence` how the underlying figure was resolved.
 struct MealEstimate: Sendable, Equatable {
     let foodName: String
     let grams: Int
     let calories: Int
+    let confidence: EstimateConfidence
 }
 
 protocol CalorieEstimating: Sendable {
     var source: CalorieEstimationSource { get }
-    func estimate(name: String, grams: Int) async throws -> Int
+    func estimate(name: String, grams: Int) async throws -> CalorieEstimate
 
     /// Estimates a meal from one free-text phrase, doing the food/quantity
     /// parsing for the caller. Used by the low-friction Siri flow, where the
@@ -42,7 +67,12 @@ extension CalorieEstimating {
     /// override this method to delegate to it.
     func estimate(phrase: String) async throws -> MealEstimate {
         let parsed = MealPhraseParser.parse(phrase)
-        let calories = try await estimate(name: parsed.foodName, grams: parsed.grams)
-        return MealEstimate(foodName: parsed.foodName, grams: parsed.grams, calories: calories)
+        let estimate = try await estimate(name: parsed.foodName, grams: parsed.grams)
+        return MealEstimate(
+            foodName: parsed.foodName,
+            grams: parsed.grams,
+            calories: estimate.calories,
+            confidence: estimate.confidence
+        )
     }
 }

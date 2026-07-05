@@ -5,8 +5,12 @@ struct AppleIntelligenceCalorieEstimator: CalorieEstimating {
     let source: CalorieEstimationSource = .appleIntelligence
     private let estimator = CalorieEstimator()
 
-    func estimate(name: String, grams: Int) async throws -> Int {
-        try await estimator.estimate(meal: name, grams: grams).calories
+    func estimate(name: String, grams: Int) async throws -> CalorieEstimate {
+        let result = try await estimator.estimate(meal: name, grams: grams)
+        return CalorieEstimate(
+            calories: result.calories,
+            confidence: EstimateConfidence(result.confidence)
+        )
     }
 
     /// Delegates whole-phrase parsing to the package's model-based
@@ -20,7 +24,20 @@ struct AppleIntelligenceCalorieEstimator: CalorieEstimating {
         return QuietCal.MealEstimate(
             foodName: result.foodName,
             grams: result.grams,
-            calories: result.calories
+            calories: result.calories,
+            confidence: EstimateConfidence(result.confidence)
         )
+    }
+}
+
+private extension EstimateConfidence {
+    /// Maps the `CalorieEstimator` package's confidence onto the app's own
+    /// ``EstimateConfidence``, keeping the package type from leaking past this
+    /// service into the rest of the app.
+    init(_ packageConfidence: Confidence) {
+        switch packageConfidence {
+        case .high: self = .high
+        case .medium: self = .medium
+        }
     }
 }

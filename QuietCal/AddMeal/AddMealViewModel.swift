@@ -21,6 +21,7 @@ final class AddMealViewModel: Identifiable {
     var amount: String = ""
     var unit: WeightUnit
     var estimatedCalories: Int?
+    var estimatedConfidence: EstimateConfidence?
     var isEstimating: Bool = false
     var errorMessage: String?
 
@@ -70,6 +71,7 @@ final class AddMealViewModel: Identifiable {
     func estimate() async {
         guard shouldEstimate else {
             estimatedCalories = nil
+            estimatedConfidence = nil
             errorMessage = nil
             return
         }
@@ -79,20 +81,23 @@ final class AddMealViewModel: Identifiable {
         errorMessage = nil
         defer { isEstimating = false }
         do {
-            let kcal = try await calorieEstimator.estimate(name: requestName, grams: requestGrams)
+            let estimate = try await calorieEstimator.estimate(name: requestName, grams: requestGrams)
             guard requestName == trimmedName, requestGrams == gramsValue else { return }
-            estimatedCalories = kcal
+            estimatedCalories = estimate.calories
+            estimatedConfidence = estimate.confidence
         } catch is CancellationError {
             // keep previous estimate
         } catch {
             guard requestName == trimmedName, requestGrams == gramsValue else { return }
             estimatedCalories = nil
+            estimatedConfidence = nil
             errorMessage = "Couldn't estimate this meal. Check the name and amount, then try again."
         }
     }
 
     func retry() async {
         estimatedCalories = nil
+        estimatedConfidence = nil
         errorMessage = nil
         await estimate()
     }

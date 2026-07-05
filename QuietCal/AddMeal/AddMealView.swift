@@ -160,7 +160,7 @@ struct AddMealView: View {
                     Text(viewModel.estimationSource.label)
                         .font(.system(size: 13, weight: .semibold))
                         .tracking(-0.1)
-                    Text("Medium confidence · tap to retry")
+                    Text("\(viewModel.estimatedConfidence?.label ?? "Estimated") · tap to retry")
                         .font(.system(size: 11))
                         .foregroundStyle(.secondary)
                 }
