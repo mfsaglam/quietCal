@@ -151,33 +151,27 @@ struct AddMealView: View {
     }
 
     private var aiChip: some View {
-        Button {
-            Task { await viewModel.retry() }
-        } label: {
-            HStack(spacing: 8) {
-                sparkle(size: 14)
-                VStack(alignment: .leading, spacing: 1) {
-                    Text(viewModel.estimationSource.label)
-                        .font(.system(size: 13, weight: .semibold))
-                        .tracking(-0.1)
-                    Text("\(viewModel.estimatedConfidence?.label ?? "Estimated") · tap to retry")
+        HStack(spacing: 8) {
+            sparkle(size: 14)
+            VStack(alignment: .leading, spacing: 1) {
+                Text(viewModel.estimationSource.label)
+                    .font(.system(size: 13, weight: .semibold))
+                    .tracking(-0.1)
+                if let confidence = viewModel.estimatedConfidence {
+                    Text(confidence.label)
                         .font(.system(size: 11))
                         .foregroundStyle(.secondary)
                 }
-                Spacer(minLength: 0)
-                Image(systemName: "arrow.clockwise")
-                    .font(.system(size: 14))
-                    .foregroundStyle(aiPurple)
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 10)
-            .background(aiPurple.opacity(0.08), in: RoundedRectangle(cornerRadius: 12))
-            .overlay {
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(aiPurple.opacity(0.25), lineWidth: 0.5)
-            }
+            Spacer(minLength: 0)
         }
-        .buttonStyle(.plain)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
+        .background(aiPurple.opacity(0.08), in: RoundedRectangle(cornerRadius: 12))
+        .overlay {
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(aiPurple.opacity(0.25), lineWidth: 0.5)
+        }
     }
 
     private var errorChip: some View {
