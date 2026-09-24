@@ -9,7 +9,10 @@ struct AppleIntelligenceCalorieEstimator: CalorieEstimating {
         let result = try await estimator.estimate(meal: name, grams: grams)
         return CalorieEstimate(
             calories: result.calories,
-            confidence: EstimateConfidence(result.confidence)
+            confidence: EstimateConfidence(result.confidence),
+            ingredients: (result.ingredients ?? []).map {
+                EstimatedIngredient(name: $0.name, grams: $0.grams, calories: $0.calories)
+            }
         )
     }
 
@@ -25,7 +28,10 @@ struct AppleIntelligenceCalorieEstimator: CalorieEstimating {
             foodName: result.foodName,
             grams: result.grams,
             calories: result.calories,
-            confidence: EstimateConfidence(result.confidence)
+            confidence: EstimateConfidence(result.confidence),
+            ingredients: (result.ingredients ?? []).map {
+                EstimatedIngredient(name: $0.name, grams: $0.grams, calories: $0.calories)
+            }
         )
     }
 }
@@ -33,11 +39,14 @@ struct AppleIntelligenceCalorieEstimator: CalorieEstimating {
 private extension EstimateConfidence {
     /// Maps the `CalorieEstimator` package's confidence onto the app's own
     /// ``EstimateConfidence``, keeping the package type from leaking past this
-    /// service into the rest of the app.
-    init(_ packageConfidence: Confidence) {
+    /// service into the rest of the app. The package reports confidence only
+    /// where available (`Confidence?`), so a `nil` figure maps to `nil` here.
+    init?(_ packageConfidence: Confidence?) {
         switch packageConfidence {
         case .high: self = .high
         case .medium: self = .medium
+        case .low: self = .low
+        case nil: return nil
         }
     }
 }
