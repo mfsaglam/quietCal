@@ -30,7 +30,8 @@ grams using a calorie estimator service.
 - **Calorie estimation**: pluggable `CalorieEstimating` protocol with stub and
   Apple Intelligence implementations, backed by the
   [CalorieEstimator](https://github.com/mfsaglam/CalorieEstimator) package
-  (1.2.0+, on-device via FoundationModels, incl. natural-language phrase parsing)
+  (3.0.0+, on-device via FoundationModels, with a local recipe database and
+  natural-language phrase parsing)
 - **Siri**: App Intents framework (`LogMealIntent`, `TodaysCaloriesIntent`)
   exposed as App Shortcuts
 - **Testing**: Swift Testing framework

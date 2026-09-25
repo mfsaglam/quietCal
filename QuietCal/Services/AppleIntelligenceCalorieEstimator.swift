@@ -17,7 +17,7 @@ struct AppleIntelligenceCalorieEstimator: CalorieEstimating {
     }
 
     /// Delegates whole-phrase parsing to the package's model-based
-    /// `estimate(phrase:)` (CalorieEstimator 1.2.0+), which handles messy
+    /// `estimate(phrase:)` (CalorieEstimator 3.0.0+), which handles messy
     /// phrasing — "a cup", "a handful", word-number quantities — far better than
     /// the interim `MealPhraseParser` used by the protocol's default. The return
     /// type is the app's own `MealEstimate` (`QuietCal.MealEstimate`), distinct
