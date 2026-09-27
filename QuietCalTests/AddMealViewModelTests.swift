@@ -18,6 +18,27 @@ struct AddMealViewModelTests {
         )
     }
 
+    @Test func ingredientsUpdateAndClearImmediatelyWhenDishNameChanges() async {
+        let estimator = TestCalorieEstimator()
+        estimator.ingredients = [EstimatedIngredient(name: "Chicken", grams: 100, calories: 165)]
+        let vm = makeViewModel(estimator: estimator)
+        vm.name = "Chicken salad"
+        vm.amount = "200"
+        await vm.estimate()
+        #expect(vm.estimatedIngredients == estimator.ingredients)
+
+        vm.name = "Tofu salad"
+        #expect(vm.estimatedIngredients.isEmpty)
+        #expect(!vm.canSave)
+        estimator.ingredients = [EstimatedIngredient(name: "Tofu", grams: 100, calories: 76)]
+        await vm.estimate()
+        #expect(vm.estimatedIngredients == estimator.ingredients)
+
+        estimator.error = TestEstimatorError()
+        await vm.retry()
+        #expect(vm.estimatedIngredients.isEmpty)
+    }
+
     @Test func defaultUnitIsApplied() {
         let vm = makeViewModel(defaultUnit: .oz)
         #expect(vm.unit == .oz)

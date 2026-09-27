@@ -3,7 +3,9 @@ import Foundation
 
 final class TestCalorieEstimator: CalorieEstimating, @unchecked Sendable {
     var source: CalorieEstimationSource = .stub
+    var ingredients: [EstimatedIngredient] = []
     var calories: Int = 200
+    var confidence: EstimateConfidence = .medium
     var error: Error?
     var delay: Duration = .zero
 
@@ -11,7 +13,7 @@ final class TestCalorieEstimator: CalorieEstimating, @unchecked Sendable {
     private(set) var lastName: String?
     private(set) var lastGrams: Int?
 
-    func estimate(name: String, grams: Int) async throws -> Int {
+    func estimate(name: String, grams: Int) async throws -> CalorieEstimate {
         callCount += 1
         lastName = name
         lastGrams = grams
@@ -21,7 +23,7 @@ final class TestCalorieEstimator: CalorieEstimating, @unchecked Sendable {
         if let error {
             throw error
         }
-        return calories
+        return CalorieEstimate(calories: calories, confidence: confidence, ingredients: ingredients)
     }
 }
 

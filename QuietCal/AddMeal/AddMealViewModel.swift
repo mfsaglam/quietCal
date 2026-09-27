@@ -17,10 +17,20 @@ final class AddMealViewModel: Identifiable {
     private let reviewPrompt: ReviewPromptController
     private let entitlements: any EntitlementProviding
 
-    var name: String = ""
-    var amount: String = ""
-    var unit: WeightUnit
+    var name: String = "" {
+        didSet { if name != oldValue { invalidateEstimate() } }
+    }
+    var amount: String = "" {
+        didSet { if amount != oldValue { invalidateEstimate() } }
+    }
+    var unit: WeightUnit {
+        didSet { if unit != oldValue { invalidateEstimate() } }
+    }
+
+    private var estimateRequestID = UUID()
+    var estimatedIngredients: [EstimatedIngredient] = []
     var estimatedCalories: Int?
+    var estimatedConfidence: EstimateConfidence?
     var isEstimating: Bool = false
     var errorMessage: String?
 
@@ -67,9 +77,21 @@ final class AddMealViewModel: Identifiable {
         Int(Double(amountValue) * unit.gramsMultiplier)
     }
 
+    private func invalidateEstimate() {
+        estimateRequestID = UUID()
+        isEstimating = false
+        estimatedCalories = nil
+        estimatedConfidence = nil
+        estimatedIngredients = []
+        errorMessage = nil
+    }
+
     func estimate() async {
+        invalidateEstimate()
+        let requestID = estimateRequestID
         guard shouldEstimate else {
             estimatedCalories = nil
+            estimatedConfidence = nil
             errorMessage = nil
             return
         }
@@ -77,22 +99,26 @@ final class AddMealViewModel: Identifiable {
         let requestGrams = gramsValue
         isEstimating = true
         errorMessage = nil
-        defer { isEstimating = false }
+        defer { if requestID == estimateRequestID { isEstimating = false } }
         do {
-            let kcal = try await calorieEstimator.estimate(name: requestName, grams: requestGrams)
-            guard requestName == trimmedName, requestGrams == gramsValue else { return }
-            estimatedCalories = kcal
+            let estimate = try await calorieEstimator.estimate(name: requestName, grams: requestGrams)
+            guard requestID == estimateRequestID, !Task.isCancelled else { return }
+            estimatedCalories = estimate.calories
+            estimatedConfidence = estimate.confidence
+            estimatedIngredients = estimate.ingredients
         } catch is CancellationError {
-            // keep previous estimate
+            // A cancelled request must not restore an outdated breakdown.
         } catch {
-            guard requestName == trimmedName, requestGrams == gramsValue else { return }
+            guard requestID == estimateRequestID, !Task.isCancelled else { return }
             estimatedCalories = nil
+            estimatedConfidence = nil
             errorMessage = "Couldn't estimate this meal. Check the name and amount, then try again."
         }
     }
 
     func retry() async {
         estimatedCalories = nil
+        estimatedConfidence = nil
         errorMessage = nil
         await estimate()
     }
