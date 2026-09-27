@@ -9,12 +9,16 @@ struct AddMealViewModelTests {
     private func makeViewModel(
         store: any MealStore = InMemoryMealStore(meals: []),
         estimator: TestCalorieEstimator = TestCalorieEstimator(),
-        defaultUnit: WeightUnit = .g
+        defaultUnit: WeightUnit = .g,
+        calendar: Calendar = .autoupdatingCurrent,
+        now: @escaping () -> Date = Date.init
     ) -> AddMealViewModel {
         AddMealViewModel(
             mealStore: store,
             calorieEstimator: estimator,
-            defaultUnit: defaultUnit
+            defaultUnit: defaultUnit,
+            calendar: calendar,
+            now: now
         )
     }
 
@@ -251,6 +255,119 @@ struct AddMealViewModelTests {
         #expect(meals.first?.grams == 453)
     }
 
+    // MARK: - Time-based quick log suggestions
+
+    @Test func suggestionsUseCurrentPeriodAndRankByFrequencyThenRecency() async throws {
+        let calendar = fixedCalendar()
+        let now = fixedDate(day: 27, hour: 8, calendar: calendar)
+        let meals = [
+            Meal(name: "Oatmeal", grams: 220, kcal: 310,
+                 createdAt: fixedDate(day: 24, hour: 8, calendar: calendar)),
+            Meal(name: " oatmeal ", grams: 220, kcal: 315,
+                 createdAt: fixedDate(day: 25, hour: 9, calendar: calendar)),
+            Meal(name: "OATMEAL", grams: 220, kcal: 320,
+                 createdAt: fixedDate(day: 26, hour: 7, calendar: calendar)),
+            Meal(name: "Eggs", grams: 120, kcal: 185,
+                 createdAt: fixedDate(day: 25, hour: 8, calendar: calendar)),
+            Meal(name: "Eggs", grams: 120, kcal: 185,
+                 createdAt: fixedDate(day: 26, hour: 8, calendar: calendar)),
+            Meal(name: "Chicken salad", grams: 300, kcal: 450,
+                 createdAt: fixedDate(day: 26, hour: 12, calendar: calendar)),
+        ]
+        let vm = makeViewModel(
+            store: InMemoryMealStore(meals: meals),
+            calendar: calendar,
+            now: { now }
+        )
+
+        await vm.loadSuggestions()
+
+        #expect(vm.suggestionPeriodLabel == "Breakfast")
+        #expect(vm.suggestions.map(\.name) == ["OATMEAL", "Eggs"])
+        #expect(vm.suggestions.map(\.occurrenceCount) == [3, 2])
+        #expect(vm.suggestions.first?.kcal == 320)
+    }
+
+    @Test func suggestionPeriodChangesAtLunchBoundary() async {
+        let calendar = fixedCalendar()
+        let now = fixedDate(day: 27, hour: 11, calendar: calendar)
+        let meals = [
+            Meal(name: "Breakfast", grams: 100, kcal: 100,
+                 createdAt: fixedDate(day: 26, hour: 10, calendar: calendar)),
+            Meal(name: "Lunch", grams: 200, kcal: 200,
+                 createdAt: fixedDate(day: 26, hour: 11, calendar: calendar)),
+        ]
+        let vm = makeViewModel(
+            store: InMemoryMealStore(meals: meals),
+            calendar: calendar,
+            now: { now }
+        )
+
+        await vm.loadSuggestions()
+
+        #expect(vm.suggestionPeriodLabel == "Lunch")
+        #expect(vm.suggestions.map(\.name) == ["Lunch"])
+    }
+
+    @Test func quickLogRepeatsHistoricalValuesWithoutCallingEstimator() async throws {
+        let calendar = fixedCalendar()
+        let now = fixedDate(day: 27, hour: 8, calendar: calendar)
+        let previous = Meal(
+            name: "Oatmeal",
+            grams: 220,
+            kcal: 310,
+            createdAt: fixedDate(day: 26, hour: 8, calendar: calendar)
+        )
+        let store = InMemoryMealStore(meals: [previous])
+        let estimator = TestCalorieEstimator()
+        let vm = makeViewModel(
+            store: store,
+            estimator: estimator,
+            calendar: calendar,
+            now: { now }
+        )
+        await vm.loadSuggestions()
+        let suggestion = try #require(vm.suggestions.first)
+
+        let outcome = await vm.logSuggestion(suggestion)
+
+        #expect(outcome == .saved)
+        #expect(estimator.callCount == 0)
+        let today = try #require(calendar.dateInterval(of: .day, for: now))
+        let logged = try await store.fetchMeals(in: today)
+        #expect(logged.count == 1)
+        #expect(logged.first?.name == "Oatmeal")
+        #expect(logged.first?.grams == 220)
+        #expect(logged.first?.kcal == 310)
+        #expect(logged.first?.createdAt == now)
+    }
+
+    @Test func suggestionArrowCopiesOnlyNameAndLeavesAmountEmpty() async throws {
+        let calendar = fixedCalendar()
+        let now = fixedDate(day: 27, hour: 8, calendar: calendar)
+        let previous = Meal(
+            name: "Oatmeal",
+            grams: 220,
+            kcal: 310,
+            createdAt: fixedDate(day: 26, hour: 8, calendar: calendar)
+        )
+        let vm = makeViewModel(
+            store: InMemoryMealStore(meals: [previous]),
+            calendar: calendar,
+            now: { now }
+        )
+        await vm.loadSuggestions()
+        let suggestion = try #require(vm.suggestions.first)
+        vm.amount = "999"
+
+        vm.useSuggestionName(suggestion)
+
+        #expect(vm.name == "Oatmeal")
+        #expect(vm.amount.isEmpty)
+        #expect(!vm.shouldShowSuggestions)
+        #expect(!vm.canSave)
+    }
+
     // MARK: - Free-tier daily save limit
 
     private func mealsLoggedToday(_ count: Int) -> [Meal] {
@@ -304,6 +421,23 @@ struct AddMealViewModelTests {
         let count = try await store.fetchMeals(in: anyInterval()).count
         #expect(count == FreeTierLimits.dailyMealLimit + 1)
     }
+}
+
+private func fixedCalendar() -> Calendar {
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+    return calendar
+}
+
+private func fixedDate(day: Int, hour: Int, calendar: Calendar) -> Date {
+    calendar.date(from: DateComponents(
+        year: 2026,
+        month: 9,
+        day: day,
+        hour: hour,
+        minute: 0,
+        second: 0
+    ))!
 }
 
 private func anyInterval() -> DateInterval {

@@ -1,6 +1,15 @@
 import Foundation
 import Observation
 
+struct MealSuggestion: Identifiable, Equatable, Sendable {
+    let id: UUID
+    let name: String
+    let grams: Int
+    let kcal: Int
+    let occurrenceCount: Int
+    let lastLoggedAt: Date
+}
+
 @MainActor
 @Observable
 final class AddMealViewModel: Identifiable {
@@ -16,6 +25,8 @@ final class AddMealViewModel: Identifiable {
     private let calorieEstimator: CalorieEstimating
     private let reviewPrompt: ReviewPromptController
     private let entitlements: any EntitlementProviding
+    private let calendar: Calendar
+    private let now: () -> Date
 
     var name: String = "" {
         didSet { if name != oldValue { invalidateEstimate() } }
@@ -33,19 +44,24 @@ final class AddMealViewModel: Identifiable {
     var estimatedConfidence: EstimateConfidence?
     var isEstimating: Bool = false
     var errorMessage: String?
+    private(set) var suggestions: [MealSuggestion] = []
 
     init(
         mealStore: MealStore,
         calorieEstimator: CalorieEstimating,
         defaultUnit: WeightUnit = .g,
         reviewPrompt: ReviewPromptController = ReviewPromptController(),
-        entitlements: any EntitlementProviding = StaticEntitlement(isPro: true)
+        entitlements: any EntitlementProviding = StaticEntitlement(isPro: true),
+        calendar: Calendar = .autoupdatingCurrent,
+        now: @escaping () -> Date = Date.init
     ) {
         self.mealStore = mealStore
         self.calorieEstimator = calorieEstimator
         self.unit = defaultUnit
         self.reviewPrompt = reviewPrompt
         self.entitlements = entitlements
+        self.calendar = calendar
+        self.now = now
     }
 
     var estimationSource: CalorieEstimationSource {
@@ -65,6 +81,14 @@ final class AddMealViewModel: Identifiable {
 
     var shouldEstimate: Bool {
         !trimmedName.isEmpty && gramsValue > 0
+    }
+
+    var shouldShowSuggestions: Bool {
+        trimmedName.isEmpty && !suggestions.isEmpty
+    }
+
+    var suggestionPeriodLabel: String {
+        mealPeriod(for: now()).label
     }
 
     private var trimmedName: String {
@@ -123,6 +147,50 @@ final class AddMealViewModel: Identifiable {
         await estimate()
     }
 
+    /// Loads the user's most common meals for the current local time of day.
+    /// Suggestions are derived entirely on-device from the last 90 days.
+    func loadSuggestions() async {
+        let currentDate = now()
+        guard let lookbackStart = calendar.date(byAdding: .day, value: -90, to: currentDate) else {
+            suggestions = []
+            return
+        }
+
+        do {
+            let interval = DateInterval(
+                start: lookbackStart,
+                end: currentDate.addingTimeInterval(1)
+            )
+            let meals = try await mealStore.fetchMeals(in: interval)
+            suggestions = makeSuggestions(from: meals, for: mealPeriod(for: currentDate))
+        } catch {
+            suggestions = []
+        }
+    }
+
+    /// Copies only the suggestion's name into the editable form. The amount is
+    /// deliberately cleared so entering a new amount follows the normal AI flow.
+    func useSuggestionName(_ suggestion: MealSuggestion) {
+        name = suggestion.name
+        amount = ""
+    }
+
+    /// Repeats a previous meal exactly, without asking the calorie estimator to
+    /// recalculate it. A fresh ID and timestamp make this a new log entry.
+    @discardableResult
+    func logSuggestion(_ suggestion: MealSuggestion) async -> SaveOutcome {
+        if !entitlements.isPro, await reachedDailyLimit() {
+            return .blockedByLimit
+        }
+        let meal = Meal(
+            name: suggestion.name,
+            grams: suggestion.grams,
+            kcal: suggestion.kcal,
+            createdAt: now()
+        )
+        return await persist(meal)
+    }
+
     @discardableResult
     func save() async -> SaveOutcome {
         guard canSave, let kcal = estimatedCalories else { return .notReady }
@@ -133,8 +201,12 @@ final class AddMealViewModel: Identifiable {
             name: trimmedName,
             grams: gramsValue,
             kcal: kcal,
-            createdAt: Date()
+            createdAt: now()
         )
+        return await persist(meal)
+    }
+
+    private func persist(_ meal: Meal) async -> SaveOutcome {
         try? await mealStore.save(meal)
         reviewPrompt.recordMealLogged()
         AppGroup.reloadWidgets()
@@ -144,9 +216,92 @@ final class AddMealViewModel: Identifiable {
     /// Whether the user has already logged the free tier's daily allowance of
     /// meals. Only consulted for non-Pro users.
     private func reachedDailyLimit() async -> Bool {
-        let today = Calendar.current.dateInterval(of: .day, for: Date())
-            ?? DateInterval(start: Date(), duration: 0)
+        let currentDate = now()
+        let today = calendar.dateInterval(of: .day, for: currentDate)
+            ?? DateInterval(start: currentDate, duration: 0)
         let count = (try? await mealStore.fetchMeals(in: today).count) ?? 0
         return count >= FreeTierLimits.dailyMealLimit
+    }
+
+    private func makeSuggestions(from meals: [Meal], for period: MealPeriod) -> [MealSuggestion] {
+        struct SuggestionKey: Hashable {
+            let normalizedName: String
+            let grams: Int
+        }
+
+        struct Group {
+            var count: Int
+            var latest: Meal
+        }
+
+        var groups: [SuggestionKey: Group] = [:]
+        for meal in meals where mealPeriod(for: meal.createdAt) == period {
+            let cleanedName = meal.name.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !cleanedName.isEmpty, meal.grams > 0, meal.kcal > 0 else { continue }
+
+            let normalizedName = cleanedName.folding(
+                options: [.caseInsensitive, .diacriticInsensitive, .widthInsensitive],
+                locale: Locale(identifier: "en_US_POSIX")
+            )
+            let key = SuggestionKey(normalizedName: normalizedName, grams: meal.grams)
+            if var group = groups[key] {
+                group.count += 1
+                if meal.createdAt > group.latest.createdAt {
+                    group.latest = meal
+                }
+                groups[key] = group
+            } else {
+                groups[key] = Group(count: 1, latest: meal)
+            }
+        }
+
+        return groups.values
+            .sorted { lhs, rhs in
+                if lhs.count != rhs.count { return lhs.count > rhs.count }
+                return lhs.latest.createdAt > rhs.latest.createdAt
+            }
+            .prefix(5)
+            .map { group in
+                MealSuggestion(
+                    id: group.latest.id,
+                    name: group.latest.name.trimmingCharacters(in: .whitespacesAndNewlines),
+                    grams: group.latest.grams,
+                    kcal: group.latest.kcal,
+                    occurrenceCount: group.count,
+                    lastLoggedAt: group.latest.createdAt
+                )
+            }
+    }
+
+    private func mealPeriod(for date: Date) -> MealPeriod {
+        MealPeriod(hour: calendar.component(.hour, from: date))
+    }
+
+    private enum MealPeriod: Equatable {
+        case breakfast
+        case lunch
+        case afternoon
+        case dinner
+        case lateNight
+
+        init(hour: Int) {
+            switch hour {
+            case 5..<11: self = .breakfast
+            case 11..<15: self = .lunch
+            case 15..<18: self = .afternoon
+            case 18..<22: self = .dinner
+            default: self = .lateNight
+            }
+        }
+
+        var label: String {
+            switch self {
+            case .breakfast: return "Breakfast"
+            case .lunch: return "Lunch"
+            case .afternoon: return "Afternoon"
+            case .dinner: return "Dinner"
+            case .lateNight: return "Late Night"
+            }
+        }
     }
 }
