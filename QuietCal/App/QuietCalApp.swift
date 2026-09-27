@@ -16,12 +16,14 @@ struct QuietCalApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     let modelContainer: ModelContainer
+    let suggestionModelContainer: ModelContainer
 
     init() {
         do {
             modelContainer = try AppGroup.makeModelContainer()
+            suggestionModelContainer = try AppGroup.makeSuggestionModelContainer()
         } catch {
-            fatalError("Failed to create ModelContainer: \(error)")
+            fatalError("Failed to create a ModelContainer: \(error)")
         }
         // Register the App Shortcuts so Siri/Spotlight pick up any phrase or
         // parameter changes on launch.
@@ -30,7 +32,10 @@ struct QuietCalApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(modelContainer: modelContainer)
+            ContentView(
+                modelContainer: modelContainer,
+                suggestionModelContainer: suggestionModelContainer
+            )
         }
     }
 }

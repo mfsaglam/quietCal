@@ -6,14 +6,20 @@ import Observation
 final class SettingsViewModel {
     private let store: SettingsStore
     private let mealStore: MealStore
+    private let suggestionStore: SuggestionStore
 
     var target: Int = 2000
     var theme: Theme = .system
     var weightUnit: WeightUnit = .g
 
-    init(store: SettingsStore, mealStore: MealStore) {
+    init(
+        store: SettingsStore,
+        mealStore: MealStore,
+        suggestionStore: SuggestionStore = InMemorySuggestionStore()
+    ) {
         self.store = store
         self.mealStore = mealStore
+        self.suggestionStore = suggestionStore
     }
 
     func load() async {
@@ -55,6 +61,7 @@ final class SettingsViewModel {
 
     func clearAll() async {
         try? await mealStore.deleteAll()
+        try? await suggestionStore.deleteAll()
         AppGroup.reloadWidgets()
     }
 

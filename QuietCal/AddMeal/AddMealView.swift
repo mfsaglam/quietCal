@@ -7,6 +7,7 @@ struct AddMealView: View {
     @FocusState private var focusedField: Field?
 
     @State private var showPaywall = false
+    @State private var isQuickLogging = false
 
     private enum Field { case name, amount }
 
@@ -18,6 +19,9 @@ struct AddMealView: View {
             ScrollView {
                 VStack(spacing: 16) {
                     nameField
+                    if viewModel.shouldShowSuggestions {
+                        suggestionsSection
+                    }
                     HStack(spacing: 10) {
                         amountField
                         caloriesField
@@ -68,7 +72,11 @@ struct AddMealView: View {
                 }
                 await viewModel.estimate()
             }
-            .onAppear { focusedField = .name }
+            .onAppear {
+                if !viewModel.shouldShowSuggestions {
+                    focusedField = .name
+                }
+            }
         }
         .presentationDetents([.large])
         .presentationDragIndicator(.visible)
@@ -90,6 +98,123 @@ struct AddMealView: View {
                 .focused($focusedField, equals: .name)
                 .submitLabel(.next)
                 .onSubmit { focusedField = .amount }
+        }
+    }
+
+    private var suggestionsSection: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text("QUICK LOG · \(viewModel.suggestionPeriodLabel.uppercased())")
+                .font(.system(size: 11, weight: .medium))
+                .tracking(0.5)
+                .foregroundStyle(.secondary)
+                .padding(.leading, 4)
+
+            if #available(iOS 27, *) {
+                suggestionsList
+            } else {
+                legacySuggestionsList
+            }
+        }
+    }
+
+    @available(iOS 27, *)
+    private var suggestionsList: some View {
+        VStack(spacing: 0) {
+            ForEach(Array(viewModel.suggestions.enumerated()), id: \.element.id) { index, suggestion in
+                suggestionRowWithDivider(suggestion, isLast: index == viewModel.suggestions.count - 1)
+                    .swipeActions {
+                        Button(role: .destructive) {
+                            Task { await viewModel.deleteSuggestion(suggestion) }
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
+            }
+        }
+        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 14))
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .swipeActionsContainer()
+    }
+
+    private var legacySuggestionsList: some View {
+        VStack(spacing: 0) {
+            ForEach(Array(viewModel.suggestions.enumerated()), id: \.element.id) { index, suggestion in
+                SwipeToDeleteRow {
+                    Task { await viewModel.deleteSuggestion(suggestion) }
+                } content: {
+                    suggestionRowWithDivider(suggestion, isLast: index == viewModel.suggestions.count - 1)
+                        .background(Color(.secondarySystemBackground))
+                }
+            }
+        }
+        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 14))
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+    }
+
+    private func suggestionRowWithDivider(_ suggestion: MealSuggestion, isLast: Bool) -> some View {
+        VStack(spacing: 0) {
+            suggestionRow(suggestion)
+            if !isLast {
+                Divider()
+                    .padding(.leading, 16)
+            }
+        }
+    }
+
+    private func suggestionRow(_ suggestion: MealSuggestion) -> some View {
+        HStack(spacing: 0) {
+            Button {
+                quickLog(suggestion)
+            } label: {
+                HStack {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(suggestion.name)
+                            .font(.system(size: 16, weight: .medium))
+                            .tracking(-0.3)
+                            .foregroundStyle(.primary)
+                            .lineLimit(1)
+                        Text("\(suggestion.grams) g · \(suggestion.kcal) kcal")
+                            .font(.system(size: 13))
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer(minLength: 12)
+                }
+                .padding(.leading, 16)
+                .padding(.vertical, 12)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Log \(suggestion.name), \(suggestion.grams) grams, \(suggestion.kcal) calories")
+
+            Button {
+                viewModel.useSuggestionName(suggestion)
+                focusedField = .amount
+            } label: {
+                Image(systemName: "arrow.up.left")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(.secondary)
+                    .frame(width: 48, height: 48)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Use \(suggestion.name) name")
+        }
+        .disabled(isQuickLogging)
+    }
+
+    private func quickLog(_ suggestion: MealSuggestion) {
+        guard !isQuickLogging else { return }
+        isQuickLogging = true
+        Task {
+            switch await viewModel.logSuggestion(suggestion) {
+            case .saved:
+                dismiss()
+            case .blockedByLimit:
+                isQuickLogging = false
+                showPaywall = true
+            case .notReady:
+                isQuickLogging = false
+            }
         }
     }
 
@@ -371,6 +496,14 @@ private struct ShimmerBar: View {
             AddMealView(
                 viewModel: AddMealViewModel(
                     mealStore: InMemoryMealStore(meals: .sample),
+                    suggestionStore: InMemorySuggestionStore(
+                        suggestions: [Meal].sample.map {
+                            StoredSuggestion(
+                                meal: $0,
+                                period: MealPeriod(date: $0.createdAt, calendar: .autoupdatingCurrent)
+                            )
+                        }
+                    ),
                     calorieEstimator: StubCalorieEstimator()
                 )
             )

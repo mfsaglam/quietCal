@@ -35,8 +35,9 @@ struct ContentView: View {
 
     @Environment(\.scenePhase) private var scenePhase
 
-    init(modelContainer: ModelContainer) {
+    init(modelContainer: ModelContainer, suggestionModelContainer: ModelContainer) {
         let mealStore = SwiftDataMealStore(modelContainer: modelContainer)
+        let suggestionStore = SwiftDataSuggestionStore(modelContainer: suggestionModelContainer)
         #if targetEnvironment(simulator)
         let calorieEstimator: CalorieEstimating = StubCalorieEstimator()
         let availabilityProvider: ModelAvailabilityProviding = AlwaysAvailableModelProvider()
@@ -50,6 +51,7 @@ struct ContentView: View {
         _entitlements = State(initialValue: entitlements)
         _homeViewModel = State(initialValue: HomeViewModel(
             mealStore: mealStore,
+            suggestionStore: suggestionStore,
             calorieEstimator: calorieEstimator,
             settingsStore: UserDefaultsSettingsStore(),
             entitlements: entitlements
@@ -104,8 +106,14 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(modelContainer: try! ModelContainer(
-        for: MealEntity.self,
-        configurations: ModelConfiguration(isStoredInMemoryOnly: true)
-    ))
+    ContentView(
+        modelContainer: try! ModelContainer(
+            for: MealEntity.self,
+            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+        ),
+        suggestionModelContainer: try! ModelContainer(
+            for: SuggestionEntity.self,
+            configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+        )
+    )
 }

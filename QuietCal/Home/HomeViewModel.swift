@@ -5,6 +5,7 @@ import Observation
 @Observable
 final class HomeViewModel {
     private let mealStore: MealStore
+    private let suggestionStore: SuggestionStore
     private let calorieEstimator: CalorieEstimating
     private let settingsStore: SettingsStore
     private let entitlements: any EntitlementProviding
@@ -14,11 +15,13 @@ final class HomeViewModel {
 
     init(
         mealStore: MealStore,
+        suggestionStore: SuggestionStore = InMemorySuggestionStore(),
         calorieEstimator: CalorieEstimating,
         settingsStore: SettingsStore,
         entitlements: any EntitlementProviding = StaticEntitlement(isPro: true)
     ) {
         self.mealStore = mealStore
+        self.suggestionStore = suggestionStore
         self.calorieEstimator = calorieEstimator
         self.settingsStore = settingsStore
         self.entitlements = entitlements
@@ -45,16 +48,23 @@ final class HomeViewModel {
 
     func makeAddMealViewModel() async -> AddMealViewModel {
         let defaultUnit = (try? await settingsStore.loadWeightUnit()) ?? .g
-        return AddMealViewModel(
+        let viewModel = AddMealViewModel(
             mealStore: mealStore,
+            suggestionStore: suggestionStore,
             calorieEstimator: calorieEstimator,
             defaultUnit: defaultUnit,
             entitlements: entitlements
         )
+        await viewModel.loadSuggestions()
+        return viewModel
     }
 
     func makeSettingsViewModel() -> SettingsViewModel {
-        SettingsViewModel(store: settingsStore, mealStore: mealStore)
+        SettingsViewModel(
+            store: settingsStore,
+            mealStore: mealStore,
+            suggestionStore: suggestionStore
+        )
     }
 
     func makeHistoryViewModel() -> HistoryViewModel {
@@ -80,4 +90,5 @@ final class HomeViewModel {
         let day = date.formatted(.dateTime.day())
         return "\(weekday) · \(month) \(day)"
     }
+
 }
