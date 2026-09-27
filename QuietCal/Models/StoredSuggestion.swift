@@ -23,11 +23,11 @@ nonisolated enum MealPeriod: String, CaseIterable, Sendable {
 
     var label: String {
         switch self {
-        case .breakfast: return "Breakfast"
-        case .lunch: return "Lunch"
-        case .afternoon: return "Afternoon"
-        case .dinner: return "Dinner"
-        case .lateNight: return "Late Night"
+        case .breakfast: return L10n.string("meal_period.breakfast")
+        case .lunch: return L10n.string("meal_period.lunch")
+        case .afternoon: return L10n.string("meal_period.afternoon")
+        case .dinner: return L10n.string("meal_period.dinner")
+        case .lateNight: return L10n.string("meal_period.late_night")
         }
     }
 }

@@ -11,9 +11,9 @@ nonisolated enum WeightUnit: String, CaseIterable, Identifiable, Hashable, Senda
 
     var settingsLabel: String {
         switch self {
-        case .g: return "Grams"
-        case .oz: return "Ounces"
-        case .lb: return "Pounds"
+        case .g: return L10n.string("weight_unit.grams")
+        case .oz: return L10n.string("weight_unit.ounces")
+        case .lb: return L10n.string("weight_unit.pounds")
         }
     }
 

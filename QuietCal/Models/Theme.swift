@@ -9,9 +9,9 @@ nonisolated enum Theme: String, CaseIterable, Identifiable, Sendable {
 
     var label: String {
         switch self {
-        case .system: return "System"
-        case .light: return "Light"
-        case .dark: return "Dark"
+        case .system: return L10n.string("theme.system")
+        case .light: return L10n.string("theme.light")
+        case .dark: return L10n.string("theme.dark")
         }
     }
 

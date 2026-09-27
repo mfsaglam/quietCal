@@ -36,7 +36,12 @@ struct CalorieEntry: TimelineEntry {
 
     /// Compact eaten value for tight lock-screen rings, e.g. "1.2K" / "840".
     var eatenCompact: String {
-        eaten >= 1000 ? String(format: "%.1fK", Double(eaten) / 1000) : "\(eaten)"
+        eaten >= 1000
+            ? WidgetL10n.format(
+                "widget.compact.thousands",
+                String(format: "%.1f", Double(eaten) / 1000)
+            )
+            : "\(eaten)"
     }
 
     static let placeholder = CalorieEntry(date: Date(), eaten: 1240, target: 2000)
@@ -116,7 +121,7 @@ private struct SmallWidgetView: View {
     var body: some View {
         VStack(spacing: 6) {
             HStack {
-                Text("TODAY")
+                Text("widget.today")
                     .font(.system(size: 10, weight: .semibold))
                     .tracking(0.5)
                     .foregroundStyle(.secondary)
@@ -130,15 +135,15 @@ private struct SmallWidgetView: View {
                         .font(.system(size: 22, weight: .bold, design: .rounded))
                         .monospacedDigit()
                         .foregroundStyle(entry.isOverTarget ? Color.orange : Color.primary)
-                    Text("of \(entry.target.formatted())")
+                    Text(WidgetL10n.format("widget.target", entry.target.formatted()))
                         .font(.system(size: 9))
                         .foregroundStyle(.secondary)
                 }
             }
 
             Text(entry.isOverTarget
-                 ? "+\(entry.overBy.formatted()) over"
-                 : "\(entry.remaining.formatted()) kcal left")
+                 ? WidgetL10n.format("widget.over", entry.overBy.formatted())
+                 : WidgetL10n.format("widget.kcal_left", entry.remaining.formatted()))
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(.secondary)
         }
@@ -160,7 +165,7 @@ private struct MediumWidgetView: View {
                         .font(.system(size: 24, weight: .bold, design: .rounded))
                         .monospacedDigit()
                         .foregroundStyle(entry.isOverTarget ? Color.orange : Color.primary)
-                    Text("of \(entry.target.formatted())")
+                    Text(WidgetL10n.format("widget.target", entry.target.formatted()))
                         .font(.system(size: 10))
                         .foregroundStyle(.secondary)
                 }
@@ -179,7 +184,9 @@ private struct MediumWidgetView: View {
                     .foregroundStyle(entry.isOverTarget ? Color.orange : Color.primary)
                     .padding(.top, 2)
 
-                Text(entry.isOverTarget ? "kcal over" : "kcal remaining")
+                Text(entry.isOverTarget
+                     ? WidgetL10n.string("widget.kcal_over")
+                     : WidgetL10n.string("widget.kcal_remaining"))
                     .font(.system(size: 11))
                     .foregroundStyle(.secondary)
 
@@ -189,7 +196,7 @@ private struct MediumWidgetView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "plus")
                             .font(.system(size: 12, weight: .bold))
-                        Text("Log meal")
+                        Text("widget.log_meal")
                             .font(.system(size: 13, weight: .semibold))
                     }
                     .frame(maxWidth: .infinity)
@@ -217,7 +224,7 @@ private struct MediumWidgetView: View {
         let date = Date()
         let month = date.formatted(.dateTime.month(.abbreviated)).uppercased()
         let day = date.formatted(.dateTime.day())
-        return "TODAY · \(month) \(day)"
+        return WidgetL10n.format("widget.date", month, day)
     }
 }
 
@@ -252,12 +259,12 @@ private struct AccessoryRectangularView: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(entry.isOverTarget
-                     ? "+\(entry.overBy.formatted()) over"
-                     : "\(entry.remaining.formatted()) left")
+                     ? WidgetL10n.format("widget.over", entry.overBy.formatted())
+                     : WidgetL10n.format("widget.left", entry.remaining.formatted()))
                     .font(.headline)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
-                Text("of \(entry.target.formatted()) kcal")
+                Text(WidgetL10n.format("widget.target_kcal", entry.target.formatted()))
                     .font(.caption2)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
@@ -273,8 +280,8 @@ private struct AccessoryInlineView: View {
     var body: some View {
         Label(
             entry.isOverTarget
-                ? "+\(entry.overBy.formatted()) kcal over"
-                : "\(entry.remaining.formatted()) kcal left",
+                ? WidgetL10n.format("widget.kcal_over_value", entry.overBy.formatted())
+                : WidgetL10n.format("widget.kcal_left", entry.remaining.formatted()),
             systemImage: "flame.fill"
         )
     }
@@ -329,8 +336,8 @@ struct QuietCalWidget: Widget {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
             QuietCalWidgetEntryView(entry: entry)
         }
-        .configurationDisplayName("Calories")
-        .description("Today's calories at a glance.")
+        .configurationDisplayName("widget.configuration.name")
+        .description("widget.configuration.description")
         .supportedFamilies([
             .systemSmall,
             .systemMedium,
@@ -338,6 +345,20 @@ struct QuietCalWidget: Widget {
             .accessoryRectangular,
             .accessoryInline
         ])
+    }
+}
+
+private enum WidgetL10n {
+    static func string(_ key: String.LocalizationValue) -> String {
+        String(localized: key)
+    }
+
+    static func format(_ key: String.LocalizationValue, _ arguments: CVarArg...) -> String {
+        String(
+            format: String(localized: key),
+            locale: Locale.autoupdatingCurrent,
+            arguments: arguments
+        )
     }
 }
 

@@ -42,14 +42,14 @@ struct AddMealView: View {
                 .padding(.bottom, 24)
             }
             .scrollIndicators(.hidden)
-            .navigationTitle("New Meal")
+            .navigationTitle("add_meal.title")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
+                    Button("common.cancel") { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
+                    Button("common.save") {
                         Task {
                             if await viewModel.save() == .blockedByLimit {
                                 showPaywall = true
@@ -89,8 +89,8 @@ struct AddMealView: View {
     // MARK: - Fields
 
     private var nameField: some View {
-        fieldCard(label: "NAME") {
-            TextField("e.g. Chicken salad", text: $viewModel.name)
+        fieldCard(label: "add_meal.field.name") {
+            TextField("add_meal.field.name.placeholder", text: $viewModel.name)
                 .font(.system(size: 17))
                 .tracking(-0.4)
                 .textInputAutocapitalization(.sentences)
@@ -103,7 +103,10 @@ struct AddMealView: View {
 
     private var suggestionsSection: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("QUICK LOG · \(viewModel.suggestionPeriodLabel.uppercased())")
+            Text(L10n.format(
+                "add_meal.quick_log",
+                viewModel.suggestionPeriodLabel.uppercased()
+            ))
                 .font(.system(size: 11, weight: .medium))
                 .tracking(0.5)
                 .foregroundStyle(.secondary)
@@ -126,7 +129,7 @@ struct AddMealView: View {
                         Button(role: .destructive) {
                             Task { await viewModel.deleteSuggestion(suggestion) }
                         } label: {
-                            Label("Delete", systemImage: "trash")
+                            Label("common.delete", systemImage: "trash")
                         }
                     }
             }
@@ -173,7 +176,11 @@ struct AddMealView: View {
                             .tracking(-0.3)
                             .foregroundStyle(.primary)
                             .lineLimit(1)
-                        Text("\(suggestion.grams) g · \(suggestion.kcal) kcal")
+                        Text(L10n.format(
+                            "add_meal.suggestion.detail",
+                            String(suggestion.grams),
+                            String(suggestion.kcal)
+                        ))
                             .font(.system(size: 13))
                             .foregroundStyle(.secondary)
                     }
@@ -184,7 +191,12 @@ struct AddMealView: View {
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("Log \(suggestion.name), \(suggestion.grams) grams, \(suggestion.kcal) calories")
+            .accessibilityLabel(Text(L10n.format(
+                "add_meal.suggestion.log_accessibility",
+                suggestion.name,
+                String(suggestion.grams),
+                String(suggestion.kcal)
+            )))
 
             Button {
                 viewModel.useSuggestionName(suggestion)
@@ -197,7 +209,10 @@ struct AddMealView: View {
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("Use \(suggestion.name) name")
+            .accessibilityLabel(Text(L10n.format(
+                "add_meal.suggestion.use_name_accessibility",
+                suggestion.name
+            )))
         }
         .disabled(isQuickLogging)
     }
@@ -219,7 +234,7 @@ struct AddMealView: View {
     }
 
     private var amountField: some View {
-        fieldCard(label: "AMOUNT") {
+        fieldCard(label: "add_meal.field.amount") {
             HStack(alignment: .firstTextBaseline, spacing: 4) {
                 TextField("—", text: $viewModel.amount)
                     .font(.system(size: 22, weight: .semibold, design: .rounded))
@@ -239,39 +254,39 @@ struct AddMealView: View {
     private var caloriesField: some View {
         switch viewModel.state {
         case .empty:
-            fieldCard(label: "CALORIES", sparkleLabel: true) {
+            fieldCard(label: "add_meal.field.calories", sparkleLabel: true) {
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
                     Text("—")
                         .font(.system(size: 22, weight: .semibold, design: .rounded))
                         .foregroundStyle(.secondary)
-                    Text("kcal")
+                    Text("common.kcal")
                         .font(.system(size: 15, weight: .medium))
                         .foregroundStyle(.secondary)
                 }
             }
         case .estimating:
-            fieldCard(label: "ESTIMATING…", sparkleLabel: true, labelColor: aiPurple) {
+            fieldCard(label: "add_meal.field.estimating", sparkleLabel: true, labelColor: aiPurple) {
                 ShimmerBar(start: aiPurple, end: aiPink)
             }
         case .estimated:
-            fieldCard(label: "CALORIES", sparkleLabel: true) {
+            fieldCard(label: "add_meal.field.calories", sparkleLabel: true) {
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
                     Text("\(viewModel.estimatedCalories ?? 0)")
                         .font(.system(size: 22, weight: .semibold, design: .rounded))
                         .tracking(-0.5)
                         .monospacedDigit()
-                    Text("kcal")
+                    Text("common.kcal")
                         .font(.system(size: 15, weight: .medium))
                         .foregroundStyle(.secondary)
                 }
             }
         case .failed:
-            fieldCard(label: "CALORIES", labelColor: .orange) {
+            fieldCard(label: "add_meal.field.calories", labelColor: .orange) {
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .font(.system(size: 16))
                         .foregroundStyle(.orange)
-                    Text("Failed")
+                    Text("add_meal.field.failed")
                         .font(.system(size: 22, weight: .semibold, design: .rounded))
                         .foregroundStyle(.orange)
                 }
@@ -312,10 +327,10 @@ struct AddMealView: View {
                     .font(.system(size: 14))
                     .foregroundStyle(.orange)
                 VStack(alignment: .leading, spacing: 1) {
-                    Text("Couldn't estimate calories")
+                    Text("add_meal.error.estimation_failed.title")
                         .font(.system(size: 13, weight: .semibold))
                         .tracking(-0.1)
-                    Text(viewModel.errorMessage ?? "Tap to try again")
+                    Text(viewModel.errorMessage ?? L10n.string("add_meal.error.retry"))
                         .font(.system(size: 11))
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.leading)
@@ -338,12 +353,12 @@ struct AddMealView: View {
 
     private var unitPicker: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("UNIT")
+            Text("add_meal.unit.title")
                 .font(.system(size: 11, weight: .medium))
                 .tracking(0.5)
                 .foregroundStyle(.secondary)
                 .padding(.leading, 4)
-            Picker("Unit", selection: $viewModel.unit) {
+            Picker("add_meal.unit.picker", selection: $viewModel.unit) {
                 ForEach(WeightUnit.allCases) { unit in
                     Text(unit.label).tag(unit)
                 }
@@ -356,10 +371,10 @@ struct AddMealView: View {
     private var ingredientsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Label("Estimated ingredients", systemImage: "sparkles")
+                Label("add_meal.ingredients.title", systemImage: "sparkles")
                     .font(.subheadline.weight(.semibold))
                 Spacer()
-                Button("Edit name") { focusedField = .name }
+                Button("add_meal.ingredients.edit_name") { focusedField = .name }
                     .font(.subheadline.weight(.medium))
             }
             IngredientPillLayout(spacing: 8) {
@@ -367,7 +382,11 @@ struct AddMealView: View {
                     VStack(alignment: .leading, spacing: 3) {
                         Text(ingredient.name)
                             .font(.subheadline.weight(.medium))
-                        Text("\(ingredient.grams) g · \(ingredient.calories) kcal")
+                        Text(L10n.format(
+                            "add_meal.ingredient.detail",
+                            String(ingredient.grams),
+                            String(ingredient.calories)
+                        ))
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -381,7 +400,7 @@ struct AddMealView: View {
                     .accessibilityElement(children: .combine)
                 }
             }
-            Text("Not quite right? Add details to the dish name to update the estimate.")
+            Text("add_meal.ingredients.hint")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
         }
@@ -393,7 +412,7 @@ struct AddMealView: View {
 
     @ViewBuilder
     private func fieldCard<Content: View>(
-        label: String,
+        label: LocalizedStringKey,
         sparkleLabel: Bool = false,
         labelColor: Color = .secondary,
         @ViewBuilder content: () -> Content

@@ -16,10 +16,26 @@ struct PaywallView: View {
     @Environment(\.dismiss) private var dismiss
 
     private static let features: [(icon: String, title: String, detail: String)] = [
-        ("infinity", "Unlimited logging", "Log as many meals a day as you like — free stops at \(FreeTierLimits.dailyMealLimit)."),
-        ("calendar", "Full history", "Browse every day you've tracked, not just the last \(FreeTierLimits.freeHistoryDays)."),
-        ("square.and.arrow.up", "Export your data", "Download all your meals as a CSV, anytime."),
-        ("paintbrush", "Light & dark themes", "Pick the look you like instead of just System.")
+        (
+            "infinity",
+            L10n.string("paywall.feature.unlimited.title"),
+            L10n.format("paywall.feature.unlimited.detail", String(FreeTierLimits.dailyMealLimit))
+        ),
+        (
+            "calendar",
+            L10n.string("paywall.feature.history.title"),
+            L10n.format("paywall.feature.history.detail", String(FreeTierLimits.freeHistoryDays))
+        ),
+        (
+            "square.and.arrow.up",
+            L10n.string("paywall.feature.export.title"),
+            L10n.string("paywall.feature.export.detail")
+        ),
+        (
+            "paintbrush",
+            L10n.string("paywall.feature.themes.title"),
+            L10n.string("paywall.feature.themes.detail")
+        )
     ]
 
     var body: some View {
@@ -42,16 +58,16 @@ struct PaywallView: View {
     private var marketingContent: some View {
         VStack(spacing: 24) {
             VStack(spacing: 10) {
-                Text("QUIETCAL")
+                Text("paywall.brand")
                     .font(.system(size: 13, weight: .semibold))
                     .tracking(1.5)
                     .foregroundStyle(.secondary)
 
-                Text("QuietCal Pro")
+                Text("pro.name")
                     .font(.system(size: 32, weight: .bold))
                     .foregroundStyle(.primary)
 
-                Text("Keep tracking, quietly — without limits.")
+                Text("paywall.subtitle")
                     .font(.system(size: 16))
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)

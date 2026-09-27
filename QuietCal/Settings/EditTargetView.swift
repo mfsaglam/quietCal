@@ -22,18 +22,18 @@ struct EditTargetView: View {
         .scrollIndicators(.hidden)
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
-                Button("Done") { dismiss() }
+                Button("common.done") { dismiss() }
             }
         }
     }
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("Daily target")
+            Text("edit_target.title")
                 .font(.system(size: 34, weight: .bold))
                 .tracking(0.4)
                 .foregroundStyle(.primary)
-            Text("How many calories per day?")
+            Text("edit_target.prompt")
                 .font(.system(size: 15))
                 .tracking(-0.2)
                 .foregroundStyle(.secondary)
@@ -50,7 +50,7 @@ struct EditTargetView: View {
                 .foregroundStyle(.primary)
                 .contentTransition(.numericText())
                 .animation(.snappy, value: viewModel.target)
-            Text("KCAL PER DAY")
+            Text("common.kcal_per_day")
                 .font(.system(size: 13, weight: .medium))
                 .tracking(0.5)
                 .foregroundStyle(.secondary)
@@ -79,7 +79,7 @@ struct EditTargetView: View {
 
     private var presetSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("QUICK PICK")
+            Text("common.quick_pick")
                 .font(.system(size: 13, weight: .medium))
                 .tracking(0.5)
                 .foregroundStyle(.secondary)

@@ -23,12 +23,12 @@ struct SettingsView: View {
         List {
             proSection
 
-            Section("Daily Target") {
+            Section("settings.section.daily_target") {
                 NavigationLink {
                     EditTargetView(viewModel: viewModel)
                 } label: {
                     HStack {
-                        Text("Calorie target")
+                        Text("settings.calorie_target")
                             .foregroundStyle(.primary)
                         Spacer()
                         Text(viewModel.formattedTarget)
@@ -40,7 +40,7 @@ struct SettingsView: View {
                         Text(unit.settingsLabel).tag(unit)
                     }
                 } label: {
-                    Text("Weight unit")
+                    Text("settings.weight_unit")
                         .foregroundStyle(.primary)
                 }
                 .pickerStyle(.navigationLink)
@@ -50,13 +50,13 @@ struct SettingsView: View {
                 }
             }
 
-            Section("Appearance") {
+            Section("settings.section.appearance") {
                 Picker(selection: $selectedTheme) {
                     ForEach(Theme.allCases) { theme in
                         themeRow(theme).tag(theme)
                     }
                 } label: {
-                    Text("Theme")
+                    Text("settings.theme")
                         .foregroundStyle(.primary)
                 }
                 .pickerStyle(.navigationLink)
@@ -74,13 +74,13 @@ struct SettingsView: View {
                 }
             }
 
-            Section("About") {
+            Section("settings.section.about") {
                 Button {
                     AppGroup.sharedDefaults.set(false, forKey: AppGroup.onboardingCompletedKey)
                     showIntroResetAlert = true
                 } label: {
                     HStack {
-                        Text("Show intro again")
+                        Text("settings.show_intro")
                             .foregroundStyle(.primary)
                         Spacer()
                         chevron
@@ -88,7 +88,7 @@ struct SettingsView: View {
                 }
             }
 
-            Section("Data") {
+            Section("settings.section.data") {
                 Button {
                     guard entitlements.isPro else {
                         showPaywall = true
@@ -101,7 +101,7 @@ struct SettingsView: View {
                     }
                 } label: {
                     HStack {
-                        Text("Export CSV")
+                        Text("settings.export_csv")
                             .foregroundStyle(.primary)
                         Spacer()
                         if entitlements.isPro {
@@ -116,14 +116,14 @@ struct SettingsView: View {
                     showResetTodayConfirm = true
                 } label: {
                     HStack {
-                        Text("Reset today")
+                        Text("settings.reset_today")
                             .foregroundStyle(.primary)
                         Spacer()
                         chevron
                     }
                 }
 
-                Button("Clear all data", role: .destructive) {
+                Button("settings.clear_all", role: .destructive) {
                     showClearAllConfirm = true
                 }
             }
@@ -138,7 +138,7 @@ struct SettingsView: View {
                     .listRowBackground(Color.clear)
             }
         }
-        .navigationTitle("Settings")
+        .navigationTitle("common.settings")
         .sheet(isPresented: $showPaywall) {
             PaywallView()
         }
@@ -149,26 +149,26 @@ struct SettingsView: View {
             selectedTheme = viewModel.theme
             didLoad = true
         }
-        .alert("Intro reset", isPresented: $showIntroResetAlert) {
-            Button("OK", role: .cancel) { }
+        .alert("settings.alert.intro_reset.title", isPresented: $showIntroResetAlert) {
+            Button("common.ok", role: .cancel) { }
         } message: {
-            Text("The intro will be shown the next time you launch the app.")
+            Text("settings.alert.intro_reset.message")
         }
-        .alert("Reset today's meals?", isPresented: $showResetTodayConfirm) {
-            Button("Cancel", role: .cancel) { }
-            Button("Reset", role: .destructive) {
+        .alert("settings.alert.reset_today.title", isPresented: $showResetTodayConfirm) {
+            Button("common.cancel", role: .cancel) { }
+            Button("common.reset", role: .destructive) {
                 Task { await viewModel.resetToday() }
             }
         } message: {
-            Text("This will permanently delete every meal logged today.")
+            Text("settings.alert.reset_today.message")
         }
-        .alert("Clear all data?", isPresented: $showClearAllConfirm) {
-            Button("Cancel", role: .cancel) { }
-            Button("Clear", role: .destructive) {
+        .alert("settings.alert.clear_all.title", isPresented: $showClearAllConfirm) {
+            Button("common.cancel", role: .cancel) { }
+            Button("common.clear", role: .destructive) {
                 Task { await viewModel.clearAll() }
             }
         } message: {
-            Text("This will permanently delete every meal you've ever logged. This cannot be undone.")
+            Text("settings.alert.clear_all.message")
         }
         .fileExporter(
             isPresented: $showExporter,
@@ -186,11 +186,11 @@ struct SettingsView: View {
     private var developerSection: some View {
         #if DEBUG
         Section {
-            Toggle("QuietCal Pro (Debug)", isOn: debugProBinding)
+            Toggle("settings.debug.pro_toggle", isOn: debugProBinding)
         } header: {
-            Text("Developer")
+            Text("settings.debug.title")
         } footer: {
-            Text("Debug builds only. Overrides StoreKit so you can test the free and Pro states without a purchase.")
+            Text("settings.debug.message")
         }
         #endif
     }
@@ -209,29 +209,29 @@ struct SettingsView: View {
     @ViewBuilder
     private var proSection: some View {
         if entitlements.isPro {
-            Section("QuietCal Pro") {
+            Section("pro.name") {
                 HStack {
-                    Label("QuietCal Pro", systemImage: "checkmark.seal.fill")
+                    Label("pro.name", systemImage: "checkmark.seal.fill")
                         .foregroundStyle(.primary)
                     Spacer()
-                    Text("Active")
+                    Text("settings.pro.active")
                         .font(.system(size: 15, weight: .medium))
                         .foregroundStyle(.secondary)
                 }
             }
         } else {
-            Section("QuietCal Pro") {
+            Section("pro.name") {
                 Button {
                     showPaywall = true
                 } label: {
                     HStack {
-                        Label("Upgrade to Pro", systemImage: "sparkles")
+                        Label("settings.pro.upgrade", systemImage: "sparkles")
                             .foregroundStyle(.primary)
                         Spacer()
                         chevron
                     }
                 }
-                Button("Restore purchases") {
+                Button("settings.pro.restore_purchases") {
                     Task { await entitlements.restore() }
                 }
                 .foregroundStyle(.primary)

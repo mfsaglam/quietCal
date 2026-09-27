@@ -45,7 +45,7 @@ struct HomeView: View {
 
                 fab
             }
-            .navigationTitle("Today")
+            .navigationTitle("home.title")
             .navigationSubtitle(viewModel.dateLabel)
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
@@ -56,7 +56,7 @@ struct HomeView: View {
                         HStack(spacing: 6) {
                             Image(systemName: "clock")
                                 .font(.system(size: 14))
-                            Text("History")
+                            Text("common.history")
                                 .font(.system(size: 15, weight: .medium))
                         }
                     }
@@ -65,7 +65,7 @@ struct HomeView: View {
                 ToolbarSpacer(.fixed, placement: .primaryAction)
 
                 ToolbarItem(placement: .primaryAction) {
-                    Button("Settings", systemImage: "gearshape") {
+                    Button("common.settings", systemImage: "gearshape") {
                         settingsViewModel = viewModel.makeSettingsViewModel()
                         showSettings = true
                     }
@@ -124,7 +124,9 @@ struct HomeView: View {
                 .animation(.easeOut(duration: 0.7), value: viewModel.progress)
 
             VStack(spacing: 0) {
-                Text(viewModel.isOverTarget ? "OVER BY" : "EATEN")
+                Text(viewModel.isOverTarget
+                     ? L10n.string("home.ring.over_by")
+                     : L10n.string("home.ring.eaten"))
                     .font(.system(size: 13, weight: .medium, design: .rounded))
                     .tracking(0.5)
                     .foregroundStyle(Color.primary.opacity(0.6))
@@ -138,7 +140,7 @@ struct HomeView: View {
                     .contentTransition(.numericText(value: Double(viewModel.eaten)))
                     .animation(.snappy, value: viewModel.eaten)
 
-                Text("of \(viewModel.target.formatted()) kcal")
+                Text(L10n.format("home.ring.target", viewModel.target.formatted()))
                     .font(.system(size: 14))
                     .foregroundStyle(Color.primary.opacity(0.6))
                     .padding(.top, 6)
@@ -154,13 +156,15 @@ struct HomeView: View {
 
     private var statStrip: some View {
         HStack {
-            statItem(value: viewModel.target.formatted(), label: "TARGET")
+            statItem(value: viewModel.target.formatted(), label: L10n.string("home.stats.target"))
             statItem(
                 value: viewModel.isOverTarget ? "+\((viewModel.eaten - viewModel.target).formatted())" : viewModel.remaining.formatted(),
-                label: viewModel.isOverTarget ? "OVER" : "REMAINING",
+                label: viewModel.isOverTarget
+                    ? L10n.string("home.stats.over")
+                    : L10n.string("home.stats.remaining"),
                 warn: viewModel.isOverTarget
             )
-            statItem(value: "\(viewModel.meals.count)", label: "MEALS")
+            statItem(value: "\(viewModel.meals.count)", label: L10n.string("home.stats.meals"))
         }
         .padding(.vertical, 16)
         .padding(.horizontal, 20)
@@ -208,7 +212,7 @@ struct HomeView: View {
 
     private var mealsSection: some View {
         VStack(alignment: .leading, spacing: 0) {
-            Text("MEALS · \(viewModel.eaten.formatted()) KCAL")
+            Text(L10n.format("home.meals.summary", viewModel.eaten.formatted()))
                 .font(.system(size: 13, weight: .medium))
                 .tracking(0.5)
                 .foregroundStyle(Color.primary.opacity(0.6))
@@ -235,7 +239,7 @@ struct HomeView: View {
                         Button(role: .destructive) {
                             Task { await viewModel.delete(meal) }
                         } label: {
-                            Label("Delete", systemImage: "trash")
+                            Label("common.delete", systemImage: "trash")
                         }
                     }
             }
@@ -269,7 +273,7 @@ struct HomeView: View {
                         .foregroundStyle(Color.primary)
                         .lineLimit(1)
 
-                    Text("\(meal.timeString) · \(meal.grams)g")
+                    Text(L10n.format("home.meal.detail", meal.timeString, String(meal.grams)))
                         .font(.system(size: 13))
                         .tracking(-0.08)
                         .foregroundStyle(Color.primary.opacity(0.6))

@@ -69,7 +69,7 @@ struct OnboardingView: View {
         HStack {
             Spacer()
             if showsSkip {
-                Button("Skip") { complete() }
+                Button("common.skip") { complete() }
                     .font(.system(size: 16, weight: .medium))
                     .foregroundStyle(.secondary)
             }
@@ -107,16 +107,16 @@ struct OnboardingView: View {
 
     private var primaryLabel: String {
         switch step {
-        case 0: return "Get started"
-        case lastStep: return "Start tracking"
-        default: return "Continue"
+        case 0: return L10n.string("onboarding.action.get_started")
+        case lastStep: return L10n.string("onboarding.action.start_tracking")
+        default: return L10n.string("common.continue")
         }
     }
 
     private var secondaryText: String? {
         switch step {
-        case 0: return "A few quick steps · under a minute"
-        case 3: return "Add later from the widget gallery"
+        case 0: return L10n.string("onboarding.welcome.duration")
+        case 3: return L10n.string("onboarding.widgets.add_later")
         default: return nil
         }
     }
@@ -186,7 +186,7 @@ private struct AppleIntelligenceLabel: View {
         HStack(spacing: 7) {
             Image(systemName: "sparkles")
                 .font(.system(size: 14, weight: .semibold))
-            Text("APPLE INTELLIGENCE")
+            Text("common.apple_intelligence")
                 .font(.system(size: 13, weight: .semibold))
                 .tracking(0.5)
         }
@@ -215,12 +215,12 @@ private struct WelcomeStep: View {
                 .foregroundStyle(.secondary)
                 .padding(.bottom, 14)
 
-            Text("Calorie tracking,\nquietly.")
+            Text("onboarding.welcome.title")
                 .font(.system(size: 38, weight: .bold))
                 .multilineTextAlignment(.center)
                 .foregroundStyle(.primary)
 
-            Text("Log a meal, get an instant estimate, watch one ring. No macros, no streaks, no noise.")
+            Text("onboarding.welcome.message")
                 .font(.system(size: 17))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -245,11 +245,11 @@ private struct TargetStep: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
-                Text("Set your daily target")
+                Text("onboarding.target.title")
                     .font(.system(size: 30, weight: .bold))
                     .foregroundStyle(.primary)
 
-                Text("Pick a number to aim for each day. You can change it anytime in Settings.")
+                Text("onboarding.target.message")
                     .font(.system(size: 16))
                     .foregroundStyle(.secondary)
                     .padding(.top, 10)
@@ -261,7 +261,7 @@ private struct TargetStep: View {
                         .foregroundStyle(.primary)
                         .contentTransition(.numericText())
                         .animation(.snappy, value: target)
-                    Text("KCAL PER DAY")
+                    Text("common.kcal_per_day")
                         .font(.system(size: 13, weight: .medium))
                         .tracking(0.5)
                         .foregroundStyle(.secondary)
@@ -283,7 +283,7 @@ private struct TargetStep: View {
                 .padding(22)
                 .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 22))
 
-                Text("QUICK PICK")
+                Text("common.quick_pick")
                     .font(.system(size: 13, weight: .medium))
                     .tracking(0.5)
                     .foregroundStyle(.secondary)
@@ -343,9 +343,18 @@ private struct TargetStep: View {
 
 private struct EstimatesStep: View {
     private let steps: [(title: String, detail: String)] = [
-        ("Type what you ate", "A name and a rough amount — “chicken salad, 340g.”"),
-        ("Get an instant estimate", "Apple Intelligence estimates the calories on device."),
-        ("See how confident it is", "Each estimate shows a confidence level, so you know how sure it is.")
+        (
+            L10n.string("onboarding.estimates.step.input.title"),
+            L10n.string("onboarding.estimates.step.input.detail")
+        ),
+        (
+            L10n.string("onboarding.estimates.step.estimate.title"),
+            L10n.string("onboarding.estimates.step.estimate.detail")
+        ),
+        (
+            L10n.string("onboarding.estimates.step.confidence.title"),
+            L10n.string("onboarding.estimates.step.confidence.detail")
+        )
     ]
 
     var body: some View {
@@ -354,11 +363,11 @@ private struct EstimatesStep: View {
                 AppleIntelligenceLabel()
                     .padding(.bottom, 12)
 
-                Text("How estimates work")
+                Text("onboarding.estimates.title")
                     .font(.system(size: 30, weight: .bold))
                     .foregroundStyle(.primary)
 
-                Text("No databases to search or barcodes to scan. Just describe the meal.")
+                Text("onboarding.estimates.message")
                     .font(.system(size: 16))
                     .foregroundStyle(.secondary)
                     .padding(.top, 10)
@@ -397,7 +406,7 @@ private struct EstimatesStep: View {
         VStack(spacing: 14) {
             HStack(alignment: .center) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Chicken salad")
+                    Text("onboarding.estimates.sample_meal")
                         .font(.system(size: 17, weight: .medium))
                         .foregroundStyle(.primary)
                     Text("340 g")
@@ -410,7 +419,7 @@ private struct EstimatesStep: View {
                         .font(.system(size: 26, weight: .semibold, design: .rounded))
                         .monospacedDigit()
                         .foregroundStyle(.primary)
-                    Text("kcal")
+                    Text("common.kcal")
                         .font(.system(size: 14, weight: .medium))
                         .foregroundStyle(.secondary)
                 }
@@ -422,7 +431,7 @@ private struct EstimatesStep: View {
                 Image(systemName: "sparkles")
                     .font(.system(size: 12))
                     .foregroundStyle(appleIntelligenceGradient)
-                Text("Estimated by Apple Intelligence · High confidence")
+                Text("onboarding.estimates.sample_result")
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(.secondary)
                 Spacer()
@@ -436,16 +445,20 @@ private struct EstimatesStep: View {
 // MARK: - 4 · Widgets
 
 private struct WidgetsStep: View {
-    private let tags = ["Home Screen", "Lock Screen", "StandBy"]
+    private let tags = [
+        L10n.string("onboarding.widgets.home_screen"),
+        L10n.string("onboarding.widgets.lock_screen"),
+        L10n.string("onboarding.widgets.standby")
+    ]
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
-                Text("Keep it one glance away")
+                Text("onboarding.widgets.title")
                     .font(.system(size: 30, weight: .bold))
                     .foregroundStyle(.primary)
 
-                Text("Add a widget to see your ring without opening the app — and log a meal in one tap.")
+                Text("onboarding.widgets.message")
                     .font(.system(size: 16))
                     .foregroundStyle(.secondary)
                     .padding(.top, 10)
@@ -502,7 +515,7 @@ private struct MockSmallWidget: View {
     var body: some View {
         VStack(spacing: 6) {
             HStack {
-                Text("TODAY")
+                Text("common.today_uppercase")
                     .font(.system(size: 10, weight: .semibold))
                     .tracking(0.5)
                     .foregroundStyle(.secondary)
@@ -520,13 +533,13 @@ private struct MockSmallWidget: View {
                         .font(.system(size: 22, weight: .bold, design: .rounded))
                         .monospacedDigit()
                         .foregroundStyle(.primary)
-                    Text("of 2,000")
+                    Text("onboarding.widget_preview.target")
                         .font(.system(size: 9))
                         .foregroundStyle(.secondary)
                 }
             }
 
-            Text("760 kcal left")
+            Text("onboarding.widget_preview.remaining")
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(.secondary)
         }
@@ -551,7 +564,7 @@ private struct MockMediumWidget: View {
                         .font(.system(size: 24, weight: .bold, design: .rounded))
                         .monospacedDigit()
                         .foregroundStyle(.primary)
-                    Text("of 2,000")
+                    Text("onboarding.widget_preview.target")
                         .font(.system(size: 10))
                         .foregroundStyle(.secondary)
                 }
@@ -559,7 +572,7 @@ private struct MockMediumWidget: View {
             .frame(width: 96, height: 96)
 
             VStack(alignment: .leading, spacing: 0) {
-                Text("TODAY")
+                Text("common.today_uppercase")
                     .font(.system(size: 10, weight: .semibold))
                     .tracking(0.5)
                     .foregroundStyle(.secondary)
@@ -568,7 +581,7 @@ private struct MockMediumWidget: View {
                     .monospacedDigit()
                     .foregroundStyle(.primary)
                     .padding(.top, 2)
-                Text("kcal remaining")
+                Text("onboarding.widget_preview.remaining_label")
                     .font(.system(size: 11))
                     .foregroundStyle(.secondary)
 
@@ -577,7 +590,7 @@ private struct MockMediumWidget: View {
                 HStack(spacing: 6) {
                     Image(systemName: "plus")
                         .font(.system(size: 12, weight: .bold))
-                    Text("Log meal")
+                    Text("common.log_meal")
                         .font(.system(size: 13, weight: .semibold))
                 }
                 .foregroundStyle(Color(.systemBackground))
@@ -604,14 +617,14 @@ private struct ReadyStep: View {
 
             OnboardingRing(progress: 0.001, lineWidth: 16) {
                 VStack(spacing: 2) {
-                    Text("EATEN")
+                    Text("home.ring.eaten")
                         .font(.system(size: 13, weight: .medium, design: .rounded))
                         .tracking(0.5)
                         .foregroundStyle(.secondary)
                     Text("0")
                         .font(.system(size: 52, weight: .semibold, design: .rounded))
                         .foregroundStyle(.primary)
-                    Text("of \(target.formatted()) kcal")
+                    Text(L10n.format("home.ring.target", target.formatted()))
                         .font(.system(size: 14))
                         .foregroundStyle(.secondary)
                         .padding(.top, 6)
@@ -620,11 +633,11 @@ private struct ReadyStep: View {
             .frame(width: 200, height: 200)
             .padding(.bottom, 36)
 
-            Text("You're all set")
+            Text("onboarding.ready.title")
                 .font(.system(size: 32, weight: .bold))
                 .foregroundStyle(.primary)
 
-            Text("Your ring starts fresh. Tap **+** to log your first meal whenever you're ready.")
+            Text("onboarding.ready.message")
                 .font(.system(size: 17))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
