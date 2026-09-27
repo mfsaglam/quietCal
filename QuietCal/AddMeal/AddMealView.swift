@@ -109,16 +109,55 @@ struct AddMealView: View {
                 .foregroundStyle(.secondary)
                 .padding(.leading, 4)
 
-            VStack(spacing: 0) {
-                ForEach(Array(viewModel.suggestions.enumerated()), id: \.element.id) { index, suggestion in
-                    suggestionRow(suggestion)
-                    if index < viewModel.suggestions.count - 1 {
-                        Divider()
-                            .padding(.leading, 16)
+            if #available(iOS 27, *) {
+                suggestionsList
+            } else {
+                legacySuggestionsList
+            }
+        }
+    }
+
+    @available(iOS 27, *)
+    private var suggestionsList: some View {
+        VStack(spacing: 0) {
+            ForEach(Array(viewModel.suggestions.enumerated()), id: \.element.id) { index, suggestion in
+                suggestionRowWithDivider(suggestion, isLast: index == viewModel.suggestions.count - 1)
+                    .swipeActions {
+                        Button(role: .destructive) {
+                            Task { await viewModel.deleteSuggestion(suggestion) }
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
                     }
+            }
+        }
+        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 14))
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .swipeActionsContainer()
+    }
+
+    private var legacySuggestionsList: some View {
+        VStack(spacing: 0) {
+            ForEach(Array(viewModel.suggestions.enumerated()), id: \.element.id) { index, suggestion in
+                SwipeToDeleteRow {
+                    Task { await viewModel.deleteSuggestion(suggestion) }
+                } content: {
+                    suggestionRowWithDivider(suggestion, isLast: index == viewModel.suggestions.count - 1)
+                        .background(Color(.secondarySystemBackground))
                 }
             }
-            .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 14))
+        }
+        .background(Color(.secondarySystemBackground), in: RoundedRectangle(cornerRadius: 14))
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+    }
+
+    private func suggestionRowWithDivider(_ suggestion: MealSuggestion, isLast: Bool) -> some View {
+        VStack(spacing: 0) {
+            suggestionRow(suggestion)
+            if !isLast {
+                Divider()
+                    .padding(.leading, 16)
+            }
         }
     }
 
@@ -457,6 +496,14 @@ private struct ShimmerBar: View {
             AddMealView(
                 viewModel: AddMealViewModel(
                     mealStore: InMemoryMealStore(meals: .sample),
+                    suggestionStore: InMemorySuggestionStore(
+                        suggestions: [Meal].sample.map {
+                            StoredSuggestion(
+                                meal: $0,
+                                period: MealPeriod(date: $0.createdAt, calendar: .autoupdatingCurrent)
+                            )
+                        }
+                    ),
                     calorieEstimator: StubCalorieEstimator()
                 )
             )

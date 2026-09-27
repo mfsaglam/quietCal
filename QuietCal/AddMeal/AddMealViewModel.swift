@@ -22,6 +22,7 @@ final class AddMealViewModel: Identifiable {
     let id = UUID()
 
     private let mealStore: MealStore
+    private let suggestionStore: SuggestionStore
     private let calorieEstimator: CalorieEstimating
     private let reviewPrompt: ReviewPromptController
     private let entitlements: any EntitlementProviding
@@ -48,6 +49,7 @@ final class AddMealViewModel: Identifiable {
 
     init(
         mealStore: MealStore,
+        suggestionStore: SuggestionStore = InMemorySuggestionStore(),
         calorieEstimator: CalorieEstimating,
         defaultUnit: WeightUnit = .g,
         reviewPrompt: ReviewPromptController = ReviewPromptController(),
@@ -56,6 +58,7 @@ final class AddMealViewModel: Identifiable {
         now: @escaping () -> Date = Date.init
     ) {
         self.mealStore = mealStore
+        self.suggestionStore = suggestionStore
         self.calorieEstimator = calorieEstimator
         self.unit = defaultUnit
         self.reviewPrompt = reviewPrompt
@@ -88,7 +91,7 @@ final class AddMealViewModel: Identifiable {
     }
 
     var suggestionPeriodLabel: String {
-        mealPeriod(for: now()).label
+        MealPeriod(date: now(), calendar: calendar).label
     }
 
     private var trimmedName: String {
@@ -157,12 +160,22 @@ final class AddMealViewModel: Identifiable {
         }
 
         do {
-            let interval = DateInterval(
-                start: lookbackStart,
-                end: currentDate.addingTimeInterval(1)
+            let period = MealPeriod(date: currentDate, calendar: calendar)
+            let storedSuggestions = try await suggestionStore.fetchSuggestions(
+                for: period,
+                usedSince: lookbackStart,
+                limit: 5
             )
-            let meals = try await mealStore.fetchMeals(in: interval)
-            suggestions = makeSuggestions(from: meals, for: mealPeriod(for: currentDate))
+            suggestions = storedSuggestions.map { stored in
+                MealSuggestion(
+                    id: stored.id,
+                    name: stored.name,
+                    grams: stored.grams,
+                    kcal: stored.kcal,
+                    occurrenceCount: stored.count(for: period),
+                    lastLoggedAt: stored.lastUsedAt(for: period) ?? .distantPast
+                )
+            }
         } catch {
             suggestions = []
         }
@@ -173,6 +186,16 @@ final class AddMealViewModel: Identifiable {
     func useSuggestionName(_ suggestion: MealSuggestion) {
         name = suggestion.name
         amount = ""
+    }
+
+    /// Removes every matching quick-log record.
+    func deleteSuggestion(_ suggestion: MealSuggestion) async {
+        do {
+            try await suggestionStore.delete(id: suggestion.id)
+            suggestions.removeAll { $0.id == suggestion.id }
+        } catch {
+            // Keep the suggestion visible when persistence fails.
+        }
     }
 
     /// Repeats a previous meal exactly, without asking the calorie estimator to
@@ -207,7 +230,13 @@ final class AddMealViewModel: Identifiable {
     }
 
     private func persist(_ meal: Meal) async -> SaveOutcome {
-        try? await mealStore.save(meal)
+        do {
+            try await mealStore.save(meal)
+        } catch {
+            return .notReady
+        }
+        let period = MealPeriod(date: meal.createdAt, calendar: calendar)
+        try? await suggestionStore.record(meal, period: period)
         reviewPrompt.recordMealLogged()
         AppGroup.reloadWidgets()
         return .saved
@@ -223,85 +252,4 @@ final class AddMealViewModel: Identifiable {
         return count >= FreeTierLimits.dailyMealLimit
     }
 
-    private func makeSuggestions(from meals: [Meal], for period: MealPeriod) -> [MealSuggestion] {
-        struct SuggestionKey: Hashable {
-            let normalizedName: String
-            let grams: Int
-        }
-
-        struct Group {
-            var count: Int
-            var latest: Meal
-        }
-
-        var groups: [SuggestionKey: Group] = [:]
-        for meal in meals where mealPeriod(for: meal.createdAt) == period {
-            let cleanedName = meal.name.trimmingCharacters(in: .whitespacesAndNewlines)
-            guard !cleanedName.isEmpty, meal.grams > 0, meal.kcal > 0 else { continue }
-
-            let normalizedName = cleanedName.folding(
-                options: [.caseInsensitive, .diacriticInsensitive, .widthInsensitive],
-                locale: Locale(identifier: "en_US_POSIX")
-            )
-            let key = SuggestionKey(normalizedName: normalizedName, grams: meal.grams)
-            if var group = groups[key] {
-                group.count += 1
-                if meal.createdAt > group.latest.createdAt {
-                    group.latest = meal
-                }
-                groups[key] = group
-            } else {
-                groups[key] = Group(count: 1, latest: meal)
-            }
-        }
-
-        return groups.values
-            .sorted { lhs, rhs in
-                if lhs.count != rhs.count { return lhs.count > rhs.count }
-                return lhs.latest.createdAt > rhs.latest.createdAt
-            }
-            .prefix(5)
-            .map { group in
-                MealSuggestion(
-                    id: group.latest.id,
-                    name: group.latest.name.trimmingCharacters(in: .whitespacesAndNewlines),
-                    grams: group.latest.grams,
-                    kcal: group.latest.kcal,
-                    occurrenceCount: group.count,
-                    lastLoggedAt: group.latest.createdAt
-                )
-            }
-    }
-
-    private func mealPeriod(for date: Date) -> MealPeriod {
-        MealPeriod(hour: calendar.component(.hour, from: date))
-    }
-
-    private enum MealPeriod: Equatable {
-        case breakfast
-        case lunch
-        case afternoon
-        case dinner
-        case lateNight
-
-        init(hour: Int) {
-            switch hour {
-            case 5..<11: self = .breakfast
-            case 11..<15: self = .lunch
-            case 15..<18: self = .afternoon
-            case 18..<22: self = .dinner
-            default: self = .lateNight
-            }
-        }
-
-        var label: String {
-            switch self {
-            case .breakfast: return "Breakfast"
-            case .lunch: return "Lunch"
-            case .afternoon: return "Afternoon"
-            case .dinner: return "Dinner"
-            case .lateNight: return "Late Night"
-            }
-        }
-    }
 }

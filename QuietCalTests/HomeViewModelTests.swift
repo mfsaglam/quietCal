@@ -8,10 +8,12 @@ struct HomeViewModelTests {
 
     private func makeViewModel(
         mealStore: any MealStore = InMemoryMealStore(meals: []),
+        suggestionStore: any SuggestionStore = InMemorySuggestionStore(),
         settingsStore: any SettingsStore = InMemorySettingsStore()
     ) -> HomeViewModel {
         HomeViewModel(
             mealStore: mealStore,
+            suggestionStore: suggestionStore,
             calorieEstimator: TestCalorieEstimator(),
             settingsStore: settingsStore
         )
@@ -58,6 +60,18 @@ struct HomeViewModelTests {
         let vm = makeViewModel(mealStore: InMemoryMealStore(meals: []))
         await vm.load()
         #expect(vm.meals.isEmpty)
+    }
+
+    @Test func openingAddMealDoesNotImportExistingMealHistoryIntoSuggestions() async {
+        let existingMeal = Meal(name: "Old meal", grams: 200, kcal: 300, createdAt: Date())
+        let vm = makeViewModel(
+            mealStore: InMemoryMealStore(meals: [existingMeal]),
+            suggestionStore: InMemorySuggestionStore()
+        )
+
+        let addMealViewModel = await vm.makeAddMealViewModel()
+
+        #expect(addMealViewModel.suggestions.isEmpty)
     }
 
     // MARK: - delete()

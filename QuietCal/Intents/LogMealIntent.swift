@@ -60,6 +60,11 @@ struct LogMealIntent: AppIntent {
             createdAt: Date()
         )
         try await store.save(mealEntry)
+        if let suggestionContainer = try? AppGroup.makeSuggestionModelContainer() {
+            let suggestionStore = SwiftDataSuggestionStore(modelContainer: suggestionContainer)
+            let period = MealPeriod(date: mealEntry.createdAt, calendar: .autoupdatingCurrent)
+            try? await suggestionStore.record(mealEntry, period: period)
+        }
         AppGroup.reloadWidgets()
 
         return .result(

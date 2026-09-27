@@ -8,9 +8,14 @@ struct SettingsViewModelTests {
 
     private func makeViewModel(
         settings: any SettingsStore = InMemorySettingsStore(),
-        meals: any MealStore = InMemoryMealStore(meals: [])
+        meals: any MealStore = InMemoryMealStore(meals: []),
+        suggestions: any SuggestionStore = InMemorySuggestionStore()
     ) -> SettingsViewModel {
-        SettingsViewModel(store: settings, mealStore: meals)
+        SettingsViewModel(
+            store: settings,
+            mealStore: meals,
+            suggestionStore: suggestions
+        )
     }
 
     @Test func initialTargetBeforeLoad() {
@@ -85,13 +90,24 @@ struct SettingsViewModelTests {
                  createdAt: Date().addingTimeInterval(-86400)),
             Meal(name: "B", grams: 100, kcal: 200, createdAt: Date())
         ])
-        let vm = makeViewModel(meals: store)
+        let suggestionStore = InMemorySuggestionStore()
+        try await suggestionStore.record(
+            Meal(name: "A", grams: 100, kcal: 100, createdAt: Date()),
+            period: .breakfast
+        )
+        let vm = makeViewModel(meals: store, suggestions: suggestionStore)
 
         await vm.clearAll()
 
         let allInterval = DateInterval(start: .distantPast, end: .distantFuture)
         let remaining = try await store.fetchMeals(in: allInterval)
         #expect(remaining.isEmpty)
+        let remainingSuggestions = try await suggestionStore.fetchSuggestions(
+            for: .breakfast,
+            usedSince: .distantPast,
+            limit: 5
+        )
+        #expect(remainingSuggestions.isEmpty)
     }
 
     // MARK: - CSV
