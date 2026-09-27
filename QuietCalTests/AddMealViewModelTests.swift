@@ -437,7 +437,9 @@ struct AddMealViewModelTests {
             now: { now }
         )
         await vm.loadSuggestions()
-        let suggestion = try #require(vm.suggestions.first { $0.name == "Oatmeal" })
+        let suggestion = try #require(vm.suggestions.first {
+            $0.name.normalizedMealName == "oatmeal" && $0.grams == 220
+        })
 
         await vm.deleteSuggestion(suggestion)
 
@@ -451,7 +453,7 @@ struct AddMealViewModelTests {
         let everything = DateInterval(start: .distantPast, end: .distantFuture)
         let remainingMeals = try await mealStore.fetchMeals(in: everything)
         #expect(remainingMeals.count == meals.count)
-        #expect(remainingMeals.map(\.name) == meals.map(\.name))
+        #expect(Set(remainingMeals.map(\.id)) == Set(meals.map(\.id)))
     }
 
     // MARK: - Free-tier daily save limit

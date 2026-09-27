@@ -41,7 +41,7 @@ private extension EstimateConfidence {
     /// ``EstimateConfidence``, keeping the package type from leaking past this
     /// service into the rest of the app. The package reports confidence only
     /// where available (`Confidence?`), so a `nil` figure maps to `nil` here.
-    init?(_ packageConfidence: Confidence?) {
+    nonisolated init?(_ packageConfidence: Confidence?) {
         switch packageConfidence {
         case .high: self = .high
         case .medium: self = .medium

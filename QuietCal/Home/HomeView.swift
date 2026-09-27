@@ -347,7 +347,7 @@ struct HomeView: View {
     private func requestReviewIfEligible() async {
         guard reviewPrompt.shouldRequestReview() else { return }
         try? await Task.sleep(for: .seconds(1.5))
-        await requestReview()
+        requestReview()
         reviewPrompt.markPrompted()
     }
 }

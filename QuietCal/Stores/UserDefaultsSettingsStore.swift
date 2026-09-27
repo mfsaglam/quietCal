@@ -1,6 +1,8 @@
 import Foundation
 
-struct UserDefaultsSettingsStore: SettingsStore {
+/// `UserDefaults` is documented as safe for concurrent reads and writes, but
+/// does not currently declare `Sendable` in the SDK.
+struct UserDefaultsSettingsStore: SettingsStore, @unchecked Sendable {
     static let targetKey = AppGroup.targetKey
     static let themeKey = AppGroup.themeKey
     static let weightUnitKey = AppGroup.weightUnitKey

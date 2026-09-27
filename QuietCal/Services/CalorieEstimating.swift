@@ -62,7 +62,7 @@ struct MealEstimate: Sendable, Equatable {
     var ingredients: [EstimatedIngredient] = []
 }
 
-protocol CalorieEstimating: Sendable {
+nonisolated protocol CalorieEstimating: Sendable {
     var source: CalorieEstimationSource { get }
     func estimate(name: String, grams: Int) async throws -> CalorieEstimate
 

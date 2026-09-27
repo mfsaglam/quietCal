@@ -52,7 +52,7 @@ final class AddMealViewModel: Identifiable {
         suggestionStore: SuggestionStore = InMemorySuggestionStore(),
         calorieEstimator: CalorieEstimating,
         defaultUnit: WeightUnit = .g,
-        reviewPrompt: ReviewPromptController = ReviewPromptController(),
+        reviewPrompt: ReviewPromptController? = nil,
         entitlements: any EntitlementProviding = StaticEntitlement(isPro: true),
         calendar: Calendar = .autoupdatingCurrent,
         now: @escaping () -> Date = Date.init
@@ -61,7 +61,7 @@ final class AddMealViewModel: Identifiable {
         self.suggestionStore = suggestionStore
         self.calorieEstimator = calorieEstimator
         self.unit = defaultUnit
-        self.reviewPrompt = reviewPrompt
+        self.reviewPrompt = reviewPrompt ?? ReviewPromptController()
         self.entitlements = entitlements
         self.calendar = calendar
         self.now = now

@@ -7,27 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1232DCF52FE8210100ED36A3 /* onboarding-screens.jsx in Resources */ = {isa = PBXBuildFile; fileRef = 1232DCE82FE8210100ED36A3 /* onboarding-screens.jsx */; };
-		1232DCF62FE8210100ED36A3 /* design-canvas.jsx in Resources */ = {isa = PBXBuildFile; fileRef = 1232DCE52FE8210100ED36A3 /* design-canvas.jsx */; };
-		1232DCF72FE8210100ED36A3 /* Quiet Kcal App Icon v2.html in Resources */ = {isa = PBXBuildFile; fileRef = 1232DCEA2FE8210100ED36A3 /* Quiet Kcal App Icon v2.html */; };
-		1232DCF82FE8210100ED36A3 /* Quiet Kcal Hi-Fi-print.html in Resources */ = {isa = PBXBuildFile; fileRef = 1232DCEE2FE8210100ED36A3 /* Quiet Kcal Hi-Fi-print.html */; };
-		1232DCF92FE8210100ED36A3 /* screens.jsx in Resources */ = {isa = PBXBuildFile; fileRef = 1232DCF12FE8210100ED36A3 /* screens.jsx */; };
-		1232DCFA2FE8210100ED36A3 /* Quiet Kcal App Icon.html in Resources */ = {isa = PBXBuildFile; fileRef = 1232DCE92FE8210100ED36A3 /* Quiet Kcal App Icon.html */; };
-		1232DCFB2FE8210100ED36A3 /* hifi-screens.jsx in Resources */ = {isa = PBXBuildFile; fileRef = 1232DCE62FE8210100ED36A3 /* hifi-screens.jsx */; };
-		1232DCFC2FE8210100ED36A3 /* Quiet Kcal Hi-Fi (standalone-source).html in Resources */ = {isa = PBXBuildFile; fileRef = 1232DCEC2FE8210100ED36A3 /* Quiet Kcal Hi-Fi (standalone-source).html */; };
-		1232DCFD2FE8210100ED36A3 /* ios-frame.jsx in Resources */ = {isa = PBXBuildFile; fileRef = 1232DCE72FE8210100ED36A3 /* ios-frame.jsx */; };
-		1232DCFE2FE8210100ED36A3 /* Quiet Kcal Hi-Fi (standalone).html in Resources */ = {isa = PBXBuildFile; fileRef = 1232DCED2FE8210100ED36A3 /* Quiet Kcal Hi-Fi (standalone).html */; };
-		1232DCFF2FE8210100ED36A3 /* wireframes.jsx in Resources */ = {isa = PBXBuildFile; fileRef = 1232DCF32FE8210100ED36A3 /* wireframes.jsx */; };
-		1232DD002FE8210100ED36A3 /* widgets.jsx in Resources */ = {isa = PBXBuildFile; fileRef = 1232DCF22FE8210100ED36A3 /* widgets.jsx */; };
-		1232DD012FE8210100ED36A3 /* .thumbnail in Resources */ = {isa = PBXBuildFile; fileRef = 1232DCE42FE8210100ED36A3 /* .thumbnail */; };
-		1232DD022FE8210100ED36A3 /* Quiet Kcal Wireframes.html in Resources */ = {isa = PBXBuildFile; fileRef = 1232DCF02FE8210100ED36A3 /* Quiet Kcal Wireframes.html */; };
-		1232DD032FE8210100ED36A3 /* Quiet Kcal Onboarding.html in Resources */ = {isa = PBXBuildFile; fileRef = 1232DCEF2FE8210100ED36A3 /* Quiet Kcal Onboarding.html */; };
-		1232DD042FE8210100ED36A3 /* Quiet Kcal Hi-Fi.html in Resources */ = {isa = PBXBuildFile; fileRef = 1232DCEB2FE8210100ED36A3 /* Quiet Kcal Hi-Fi.html */; };
 		12F519FC2FE6D0E00083490F /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12F519FB2FE6D0E00083490F /* WidgetKit.framework */; };
 		12F519FE2FE6D0E00083490F /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 12F519FD2FE6D0E00083490F /* SwiftUI.framework */; };
 		12F51A0B2FE6D0E20083490F /* QuietCalWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 12F519F92FE6D0E00083490F /* QuietCalWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		E6434E342F9FD6E6003E4714 /* CalorieEstimator in Frameworks */ = {isa = PBXBuildFile; productRef = E6434E332F9FD6E6003E4714 /* CalorieEstimator */; };
-		E6434E4A2F9FDA2B003E4714 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = E6434E452F9FDA2B003E4714 /* README.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -109,6 +92,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+				QuietCal.storekit,
 			);
 			target = E6434E232F9FD653003E4714 /* QuietCal */;
 		};
@@ -312,7 +296,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2700;
-				LastUpgradeCheck = 2650;
+				LastUpgradeCheck = 2700;
 				TargetAttributes = {
 					12F519F82FE6D0E00083490F = {
 						CreatedOnToolsVersion = 27.0;
@@ -374,23 +358,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E6434E4A2F9FDA2B003E4714 /* README.md in Resources */,
-				1232DCF52FE8210100ED36A3 /* onboarding-screens.jsx in Resources */,
-				1232DCF62FE8210100ED36A3 /* design-canvas.jsx in Resources */,
-				1232DCF72FE8210100ED36A3 /* Quiet Kcal App Icon v2.html in Resources */,
-				1232DCF82FE8210100ED36A3 /* Quiet Kcal Hi-Fi-print.html in Resources */,
-				1232DCF92FE8210100ED36A3 /* screens.jsx in Resources */,
-				1232DCFA2FE8210100ED36A3 /* Quiet Kcal App Icon.html in Resources */,
-				1232DCFB2FE8210100ED36A3 /* hifi-screens.jsx in Resources */,
-				1232DCFC2FE8210100ED36A3 /* Quiet Kcal Hi-Fi (standalone-source).html in Resources */,
-				1232DCFD2FE8210100ED36A3 /* ios-frame.jsx in Resources */,
-				1232DCFE2FE8210100ED36A3 /* Quiet Kcal Hi-Fi (standalone).html in Resources */,
-				1232DCFF2FE8210100ED36A3 /* wireframes.jsx in Resources */,
-				1232DD002FE8210100ED36A3 /* widgets.jsx in Resources */,
-				1232DD012FE8210100ED36A3 /* .thumbnail in Resources */,
-				1232DD022FE8210100ED36A3 /* Quiet Kcal Wireframes.html in Resources */,
-				1232DD032FE8210100ED36A3 /* Quiet Kcal Onboarding.html in Resources */,
-				1232DD042FE8210100ED36A3 /* Quiet Kcal Hi-Fi.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -449,7 +416,6 @@
 				CODE_SIGN_ENTITLEMENTS = QuietCalWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RPQ3VF2JBZ;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = QuietCalWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = QuietCalWidget;
@@ -482,7 +448,6 @@
 				CODE_SIGN_ENTITLEMENTS = QuietCalWidgetExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RPQ3VF2JBZ;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = QuietCalWidget/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = QuietCalWidget;
@@ -512,6 +477,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -542,6 +508,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = RPQ3VF2JBZ;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -559,7 +526,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -576,6 +543,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -606,6 +574,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = RPQ3VF2JBZ;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -617,7 +586,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -636,7 +605,6 @@
 				CODE_SIGN_ENTITLEMENTS = QuietCal/QuietCal.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RPQ3VF2JBZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = QuietCal/Info.plist;
@@ -676,7 +644,6 @@
 				CODE_SIGN_ENTITLEMENTS = QuietCal/QuietCal.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = RPQ3VF2JBZ;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = QuietCal/Info.plist;
@@ -715,7 +682,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = mfsaglam.QuietCalTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -736,7 +703,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = mfsaglam.QuietCalTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";

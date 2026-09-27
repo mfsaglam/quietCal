@@ -12,7 +12,8 @@ struct TodaysCaloriesIntent: AppIntent {
     static let openAppWhenRun = false
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        let store = SwiftDataMealStore(modelContainer: try AppGroup.makeModelContainer())
+        let modelContainer = try await AppGroup.makeModelContainer()
+        let store = SwiftDataMealStore(modelContainer: modelContainer)
         let today = Calendar.current.dateInterval(of: .day, for: Date())
             ?? DateInterval(start: Date(), duration: 0)
         let meals = try await store.fetchMeals(in: today)

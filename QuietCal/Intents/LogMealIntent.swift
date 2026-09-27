@@ -52,7 +52,8 @@ struct LogMealIntent: AppIntent {
             throw LogMealError.estimationFailed
         }
 
-        let store = SwiftDataMealStore(modelContainer: try AppGroup.makeModelContainer())
+        let modelContainer = try await AppGroup.makeModelContainer()
+        let store = SwiftDataMealStore(modelContainer: modelContainer)
         let mealEntry = Meal(
             name: estimate.foodName,
             grams: estimate.grams,
@@ -60,12 +61,12 @@ struct LogMealIntent: AppIntent {
             createdAt: Date()
         )
         try await store.save(mealEntry)
-        if let suggestionContainer = try? AppGroup.makeSuggestionModelContainer() {
+        if let suggestionContainer = try? await AppGroup.makeSuggestionModelContainer() {
             let suggestionStore = SwiftDataSuggestionStore(modelContainer: suggestionContainer)
             let period = MealPeriod(date: mealEntry.createdAt, calendar: .autoupdatingCurrent)
             try? await suggestionStore.record(mealEntry, period: period)
         }
-        AppGroup.reloadWidgets()
+        await AppGroup.reloadWidgets()
 
         return .result(
             dialog: "Logged \(estimate.foodName) — about \(estimate.calories) calories."

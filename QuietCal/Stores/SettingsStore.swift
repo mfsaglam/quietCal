@@ -1,6 +1,6 @@
 import Foundation
 
-protocol SettingsStore: Sendable {
+nonisolated protocol SettingsStore: Sendable {
     func loadTarget() async throws -> Int
     func saveTarget(_ target: Int) async throws
     func loadTheme() async throws -> Theme
