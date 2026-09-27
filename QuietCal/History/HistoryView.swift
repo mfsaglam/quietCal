@@ -25,7 +25,7 @@ struct HistoryView: View {
             .padding(.bottom, 32)
         }
         .scrollIndicators(.hidden)
-        .navigationTitle("History")
+        .navigationTitle("common.history")
         .sheet(isPresented: $showPaywall) {
             PaywallView()
         }
@@ -40,7 +40,7 @@ struct HistoryView: View {
     // MARK: - Header
 
     private var header: some View {
-        Text("AVERAGE · \(viewModel.averageKcal.formatted()) KCAL")
+        Text(L10n.format("history.average", viewModel.averageKcal.formatted()))
             .font(.system(size: 13, weight: .medium))
             .tracking(0.5)
             .foregroundStyle(.secondary)
@@ -55,9 +55,9 @@ struct HistoryView: View {
             chart
 
             HStack {
-                Text("THIS WEEK")
+                Text("history.this_week")
                 Spacer()
-                Text("TARGET \(viewModel.target.formatted())")
+                Text(L10n.format("history.target", viewModel.target.formatted()))
             }
             .font(.system(size: 11, weight: .medium))
             .tracking(0.5)
@@ -82,8 +82,8 @@ struct HistoryView: View {
                 let cappedKcal = min(Double(dayTotal.kcal), maxY)
 
                 BarMark(
-                    x: .value("Day", dayTotal.date, unit: .day),
-                    y: .value("Kcal", rendered ? cappedKcal : 0),
+                    x: .value(L10n.string("history.chart.day"), dayTotal.date, unit: .day),
+                    y: .value(L10n.string("history.chart.kcal"), rendered ? cappedKcal : 0),
                     width: .ratio(0.7)
                 )
                 .foregroundStyle(dayTotal.kcal > target ? Self.warnColor : Color.primary)
@@ -100,7 +100,7 @@ struct HistoryView: View {
                 }
             }
 
-            RuleMark(y: .value("Target", target))
+            RuleMark(y: .value(L10n.string("history.chart.target"), target))
                 .foregroundStyle(Color.secondary.opacity(0.4))
                 .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 4]))
         }
@@ -125,7 +125,7 @@ struct HistoryView: View {
 
     private var lockedEarlierCard: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("EARLIER")
+            Text("history.earlier")
                 .font(.system(size: 13, weight: .medium))
                 .tracking(0.5)
                 .foregroundStyle(.secondary)
@@ -139,17 +139,20 @@ struct HistoryView: View {
                         .font(.system(size: 22))
                         .foregroundStyle(.secondary)
 
-                    Text("See your full history")
+                    Text("history.locked.title")
                         .font(.system(size: 17, weight: .semibold))
                         .foregroundStyle(.primary)
 
-                    Text("Free shows the last \(FreeTierLimits.freeHistoryDays) days. Unlock every day you've tracked with QuietCal Pro.")
+                    Text(L10n.format(
+                        "history.locked.message",
+                        String(FreeTierLimits.freeHistoryDays)
+                    ))
                         .font(.system(size: 14))
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
                         .fixedSize(horizontal: false, vertical: true)
 
-                    Text("Unlock with Pro")
+                    Text("history.locked.action")
                         .font(.system(size: 15, weight: .semibold))
                         .foregroundStyle(Color(.systemBackground))
                         .padding(.horizontal, 22)
@@ -171,14 +174,14 @@ struct HistoryView: View {
 
     private var earlierSection: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("EARLIER")
+            Text("history.earlier")
                 .font(.system(size: 13, weight: .medium))
                 .tracking(0.5)
                 .foregroundStyle(.secondary)
                 .padding(.horizontal, 4)
 
             if viewModel.earlier.isEmpty {
-                Text("No earlier history yet.")
+                Text("history.empty")
                     .font(.system(size: 13))
                     .foregroundStyle(.secondary)
                     .padding(.horizontal, 4)

@@ -72,6 +72,6 @@ final class SettingsViewModel {
     }
 
     var formattedTarget: String {
-        "\(target.formatted()) kcal"
+        L10n.format("settings.target.value", target.formatted())
     }
 }

@@ -60,23 +60,23 @@ struct ModelUnavailableView: View {
         VStack(spacing: 12) {
             if showsSettingsButton {
                 Button(action: openSettings) {
-                    primaryLabel("Open Settings")
+                    primaryLabel("model_unavailable.action.open_settings")
                 }
                 .buttonStyle(.plain)
 
-                Button("Check Again", action: onRetry)
+                Button("model_unavailable.action.check_again", action: onRetry)
                     .font(.system(size: 16, weight: .medium))
                     .foregroundStyle(.secondary)
             } else if showsRetryButton {
                 Button(action: onRetry) {
-                    primaryLabel("Check Again")
+                    primaryLabel("model_unavailable.action.check_again")
                 }
                 .buttonStyle(.plain)
             }
         }
     }
 
-    private func primaryLabel(_ text: String) -> some View {
+    private func primaryLabel(_ text: LocalizedStringKey) -> some View {
         Text(text)
             .font(.system(size: 18, weight: .semibold))
             .foregroundStyle(Color(.systemBackground))
@@ -113,23 +113,27 @@ struct ModelUnavailableView: View {
 
     private var title: String {
         switch availability {
-        case .appleIntelligenceNotEnabled: "Turn on Apple Intelligence"
-        case .modelNotReady: "Getting ready"
-        case .deviceNotEligible: "This iPhone isn't supported"
-        default: "Apple Intelligence unavailable"
+        case .appleIntelligenceNotEnabled:
+            L10n.string("model_unavailable.not_enabled.title")
+        case .modelNotReady:
+            L10n.string("model_unavailable.not_ready.title")
+        case .deviceNotEligible:
+            L10n.string("model_unavailable.not_supported.title")
+        default:
+            L10n.string("model_unavailable.unknown.title")
         }
     }
 
     private var message: String {
         switch availability {
         case .appleIntelligenceNotEnabled:
-            "\(AppInfo.name) uses Apple Intelligence to estimate the calories in your meals. Turn it on in Settings, then come back."
+            L10n.format("model_unavailable.not_enabled.message", AppInfo.name)
         case .modelNotReady:
-            "Apple Intelligence is still setting up — this can take a little while after you enable it or update iOS. Try again in a bit."
+            L10n.string("model_unavailable.not_ready.message")
         case .deviceNotEligible:
-            "\(AppInfo.name) estimates calories with Apple Intelligence, which this iPhone doesn't support. Sorry — the app can't work on this device."
+            L10n.format("model_unavailable.not_supported.message", AppInfo.name)
         default:
-            "\(AppInfo.name) needs Apple Intelligence to estimate calories, and it isn't available right now."
+            L10n.format("model_unavailable.unknown.message", AppInfo.name)
         }
     }
 }

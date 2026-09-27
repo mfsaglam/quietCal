@@ -88,7 +88,7 @@ final class HomeViewModel {
         let weekday = date.formatted(.dateTime.weekday(.wide)).uppercased()
         let month = date.formatted(.dateTime.month(.abbreviated)).uppercased()
         let day = date.formatted(.dateTime.day())
-        return "\(weekday) · \(month) \(day)"
+        return L10n.format("home.date", weekday, month, day)
     }
 
 }

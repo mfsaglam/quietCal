@@ -139,7 +139,7 @@ final class AddMealViewModel: Identifiable {
             guard requestID == estimateRequestID, !Task.isCancelled else { return }
             estimatedCalories = nil
             estimatedConfidence = nil
-            errorMessage = "Couldn't estimate this meal. Check the name and amount, then try again."
+            errorMessage = L10n.string("add_meal.error.estimation_failed.message")
         }
     }
 

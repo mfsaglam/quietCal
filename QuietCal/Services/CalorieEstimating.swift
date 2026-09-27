@@ -7,8 +7,8 @@ enum CalorieEstimationSource {
 
     var label: String {
         switch self {
-        case .appleIntelligence: "Estimated by Apple Intelligence"
-        case .stub: "Estimated by Stub Estimator"
+        case .appleIntelligence: L10n.string("estimation.source.apple_intelligence")
+        case .stub: L10n.string("estimation.source.stub")
         }
     }
 }
@@ -25,9 +25,9 @@ enum EstimateConfidence: Sendable, Equatable {
     /// User-facing description shown alongside an estimate.
     var label: String {
         switch self {
-        case .high: "High confidence"
-        case .medium: "Medium confidence"
-        case .low: "Low confidence"
+        case .high: L10n.string("estimation.confidence.high")
+        case .medium: L10n.string("estimation.confidence.medium")
+        case .low: L10n.string("estimation.confidence.low")
         }
     }
 }
