@@ -157,6 +157,27 @@ struct AddMealViewModelTests {
         #expect(vm.errorMessage == nil)
     }
 
+    @Test func manualCaloriesCanBeSavedAfterAutomaticEstimationFails() async throws {
+        let store = InMemoryMealStore(meals: [])
+        let estimator = TestCalorieEstimator()
+        estimator.error = TestEstimatorError()
+        let vm = makeViewModel(store: store, estimator: estimator)
+        vm.name = "Family recipe"
+        vm.amount = "240"
+
+        await vm.estimate()
+        #expect(vm.state == .failed)
+
+        vm.calories = "430"
+
+        #expect(vm.state == .estimated)
+        #expect(vm.estimationSource == nil)
+        #expect(vm.canSave)
+        #expect(await vm.save() == .saved)
+        let saved = try #require(await store.fetchMeals(in: anyInterval()).first)
+        #expect(saved.kcal == 430)
+    }
+
     @Test func staleEstimateIsDiscardedWhenNameChangesMidCall() async {
         let estimator = TestCalorieEstimator()
         estimator.calories = 350

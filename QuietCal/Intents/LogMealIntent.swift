@@ -16,6 +16,47 @@ enum LogMealError: Error, CustomLocalizedStringResourceConvertible {
     }
 }
 
+/// Testable intent workflow. Estimation and validation complete before the
+/// first write, so a failed or invalid estimate can never create a partial meal.
+struct LogMealIntentService: Sendable {
+    let estimator: any CalorieEstimating
+    let mealStore: any MealStore
+    let suggestionStore: (any SuggestionStore)?
+    var now: @Sendable () -> Date = Date.init
+
+    func log(phrase rawPhrase: String) async throws -> Meal {
+        let phrase = rawPhrase.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !phrase.isEmpty else {
+            throw LogMealError.invalidInput
+        }
+
+        let estimate: MealEstimate
+        do {
+            estimate = try await estimator.estimate(phrase: phrase)
+        } catch {
+            throw LogMealError.estimationFailed
+        }
+
+        let foodName = estimate.foodName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !foodName.isEmpty, estimate.grams > 0, estimate.calories > 0 else {
+            throw LogMealError.estimationFailed
+        }
+
+        let meal = Meal(
+            name: foodName,
+            grams: estimate.grams,
+            kcal: estimate.calories,
+            createdAt: now()
+        )
+        try await mealStore.save(meal)
+        if let suggestionStore {
+            let period = MealPeriod(date: meal.createdAt, calendar: .autoupdatingCurrent)
+            try? await suggestionStore.record(meal, period: period)
+        }
+        return meal
+    }
+}
+
 /// Logs a meal to QuietCal from Siri, Shortcuts, or Spotlight. Runs in the
 /// background without opening the app: it estimates calories on-device and
 /// writes straight to the shared App Group store, then refreshes the widget.
@@ -40,46 +81,27 @@ struct LogMealIntent: AppIntent {
     }
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
-        let phrase = meal.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !phrase.isEmpty else {
-            throw LogMealError.invalidInput
-        }
-
-        let estimate: MealEstimate
-        do {
-            estimate = try await Self.makeEstimator().estimate(phrase: phrase)
-        } catch {
-            throw LogMealError.estimationFailed
-        }
-
         let modelContainer = try await AppGroup.makeModelContainer()
         let store = SwiftDataMealStore(modelContainer: modelContainer)
-        let mealEntry = Meal(
-            name: estimate.foodName,
-            grams: estimate.grams,
-            kcal: estimate.calories,
-            createdAt: Date()
-        )
-        try await store.save(mealEntry)
+        var suggestionStore: (any SuggestionStore)?
         if let suggestionContainer = try? await AppGroup.makeSuggestionModelContainer() {
-            let suggestionStore = SwiftDataSuggestionStore(modelContainer: suggestionContainer)
-            let period = MealPeriod(date: mealEntry.createdAt, calendar: .autoupdatingCurrent)
-            try? await suggestionStore.record(mealEntry, period: period)
+            suggestionStore = SwiftDataSuggestionStore(modelContainer: suggestionContainer)
         }
+        let service = LogMealIntentService(
+            estimator: Self.makeEstimator(),
+            mealStore: store,
+            suggestionStore: suggestionStore
+        )
+        let mealEntry = try await service.log(phrase: meal)
         await AppGroup.reloadWidgets()
 
         return .result(
-            dialog: "Logged \(estimate.foodName) — about \(estimate.calories) calories."
+            dialog: "Logged \(mealEntry.name) — about \(mealEntry.kcal) calories."
         )
     }
 
-    /// Mirrors ContentView's estimator selection: the stub on the simulator
-    /// (Apple Intelligence isn't available there), the real model on device.
-    private static func makeEstimator() -> CalorieEstimating {
-        #if targetEnvironment(simulator)
-        StubCalorieEstimator()
-        #else
-        AppleIntelligenceCalorieEstimator()
-        #endif
+    /// Uses the same package-owned fallback architecture as Add Meal.
+    static func makeEstimator() -> any CalorieEstimating {
+        PackageCalorieEstimator()
     }
 }

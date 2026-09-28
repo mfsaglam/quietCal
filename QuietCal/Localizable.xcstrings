@@ -513,89 +513,6 @@
         }
       }
     },
-    "add_meal.field.failed" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Failed"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Başarısız"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fehlgeschlagen"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Error"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Échec"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Operazione non riuscita"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Falhou"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ошибка"
-          }
-        },
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "فشل"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "विफल"
-          }
-        },
-        "zh" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "失败"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "失敗"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "실패"
-          }
-        }
-      }
-    },
     "add_meal.field.name" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1671,89 +1588,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "단위"
-          }
-        }
-      }
-    },
-    "common.apple_intelligence" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "APPLE INTELLIGENCE"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "APPLE INTELLIGENCE"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "APPLE INTELLIGENCE"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "APPLE INTELLIGENCE"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "APPLE INTELLIGENCE"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "APPLE INTELLIGENCE"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "APPLE INTELLIGENCE"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "APPLE INTELLIGENCE"
-          }
-        },
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "APPLE INTELLIGENCE"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "APPLE INTELLIGENCE"
-          }
-        },
-        "zh" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "APPLE 智能"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "APPLE INTELLIGENCE"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "APPLE INTELLIGENCE"
           }
         }
       }
@@ -3653,6 +3487,42 @@
         }
       }
     },
+    "estimation.source.local_database" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Estimated from on-device database" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "Aygıttaki veri tabanından tahmin edildi" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Aus der On-Device-Datenbank geschätzt" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Estimado con la base de datos del dispositivo" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Estimé à partir de la base de données de l’appareil" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Stima dal database sul dispositivo" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Estimado a partir da base de dados no dispositivo" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Оценено по базе данных на устройстве" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "تقدير من قاعدة البيانات على الجهاز" } },
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "डिवाइस पर मौजूद डेटाबेस से अनुमानित" } },
+        "zh" : { "stringUnit" : { "state" : "translated", "value" : "通过设备端数据库估算" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "デバイス上のデータベースによる推定" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "기기 내 데이터베이스로 추정" } }
+      }
+    },
+    "estimation.source.quietcal" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "Estimated by QuietCal" } },
+        "tr" : { "stringUnit" : { "state" : "translated", "value" : "QuietCal tarafından tahmin edildi" } },
+        "de" : { "stringUnit" : { "state" : "translated", "value" : "Von QuietCal geschätzt" } },
+        "es" : { "stringUnit" : { "state" : "translated", "value" : "Estimado por QuietCal" } },
+        "fr" : { "stringUnit" : { "state" : "translated", "value" : "Estimé par QuietCal" } },
+        "it" : { "stringUnit" : { "state" : "translated", "value" : "Stima di QuietCal" } },
+        "pt" : { "stringUnit" : { "state" : "translated", "value" : "Estimado pelo QuietCal" } },
+        "ru" : { "stringUnit" : { "state" : "translated", "value" : "Оценено QuietCal" } },
+        "ar" : { "stringUnit" : { "state" : "translated", "value" : "تقدير بواسطة QuietCal" } },
+        "hi" : { "stringUnit" : { "state" : "translated", "value" : "QuietCal द्वारा अनुमानित" } },
+        "zh" : { "stringUnit" : { "state" : "translated", "value" : "由QuietCal估算" } },
+        "ja" : { "stringUnit" : { "state" : "translated", "value" : "QuietCalによる推定" } },
+        "ko" : { "stringUnit" : { "state" : "translated", "value" : "QuietCal로 추정" } }
+      }
+    },
     "estimation.source.apple_intelligence" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3732,89 +3602,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Apple Intelligence로 추정"
-          }
-        }
-      }
-    },
-    "estimation.source.stub" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Estimated by Stub Estimator"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Test Tahmincisi tarafından tahmin edildi"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vom Test-Schätzer geschätzt"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Estimado por el estimador de prueba"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Estimé par l’outil de test"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stima dello strumento di test"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Estimado pelo estimador de teste"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Оценено тестовым модулем"
-          }
-        },
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "تقدير بواسطة أداة الاختبار"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "परीक्षण अनुमानक द्वारा अनुमानित"
-          }
-        },
-        "zh" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "由测试估算器估算"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "テスト推定器による推定"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "테스트 추정기로 추정"
           }
         }
       }
@@ -6370,836 +6157,6 @@
         }
       }
     },
-    "model_unavailable.action.check_again" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Check Again"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tekrar Kontrol Et"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erneut prüfen"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Comprobar de nuevo"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vérifier à nouveau"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Controlla di nuovo"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verificar novamente"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Проверить снова"
-          }
-        },
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "تحقق مجددًا"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "फिर जाँचें"
-          }
-        },
-        "zh" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "再次检查"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "もう一度確認"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "다시 확인"
-          }
-        }
-      }
-    },
-    "model_unavailable.action.open_settings" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open Settings"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ayarları Aç"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Einstellungen öffnen"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abrir Ajustes"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ouvrir les réglages"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apri Impostazioni"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abrir Definições"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Открыть настройки"
-          }
-        },
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "فتح الإعدادات"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "सेटिंग्स खोलें"
-          }
-        },
-        "zh" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "打开设置"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "設定を開く"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "설정 열기"
-          }
-        }
-      }
-    },
-    "model_unavailable.not_enabled.message" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ uses Apple Intelligence to estimate the calories in your meals. Turn it on in Settings, then come back."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@, öğünlerinizdeki kalorileri tahmin etmek için Apple Intelligence kullanır. Ayarlar'dan etkinleştirip geri dönün."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ verwendet Apple Intelligence, um die Kalorien deiner Mahlzeiten zu schätzen. Aktiviere es in den Einstellungen und kehre dann zurück."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ usa Apple Intelligence para estimar las calorías de tus comidas. Actívalo en Ajustes y vuelve."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ utilise Apple Intelligence pour estimer les calories de vos repas. Activez-la dans Réglages, puis revenez."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ usa Apple Intelligence per stimare le calorie dei tuoi pasti. Attivala in Impostazioni, poi torna qui."
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O %@ utiliza a Apple Intelligence para estimar as calorias das suas refeições. Ative-a nas Definições e volte."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ использует Apple Intelligence для оценки калорийности ваших блюд. Включите её в настройках и вернитесь."
-          }
-        },
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "يستخدم %@ ‏Apple Intelligence لتقدير السعرات الحرارية في وجباتك. شغّله من الإعدادات، ثم عُد."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ आपके भोजन की कैलोरी का अनुमान लगाने के लिए Apple Intelligence का उपयोग करता है। इसे सेटिंग्स में चालू करें, फिर वापस आएँ।"
-          }
-        },
-        "zh" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@使用Apple智能估算餐食热量。请在“设置”中将其打开，然后返回。"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@はApple Intelligenceを使って食事のカロリーを推定します。「設定」でオンにしてから戻ってください。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@은 Apple Intelligence를 사용하여 식사의 칼로리를 추정합니다. 설정에서 켠 후 돌아오세요."
-          }
-        }
-      }
-    },
-    "model_unavailable.not_enabled.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Turn on Apple Intelligence"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence'ı Aç"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence aktivieren"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activar Apple Intelligence"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Activer Apple Intelligence"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Attiva Apple Intelligence"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ativar a Apple Intelligence"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Включить Apple Intelligence"
-          }
-        },
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "تشغيل Apple Intelligence"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence चालू करें"
-          }
-        },
-        "zh" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "打开Apple智能"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligenceをオンにする"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence 켜기"
-          }
-        }
-      }
-    },
-    "model_unavailable.not_ready.message" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence is still setting up — this can take a little while after you enable it or update iOS. Try again in a bit."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence hâlâ ayarlanıyor — etkinleştirdikten veya iOS'i güncelledikten sonra bu işlem biraz sürebilir. Birazdan tekrar deneyin."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence wird noch eingerichtet — nach der Aktivierung oder einem iOS-Update kann das eine Weile dauern. Versuche es später erneut."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence aún se está configurando; puede tardar un poco después de activarlo o actualizar iOS. Inténtalo de nuevo más tarde."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "La configuration d’Apple Intelligence est toujours en cours. Cela peut prendre un peu de temps après son activation ou la mise à jour d’iOS. Réessayez plus tard."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence è ancora in fase di configurazione. Potrebbe volerci un po’ dopo l’attivazione o l’aggiornamento di iOS. Riprova tra poco."
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A Apple Intelligence ainda está a ser configurada. Isto pode demorar algum tempo após a ativação ou uma atualização do iOS. Tente novamente dentro de pouco tempo."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence всё ещё настраивается — после включения или обновления iOS это может занять некоторое время. Повторите попытку позже."
-          }
-        },
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "لا يزال إعداد Apple Intelligence جاريًا — قد يستغرق ذلك بعض الوقت بعد تشغيله أو تحديث iOS. حاول مجددًا بعد قليل."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence अभी सेट अप हो रहा है—इसे चालू करने या iOS अपडेट करने के बाद इसमें कुछ समय लग सकता है। थोड़ी देर बाद फिर कोशिश करें।"
-          }
-        },
-        "zh" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple智能仍在设置中——启用或更新iOS后可能需要一些时间。请稍后重试。"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligenceはまだ設定中です。有効化またはiOSのアップデート後は、しばらく時間がかかることがあります。少し待ってからもう一度お試しください。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence를 설정하는 중입니다. 활성화하거나 iOS를 업데이트한 후에는 시간이 걸릴 수 있습니다. 잠시 후 다시 시도하세요."
-          }
-        }
-      }
-    },
-    "model_unavailable.not_ready.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Getting ready"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hazırlanıyor"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wird vorbereitet"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Preparando"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Préparation en cours"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Preparazione"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A preparar"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Подготовка"
-          }
-        },
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "جارٍ التحضير"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "तैयार हो रहा है"
-          }
-        },
-        "zh" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "正在准备"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "準備中"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "준비 중"
-          }
-        }
-      }
-    },
-    "model_unavailable.not_supported.message" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ estimates calories with Apple Intelligence, which this iPhone doesn't support. Sorry — the app can't work on this device."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@, kalorileri bu iPhone'un desteklemediği Apple Intelligence ile tahmin eder. Üzgünüz, uygulama bu aygıtta çalışamaz."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ schätzt Kalorien mit Apple Intelligence, das dieses iPhone nicht unterstützt. Leider kann die App auf diesem Gerät nicht verwendet werden."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ estima las calorías con Apple Intelligence, que este iPhone no admite. Lo sentimos, la app no puede funcionar en este dispositivo."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ estime les calories avec Apple Intelligence, que cet iPhone ne prend pas en charge. Désolé, l’app ne peut pas fonctionner sur cet appareil."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ stima le calorie con Apple Intelligence, che questo iPhone non supporta. L’app non può funzionare su questo dispositivo."
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O %@ estima calorias com a Apple Intelligence, que este iPhone não suporta. Lamentamos, mas a aplicação não funciona neste dispositivo."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ оценивает калории с помощью Apple Intelligence, которую этот iPhone не поддерживает. Приложение не может работать на этом устройстве."
-          }
-        },
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "يقدّر %@ السعرات الحرارية باستخدام Apple Intelligence، وهو غير مدعوم على هذا الـ iPhone. عذرًا، لا يمكن تشغيل التطبيق على هذا الجهاز."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ Apple Intelligence से कैलोरी का अनुमान लगाता है, जिसका यह iPhone समर्थन नहीं करता। क्षमा करें, ऐप इस डिवाइस पर काम नहीं कर सकता।"
-          }
-        },
-        "zh" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@使用Apple智能估算热量，但这部iPhone不支持该功能。抱歉，此App无法在这台设备上运行。"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@はApple Intelligenceでカロリーを推定しますが、このiPhoneは対応していません。このデバイスではアプリを使用できません。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@은 Apple Intelligence로 칼로리를 추정하지만 이 iPhone은 이를 지원하지 않습니다. 죄송하지만 이 기기에서는 앱을 사용할 수 없습니다."
-          }
-        }
-      }
-    },
-    "model_unavailable.not_supported.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This iPhone isn't supported"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bu iPhone desteklenmiyor"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dieses iPhone wird nicht unterstützt"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Este iPhone no es compatible"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cet iPhone n’est pas compatible"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Questo iPhone non è supportato"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Este iPhone não é compatível"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Этот iPhone не поддерживается"
-          }
-        },
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "هذا الـ iPhone غير مدعوم"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "यह iPhone समर्थित नहीं है"
-          }
-        },
-        "zh" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "不支持这部iPhone"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "このiPhoneは対応していません"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "이 iPhone은 지원되지 않습니다"
-          }
-        }
-      }
-    },
-    "model_unavailable.unknown.message" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ needs Apple Intelligence to estimate calories, and it isn't available right now."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@, kalorileri tahmin etmek için Apple Intelligence'a ihtiyaç duyuyor ve şu anda kullanılamıyor."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ benötigt Apple Intelligence zum Schätzen von Kalorien, ist derzeit aber nicht verfügbar."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ necesita Apple Intelligence para estimar calorías y ahora mismo no está disponible."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ a besoin d’Apple Intelligence pour estimer les calories, mais elle n’est pas disponible actuellement."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ richiede Apple Intelligence per stimare le calorie, ma al momento non è disponibile."
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O %@ precisa da Apple Intelligence para estimar calorias, mas esta não está disponível neste momento."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Для оценки калорий %@ требуется Apple Intelligence, но сейчас она недоступна."
-          }
-        },
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "يحتاج %@ إلى Apple Intelligence لتقدير السعرات الحرارية، وهو غير متاح حاليًا."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "कैलोरी का अनुमान लगाने के लिए %@ को Apple Intelligence चाहिए, जो अभी उपलब्ध नहीं है।"
-          }
-        },
-        "zh" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@需要Apple智能来估算热量，但该功能目前不可用。"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@でカロリーを推定するにはApple Intelligenceが必要ですが、現在利用できません。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@에서 칼로리를 추정하려면 Apple Intelligence가 필요하지만 현재 사용할 수 없습니다."
-          }
-        }
-      }
-    },
-    "model_unavailable.unknown.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence unavailable"
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence kullanılamıyor"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence nicht verfügbar"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence no disponible"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence indisponible"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence non disponibile"
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence indisponível"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence недоступна"
-          }
-        },
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence غير متاح"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence उपलब्ध नहीं है"
-          }
-        },
-        "zh" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple智能不可用"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligenceを利用できません"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Apple Intelligence를 사용할 수 없음"
-          }
-        }
-      }
-    },
     "onboarding.action.get_started" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -7366,89 +6323,6 @@
         }
       }
     },
-    "onboarding.estimates.message" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No databases to search or barcodes to scan. Just describe the meal."
-          }
-        },
-        "tr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aranacak veri tabanı veya taranacak barkod yok. Sadece öğünü tarif edin."
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Keine Datenbanken, keine Barcodes. Beschreibe einfach die Mahlzeit."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sin bases de datos ni códigos de barras. Solo describe la comida."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aucune base de données ni aucun code-barres à scanner. Décrivez simplement le repas."
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nessun database da consultare o codice a barre da scansionare. Descrivi semplicemente il pasto."
-          }
-        },
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sem bases de dados para pesquisar nem códigos de barras para ler. Basta descrever a refeição."
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Никаких баз данных и штрихкодов. Просто опишите блюдо."
-          }
-        },
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "لا قواعد بيانات للبحث ولا رموز شريطية للمسح. ما عليك سوى وصف الوجبة."
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "न कोई डेटाबेस खोजना है, न बारकोड स्कैन करना है। बस भोजन का वर्णन करें।"
-          }
-        },
-        "zh" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "无需搜索数据库或扫描条形码。只需描述餐食即可。"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "データベースの検索もバーコードのスキャンも不要です。食事を説明するだけです。"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "데이터베이스 검색이나 바코드 스캔이 필요 없습니다. 식사를 설명하기만 하세요."
-          }
-        }
-      }
-    },
     "onboarding.estimates.sample_meal" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -7538,79 +6412,79 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Estimated by Apple Intelligence · High confidence"
+            "value" : "Estimated by QuietCal · High confidence"
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apple Intelligence tarafından tahmin edildi · Yüksek güven"
+            "value" : "QuietCal tarafından tahmin edildi · Yüksek güven"
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Von Apple Intelligence geschätzt · Hohe Sicherheit"
+            "value" : "Von QuietCal geschätzt · Hohe Sicherheit"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Estimado por Apple Intelligence · Confianza alta"
+            "value" : "Estimado por QuietCal · Confianza alta"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Estimé par Apple Intelligence · Confiance élevée"
+            "value" : "Estimé par QuietCal · Confiance élevée"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Stima di Apple Intelligence · Affidabilità alta"
+            "value" : "Stima di QuietCal · Affidabilità alta"
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Estimado pela Apple Intelligence · Confiança elevada"
+            "value" : "Estimado pela QuietCal · Confiança elevada"
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Оценено Apple Intelligence · Высокая достоверность"
+            "value" : "Оценено QuietCal · Высокая достоверность"
           }
         },
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "تقدير بواسطة Apple Intelligence · ثقة عالية"
+            "value" : "تقدير بواسطة QuietCal · ثقة عالية"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apple Intelligence द्वारा अनुमानित · उच्च विश्वसनीयता"
+            "value" : "QuietCal द्वारा अनुमानित · उच्च विश्वसनीयता"
           }
         },
         "zh" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "由Apple智能估算 · 高可信度"
+            "value" : "由QuietCal估算 · 高可信度"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apple Intelligenceによる推定 · 信頼度：高"
+            "value" : "QuietCalによる推定 · 信頼度：高"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apple Intelligence로 추정 · 높은 신뢰도"
+            "value" : "QuietCal로 추정 · 높은 신뢰도"
           }
         }
       }
@@ -7787,79 +6661,79 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apple Intelligence estimates the calories on device."
+            "value" : "QuietCal estimates the calories on device."
           }
         },
         "tr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apple Intelligence kalorileri aygıt üzerinde tahmin eder."
+            "value" : "QuietCal kalorileri aygıt üzerinde tahmin eder."
           }
         },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apple Intelligence schätzt die Kalorien auf dem Gerät."
+            "value" : "QuietCal schätzt die Kalorien auf dem Gerät."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apple Intelligence estima las calorías en el dispositivo."
+            "value" : "QuietCal estima las calorías en el dispositivo."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apple Intelligence estime les calories sur l’appareil."
+            "value" : "QuietCal estime les calories sur l’appareil."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apple Intelligence stima le calorie sul dispositivo."
+            "value" : "QuietCal stima le calorie sul dispositivo."
           }
         },
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A Apple Intelligence estima as calorias no dispositivo."
+            "value" : "A QuietCal estima as calorias no dispositivo."
           }
         },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apple Intelligence оценивает калории на устройстве."
+            "value" : "QuietCal оценивает калории на устройстве."
           }
         },
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "يقدّر Apple Intelligence السعرات الحرارية على الجهاز."
+            "value" : "يقدّر QuietCal السعرات الحرارية على الجهاز."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apple Intelligence डिवाइस पर ही कैलोरी का अनुमान लगाता है।"
+            "value" : "QuietCal डिवाइस पर ही कैलोरी का अनुमान लगाता है।"
           }
         },
         "zh" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apple智能在设备端估算热量。"
+            "value" : "QuietCal在设备端估算热量。"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apple Intelligenceがデバイス上でカロリーを推定します。"
+            "value" : "QuietCalがデバイス上でカロリーを推定します。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apple Intelligence가 기기에서 칼로리를 추정합니다."
+            "value" : "QuietCal가 기기에서 칼로리를 추정합니다."
           }
         }
       }

@@ -2,13 +2,15 @@ import Foundation
 
 /// Identifies which engine produced a calorie estimate, for display in the UI.
 enum CalorieEstimationSource {
+    case localDatabase
     case appleIntelligence
-    case stub
+    case quietCal
 
     var label: String {
         switch self {
+        case .localDatabase: L10n.string("estimation.source.local_database")
         case .appleIntelligence: L10n.string("estimation.source.apple_intelligence")
-        case .stub: L10n.string("estimation.source.stub")
+        case .quietCal: L10n.string("estimation.source.quietcal")
         }
     }
 }
@@ -45,6 +47,7 @@ struct EstimatedIngredient: Sendable, Equatable {
 struct CalorieEstimate: Sendable, Equatable {
     let calories: Int
     let confidence: EstimateConfidence?
+    var source: CalorieEstimationSource? = nil
     var ingredients: [EstimatedIngredient] = []
 }
 
@@ -59,11 +62,11 @@ struct MealEstimate: Sendable, Equatable {
     let grams: Int
     let calories: Int
     let confidence: EstimateConfidence?
+    var source: CalorieEstimationSource? = nil
     var ingredients: [EstimatedIngredient] = []
 }
 
 nonisolated protocol CalorieEstimating: Sendable {
-    var source: CalorieEstimationSource { get }
     func estimate(name: String, grams: Int) async throws -> CalorieEstimate
 
     /// Estimates a meal from one free-text phrase, doing the food/quantity
@@ -87,6 +90,7 @@ extension CalorieEstimating {
             grams: parsed.grams,
             calories: estimate.calories,
             confidence: estimate.confidence,
+            source: estimate.source,
             ingredients: estimate.ingredients
         )
     }

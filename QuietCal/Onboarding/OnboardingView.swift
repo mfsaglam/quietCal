@@ -172,7 +172,7 @@ private struct OnboardingRing<Content: View>: View {
     }
 }
 
-private let appleIntelligenceGradient = LinearGradient(
+private let estimationGradient = LinearGradient(
     colors: [
         Color(red: 0.686, green: 0.322, blue: 0.871),
         Color(red: 1.0, green: 0.176, blue: 0.573)
@@ -181,16 +181,16 @@ private let appleIntelligenceGradient = LinearGradient(
     endPoint: .trailing
 )
 
-private struct AppleIntelligenceLabel: View {
+private struct EstimatorLabel: View {
     var body: some View {
         HStack(spacing: 7) {
             Image(systemName: "sparkles")
                 .font(.system(size: 14, weight: .semibold))
-            Text("common.apple_intelligence")
+            Text(AppInfo.name.uppercased())
                 .font(.system(size: 13, weight: .semibold))
                 .tracking(0.5)
         }
-        .foregroundStyle(appleIntelligenceGradient)
+        .foregroundStyle(estimationGradient)
     }
 }
 
@@ -360,17 +360,12 @@ private struct EstimatesStep: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
-                AppleIntelligenceLabel()
+                EstimatorLabel()
                     .padding(.bottom, 12)
 
                 Text("onboarding.estimates.title")
                     .font(.system(size: 30, weight: .bold))
                     .foregroundStyle(.primary)
-
-                Text("onboarding.estimates.message")
-                    .font(.system(size: 16))
-                    .foregroundStyle(.secondary)
-                    .padding(.top, 10)
 
                 estimateCard
                     .padding(.top, 24)
@@ -430,7 +425,7 @@ private struct EstimatesStep: View {
             HStack(spacing: 7) {
                 Image(systemName: "sparkles")
                     .font(.system(size: 12))
-                    .foregroundStyle(appleIntelligenceGradient)
+                    .foregroundStyle(estimationGradient)
                 Text("onboarding.estimates.sample_result")
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(.secondary)

@@ -27,11 +27,9 @@ grams using a calorie estimator service.
 - **UI**: SwiftUI
 - **Persistence**: SwiftData (meals), UserDefaults (settings)
 - **Charts**: Swift Charts
-- **Calorie estimation**: pluggable `CalorieEstimating` protocol with stub and
-  Apple Intelligence implementations, backed by the
+- **Calorie estimation**: pluggable `CalorieEstimating` protocol backed by the
   [CalorieEstimator](https://github.com/mfsaglam/CalorieEstimator) package
-  (3.0.0+, on-device via FoundationModels, with a local recipe database and
-  natural-language phrase parsing)
+  (3.2.2+, local-database-first with package-owned on-device model fallback)
 - **Siri**: App Intents framework (`LogMealIntent`, `TodaysCaloriesIntent`)
   exposed as App Shortcuts
 - **Testing**: Swift Testing framework
@@ -63,8 +61,8 @@ MVVM with protocol-driven stores and services for testability:
 - View models hold state and orchestrate stores/services
 - `MealStore` and `SettingsStore` protocols have in-memory and persistent
   implementations — in-memory variants are used in previews and tests
-- `CalorieEstimating` abstracts calorie estimation so different backends can be
-  swapped in (stub, Apple Intelligence, etc.)
+- `CalorieEstimating` abstracts calorie estimation so the package adapter and
+  deterministic test/preview estimators can be injected
 
 ## Siri & Shortcuts
 
@@ -102,17 +100,15 @@ amount to grams and estimates the calories in a single call.
 - The intent runs in a background process, separate from the UI, so it writes
   straight to the shared App Group SwiftData store and calls
   `WidgetCenter.reloadAllTimelines()` — the meal is there next time the app opens.
-- Phrase parsing is delegated to the CalorieEstimator package's model-based
-  `estimate(phrase:)`. A lightweight local fallback (`MealPhraseParser`) backs
-  the simulator/stub path so the flow works without Apple Intelligence.
+- Phrase parsing and fallback behavior are delegated to the CalorieEstimator
+  package. If estimation fails, the intent returns without writing a meal.
 - A `SiriTipView` on the Home screen teaches the trigger phrase (dismissal is
   persisted).
 
 ### Notes
 
-- Voice Siri and on-device estimation require a **real device** with Apple
-  Intelligence enabled. On the simulator, exercise the intents from the
-  **Shortcuts** app (they use the stub estimator).
+- Voice Siri phrase parsing may require the on-device model. Name-and-weight
+  estimates use the package's local database first on every supported iPhone.
 - Every App Shortcut phrase must include the app name ("QuietCal").
 
 ## Requirements

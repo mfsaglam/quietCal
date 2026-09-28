@@ -27,26 +27,13 @@ struct ContentView: View {
     /// aren't already subscribed.
     @State private var showOnboardingPaywall = false
 
-    /// Whether on-device calorie estimation can run. Re-checked whenever the
-    /// app becomes active so recoverable states (Apple Intelligence enabled in
-    /// Settings, or the model finishing its download) are picked up live.
-    private let availabilityProvider: ModelAvailabilityProviding
-    @State private var availability: ModelAvailability
-
-    @Environment(\.scenePhase) private var scenePhase
-
-    init(modelContainer: ModelContainer, suggestionModelContainer: ModelContainer) {
+    init(
+        modelContainer: ModelContainer,
+        suggestionModelContainer: ModelContainer,
+        calorieEstimator: any CalorieEstimating = PackageCalorieEstimator()
+    ) {
         let mealStore = SwiftDataMealStore(modelContainer: modelContainer)
         let suggestionStore = SwiftDataSuggestionStore(modelContainer: suggestionModelContainer)
-        #if targetEnvironment(simulator)
-        let calorieEstimator: CalorieEstimating = StubCalorieEstimator()
-        let availabilityProvider: ModelAvailabilityProviding = AlwaysAvailableModelProvider()
-        #else
-        let calorieEstimator: CalorieEstimating = AppleIntelligenceCalorieEstimator()
-        let availabilityProvider: ModelAvailabilityProviding = SystemModelAvailabilityProvider()
-        #endif
-        self.availabilityProvider = availabilityProvider
-        _availability = State(initialValue: availabilityProvider.availability)
         let entitlements = StoreKitEntitlementStore()
         _entitlements = State(initialValue: entitlements)
         _homeViewModel = State(initialValue: HomeViewModel(
@@ -68,24 +55,11 @@ struct ContentView: View {
     }
 
     var body: some View {
-        Group {
-            if availability.isAvailable {
-                mainContent
-            } else {
-                ModelUnavailableView(availability: availability) {
-                    availability = availabilityProvider.availability
-                }
-            }
-        }
+        mainContent
         .preferredColorScheme(theme.colorScheme)
         .task { entitlements.start() }
         .sheet(isPresented: $showOnboardingPaywall) {
             PaywallView()
-        }
-        .onChange(of: scenePhase) { _, newPhase in
-            if newPhase == .active {
-                availability = availabilityProvider.availability
-            }
         }
     }
 

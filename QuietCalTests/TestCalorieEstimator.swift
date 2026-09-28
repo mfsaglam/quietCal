@@ -2,7 +2,7 @@ import Foundation
 @testable import QuietCal
 
 final class TestCalorieEstimator: CalorieEstimating, @unchecked Sendable {
-    var source: CalorieEstimationSource = .stub
+    var source: CalorieEstimationSource? = .quietCal
     var ingredients: [EstimatedIngredient] = []
     var calories: Int = 200
     var confidence: EstimateConfidence = .medium
@@ -23,7 +23,12 @@ final class TestCalorieEstimator: CalorieEstimating, @unchecked Sendable {
         if let error {
             throw error
         }
-        return CalorieEstimate(calories: calories, confidence: confidence, ingredients: ingredients)
+        return CalorieEstimate(
+            calories: calories,
+            confidence: confidence,
+            source: source,
+            ingredients: ingredients
+        )
     }
 }
 

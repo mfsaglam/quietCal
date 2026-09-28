@@ -26,8 +26,8 @@ struct AddMealView: View {
                         amountField
                         caloriesField
                     }
-                    if viewModel.state == .estimated {
-                        aiChip
+                    if viewModel.state == .estimated, viewModel.estimationSource != nil {
+                        sourceChip
                     }
                     if viewModel.state == .failed {
                         errorChip
@@ -253,52 +253,32 @@ struct AddMealView: View {
     @ViewBuilder
     private var caloriesField: some View {
         switch viewModel.state {
-        case .empty:
-            fieldCard(label: "add_meal.field.calories", sparkleLabel: true) {
-                HStack(alignment: .firstTextBaseline, spacing: 4) {
-                    Text("—")
-                        .font(.system(size: 22, weight: .semibold, design: .rounded))
-                        .foregroundStyle(.secondary)
-                    Text("common.kcal")
-                        .font(.system(size: 15, weight: .medium))
-                        .foregroundStyle(.secondary)
-                }
-            }
         case .estimating:
             fieldCard(label: "add_meal.field.estimating", sparkleLabel: true, labelColor: aiPurple) {
                 ShimmerBar(start: aiPurple, end: aiPink)
             }
-        case .estimated:
-            fieldCard(label: "add_meal.field.calories", sparkleLabel: true) {
+        case .empty, .estimated, .failed:
+            fieldCard(label: "add_meal.field.calories", sparkleLabel: viewModel.estimationSource != nil) {
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
-                    Text("\(viewModel.estimatedCalories ?? 0)")
+                    TextField("—", text: $viewModel.calories)
                         .font(.system(size: 22, weight: .semibold, design: .rounded))
                         .tracking(-0.5)
                         .monospacedDigit()
+                        .keyboardType(.numberPad)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     Text("common.kcal")
                         .font(.system(size: 15, weight: .medium))
                         .foregroundStyle(.secondary)
-                }
-            }
-        case .failed:
-            fieldCard(label: "add_meal.field.calories", labelColor: .orange) {
-                HStack(alignment: .firstTextBaseline, spacing: 4) {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .font(.system(size: 16))
-                        .foregroundStyle(.orange)
-                    Text("add_meal.field.failed")
-                        .font(.system(size: 22, weight: .semibold, design: .rounded))
-                        .foregroundStyle(.orange)
                 }
             }
         }
     }
 
-    private var aiChip: some View {
+    private var sourceChip: some View {
         HStack(spacing: 8) {
             sparkle(size: 14)
             VStack(alignment: .leading, spacing: 1) {
-                Text(viewModel.estimationSource.label)
+                Text(viewModel.estimationSource?.label ?? L10n.string("estimation.source.quietcal"))
                     .font(.system(size: 13, weight: .semibold))
                     .tracking(-0.1)
                 if let confidence = viewModel.estimatedConfidence {
@@ -540,10 +520,8 @@ private struct ShimmerBar: View {
 }
 
 private struct IngredientPreviewEstimator: CalorieEstimating {
-    let source: CalorieEstimationSource = .appleIntelligence
-
     func estimate(name: String, grams: Int) async throws -> CalorieEstimate {
-        CalorieEstimate(calories: 310, confidence: .medium, ingredients: [
+        CalorieEstimate(calories: 310, confidence: .medium, source: .quietCal, ingredients: [
             EstimatedIngredient(name: "Grilled chicken", grams: 100, calories: 165),
             EstimatedIngredient(name: "Mixed greens", grams: 80, calories: 16),
             EstimatedIngredient(name: "Cherry tomatoes", grams: 50, calories: 9),

@@ -38,11 +38,23 @@ final class AddMealViewModel: Identifiable {
     var unit: WeightUnit {
         didSet { if unit != oldValue { invalidateEstimate() } }
     }
+    var calories: String = "" {
+        didSet {
+            guard calories != oldValue, !isApplyingAutomaticCalories else { return }
+            estimateRequestID = UUID()
+            isEstimating = false
+            estimatedConfidence = nil
+            estimationSource = nil
+            estimatedIngredients = []
+            errorMessage = nil
+        }
+    }
 
     private var estimateRequestID = UUID()
+    private var isApplyingAutomaticCalories = false
     var estimatedIngredients: [EstimatedIngredient] = []
-    var estimatedCalories: Int?
     var estimatedConfidence: EstimateConfidence?
+    var estimationSource: CalorieEstimationSource?
     var isEstimating: Bool = false
     var errorMessage: String?
     private(set) var suggestions: [MealSuggestion] = []
@@ -67,8 +79,9 @@ final class AddMealViewModel: Identifiable {
         self.now = now
     }
 
-    var estimationSource: CalorieEstimationSource {
-        calorieEstimator.source
+    var estimatedCalories: Int? {
+        guard let value = Int(calories), value > 0 else { return nil }
+        return value
     }
 
     var state: FieldState {
@@ -79,7 +92,7 @@ final class AddMealViewModel: Identifiable {
     }
 
     var canSave: Bool {
-        state == .estimated && !trimmedName.isEmpty && gramsValue > 0
+        estimatedCalories != nil && !trimmedName.isEmpty && gramsValue > 0
     }
 
     var shouldEstimate: Bool {
@@ -107,7 +120,7 @@ final class AddMealViewModel: Identifiable {
     private func invalidateEstimate() {
         estimateRequestID = UUID()
         isEstimating = false
-        estimatedCalories = nil
+        replaceCalories(with: "", source: nil)
         estimatedConfidence = nil
         estimatedIngredients = []
         errorMessage = nil
@@ -117,7 +130,6 @@ final class AddMealViewModel: Identifiable {
         invalidateEstimate()
         let requestID = estimateRequestID
         guard shouldEstimate else {
-            estimatedCalories = nil
             estimatedConfidence = nil
             errorMessage = nil
             return
@@ -130,24 +142,34 @@ final class AddMealViewModel: Identifiable {
         do {
             let estimate = try await calorieEstimator.estimate(name: requestName, grams: requestGrams)
             guard requestID == estimateRequestID, !Task.isCancelled else { return }
-            estimatedCalories = estimate.calories
+            guard estimate.calories > 0 else {
+                throw InvalidCalorieEstimate()
+            }
+            replaceCalories(with: String(estimate.calories), source: estimate.source)
             estimatedConfidence = estimate.confidence
             estimatedIngredients = estimate.ingredients
         } catch is CancellationError {
             // A cancelled request must not restore an outdated breakdown.
         } catch {
             guard requestID == estimateRequestID, !Task.isCancelled else { return }
-            estimatedCalories = nil
+            replaceCalories(with: "", source: nil)
             estimatedConfidence = nil
             errorMessage = L10n.string("add_meal.error.estimation_failed.message")
         }
     }
 
     func retry() async {
-        estimatedCalories = nil
+        replaceCalories(with: "", source: nil)
         estimatedConfidence = nil
         errorMessage = nil
         await estimate()
+    }
+
+    private func replaceCalories(with value: String, source: CalorieEstimationSource?) {
+        isApplyingAutomaticCalories = true
+        calories = value
+        estimationSource = source
+        isApplyingAutomaticCalories = false
     }
 
     /// Loads the user's most common meals for the current local time of day.
@@ -253,3 +275,5 @@ final class AddMealViewModel: Identifiable {
     }
 
 }
+
+private struct InvalidCalorieEstimate: Error { }

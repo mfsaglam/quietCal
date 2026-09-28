@@ -1,7 +1,6 @@
 import Foundation
 
 struct StubCalorieEstimator: CalorieEstimating {
-    let source: CalorieEstimationSource = .stub
     var delay: Duration = .milliseconds(1500)
     var caloriesPerGram: Double = 1.5
 
@@ -9,7 +8,8 @@ struct StubCalorieEstimator: CalorieEstimating {
         try await Task.sleep(for: delay)
         return CalorieEstimate(
             calories: Int(Double(grams) * caloriesPerGram),
-            confidence: .medium
+            confidence: .medium,
+            source: .quietCal
         )
     }
 }
