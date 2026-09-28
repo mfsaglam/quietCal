@@ -44,6 +44,14 @@ struct PaywallView: View {
         }
         .subscriptionStoreButtonLabel(.multiline)
         .subscriptionStoreControlStyle(.prominentPicker)
+        .subscriptionStorePolicyDestination(
+            url: AppInfo.privacyPolicyURL,
+            for: .privacyPolicy
+        )
+        .subscriptionStorePolicyDestination(
+            url: AppInfo.termsOfUseURL,
+            for: .termsOfService
+        )
         .storeButton(.visible, for: .restorePurchases)
         .storeButton(.visible, for: .cancellation)
         .onInAppPurchaseCompletion { _, result in

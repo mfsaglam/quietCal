@@ -10,6 +10,12 @@ enum AppInfo {
     /// The display name shown to users throughout the UI.
     static let name = "QuietCal"
 
+    /// Public legal and support pages used by Settings, StoreKit, and the
+    /// corresponding App Store Connect metadata.
+    static let privacyPolicyURL = URL(string: "https://mfsaglam.github.io/quietcal-support/privacy/")!
+    static let termsOfUseURL = URL(string: "https://mfsaglam.github.io/quietcal-support/terms/")!
+    static let supportURL = URL(string: "https://mfsaglam.github.io/quietcal-support/support/")!
+
     /// Marketing version (e.g. "1.0"), read from the bundle so it tracks
     /// `MARKETING_VERSION` automatically.
     static var version: String {

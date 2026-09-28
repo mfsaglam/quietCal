@@ -130,6 +130,8 @@ struct SettingsView: View {
 
             developerSection
 
+            legalSection
+
             Section {
                 Text(AppInfo.nameAndVersion)
                     .font(.system(size: 13))
@@ -177,6 +179,38 @@ struct SettingsView: View {
             defaultFilename: "quietcal-meals"
         ) { _ in
             exportDocument = nil
+        }
+    }
+
+    private var legalSection: some View {
+        Section("settings.section.legal") {
+            legalLink(
+                "settings.privacy_policy",
+                systemImage: "hand.raised",
+                destination: AppInfo.privacyPolicyURL
+            )
+            legalLink(
+                "settings.terms_of_use",
+                systemImage: "doc.text",
+                destination: AppInfo.termsOfUseURL
+            )
+        }
+    }
+
+    private func legalLink(
+        _ titleKey: LocalizedStringKey,
+        systemImage: String,
+        destination: URL
+    ) -> some View {
+        Link(destination: destination) {
+            HStack {
+                Label(titleKey, systemImage: systemImage)
+                    .foregroundStyle(.primary)
+                Spacer()
+                Image(systemName: "arrow.up.right")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(.tertiary)
+            }
         }
     }
 
